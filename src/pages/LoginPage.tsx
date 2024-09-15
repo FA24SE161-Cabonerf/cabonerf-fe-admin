@@ -1,14 +1,9 @@
-import LoginForm from "@/forms/LoginForm";
-import LoginLayout from "@/layouts/LoginLayout";
-
-
+import LoginForm from "@/forms/login-form/LoginForm";
 
 const LoginPage = () => {
   return (
     <div>
-       <LoginLayout>
       <LoginForm />
-      </LoginLayout>
     </div>
   );
 };
