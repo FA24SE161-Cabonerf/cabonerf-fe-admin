@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import LoginLayout from "./layouts/LoginLayout";
+import AdminDashboard from "./pages/AdminDashboardPage";
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,9 @@ const AppRoutes = () => {
             <LoginPage />
           </LoginLayout>
         }
+      />
+        <Route
+       path="/" element={<AdminDashboard />}
       />
     </Routes>
   );
