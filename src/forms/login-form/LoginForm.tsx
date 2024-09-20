@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useAuth } from '@/contexts/auth/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 // Define the form schema with Zod
 const loginSchema = z.object({
@@ -17,21 +19,15 @@ const loginSchema = z.object({
 })
 
 // Infer the type from the schema
-type LoginFormValues = z.infer<typeof loginSchema>
+export type LoginFormValues = z.infer<typeof loginSchema>
 
 // Mock login function (replace with actual API call)
-const loginUser = async (data: LoginFormValues) => {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  if (data.email === 'test@example.com' && data.password === 'password123') {
-    return { success: true }
-  }
-  throw new Error('Invalid credentials')
-}
+
 
 const LoginForm =() => {
+  const { handleLogin } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null)
-
+  const navigate = useNavigate(); 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -41,19 +37,20 @@ const LoginForm =() => {
   })
 
   const loginMutation = useMutation({
-    mutationFn: loginUser,
+    mutationFn: (data: LoginFormValues) => handleLogin(data), // Pass the data here
     onSuccess: () => {
-      console.log('Login successful')
+      console.log('Login successful');
+      navigate('/'); 
     },
     onError: (error: Error) => {
-      setLoginError(error.message)
+      setLoginError(error.message);
     },
-  })
+  });
 
   const onSubmit = (data: LoginFormValues) => {
-    setLoginError(null)
-    loginMutation.mutate(data)
-  }
+    setLoginError(null);
+    loginMutation.mutate(data); // Pass the form data to the mutation
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8 sm:px-6 lg:px-8">
