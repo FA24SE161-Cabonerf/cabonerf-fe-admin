@@ -4,7 +4,10 @@ import LoginLayout from "./layouts/LoginLayout";
 
 import ProtectedRoute from "./contexts/auth/ProtectedRoute";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
-import AdminDashboardContent from "./components/dashboard/AdminDashboardContent";
+
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import UpdateProfilePage from "./pages/UpdateProfilePage";
+import ManageUserPage from "./pages/ManageUserPage";
 
 const AppRoutes = () => {
   return (
@@ -23,7 +26,23 @@ const AppRoutes = () => {
           path="/"
           element={
             <AdminDashboardLayout>
-              <AdminDashboardContent />
+              <AdminDashboardPage />
+            </AdminDashboardLayout>
+          }
+        />
+          <Route
+          path="/update-profile"
+          element={
+            <AdminDashboardLayout>
+              <UpdateProfilePage />
+            </AdminDashboardLayout>
+          }
+        />
+          <Route
+          path="/manage-user"
+          element={
+            <AdminDashboardLayout>
+              <ManageUserPage />
             </AdminDashboardLayout>
           }
         />
