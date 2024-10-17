@@ -8,14 +8,15 @@ import { Link } from "react-router-dom"
 
 type AdminHeaderProps = {
   toggleSidebar: () => void
-  userEmail: string
+  userEmail: string | undefined
+  userRole?: string
   userAvatar?: string
   onLogout: () => void
   onUpdateProfile: () => void
 }
 
 
-const AdminHeader = ({toggleSidebar,userEmail,
+const AdminHeader = ({toggleSidebar,userEmail,userRole,
   userAvatar,
   onLogout,
   onUpdateProfile}: AdminHeaderProps) => {
@@ -60,14 +61,14 @@ const AdminHeader = ({toggleSidebar,userEmail,
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
               <AvatarImage src={userAvatar} alt={userEmail} />
-              <AvatarFallback>{userEmail.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{userEmail?.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuItem className="flex flex-col items-start">
             <div className="text-sm font-medium">{userEmail}</div>
-            <div className="text-xs text-muted-foreground">Administrator</div>
+            <div className="text-xs text-muted-foreground">{userRole}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onUpdateProfile}>

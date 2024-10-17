@@ -45,7 +45,7 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
               <FileText className="h-5 w-5" />
-              <span className="ml-3">Reports</span>
+              <span className="ml-3">Manage midpoint factor</span>
             </Link>
           </li>
           <li>
@@ -54,7 +54,7 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
               <Settings className="h-5 w-5" />
-              <span className="ml-3">Settings</span>
+              <span className="ml-3">Manage impact category</span>
             </Link>
           </li>
         </ul>

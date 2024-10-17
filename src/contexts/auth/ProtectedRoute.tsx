@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 import { Navigate, Outlet } from "react-router-dom";
 
 type ProtectedRouteProps = {
-  allowedRoles?: User['role'][];
+  allowedRoles?: User['role']["name"][];
 };
 
 export default function ProtectedRoute({
@@ -17,7 +17,7 @@ export default function ProtectedRoute({
 
   if (
     currentUser === null ||
-    (allowedRoles && !allowedRoles.includes(currentUser.role))
+    (allowedRoles && !allowedRoles.includes(currentUser.role.name))
   ) {
     return <Navigate to="/login" replace />;
   }

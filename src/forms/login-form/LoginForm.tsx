@@ -12,32 +12,28 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useAuth } from '@/contexts/auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
-// Define the form schema with Zod
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required'),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 })
 
-// Infer the type from the schema
 export type LoginFormValues = z.infer<typeof loginSchema>
 
-// Mock login function (replace with actual API call)
-
-
-const LoginForm =() => {
+const LoginForm = () => {
   const { handleLogin } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null)
   const navigate = useNavigate(); 
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'system.admin.test@gmail.com',
+      password: 'Admin@123456', 
     },
   })
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginFormValues) => handleLogin(data), // Pass the data here
+    mutationFn: handleLogin,
     onSuccess: () => {
       console.log('Login successful');
       navigate('/'); 
@@ -49,7 +45,7 @@ const LoginForm =() => {
 
   const onSubmit = (data: LoginFormValues) => {
     setLoginError(null);
-    loginMutation.mutate(data); // Pass the form data to the mutation
+    loginMutation.mutate(data);
   };
 
   return (
@@ -100,7 +96,7 @@ const LoginForm =() => {
               />
               <Button 
                 type="submit" 
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? (
@@ -127,4 +123,5 @@ const LoginForm =() => {
     </div>
   )
 }
+
 export default LoginForm;
