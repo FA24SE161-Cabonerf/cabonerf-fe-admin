@@ -1,5 +1,6 @@
 import AdminHeader from "@/components/dashboard/AdminHeader";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
+import { useAuth } from "@/contexts/auth/AuthContext";
 import React, { useState } from "react";
 
 type AdminDashboardLayoutProps = {
@@ -8,15 +9,12 @@ type AdminDashboardLayoutProps = {
 
 const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const {handleLogout, currentUser} = useAuth()
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  const handleLogout = () => {
-    // Implement logout logic here
-    console.log("Logging out...");
-  };
-
+ 
   const handleUpdateProfile = () => {
     // Implement update profile logic here
     console.log("Updating profile...");
@@ -31,7 +29,8 @@ const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
       >
         <AdminHeader
           toggleSidebar={toggleSidebar}
-          userEmail="admin@example.com"
+          userEmail={currentUser?.email}
+          userRole={currentUser?.role.name}
           userAvatar="/path/to/avatar.jpg"
           onLogout={handleLogout}
           onUpdateProfile={handleUpdateProfile}

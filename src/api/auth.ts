@@ -1,32 +1,26 @@
-import { LoginFormValues } from '@/forms/login-form/LoginForm';
-import { User } from '@/types/user';
+// api/auth.ts
 
-const testUser: User = {
-  id: 1,
-  email: 'test@example.com',
-  password: "password123",
-  role: 'admin',
-};
+import { User } from "@/types/user";
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export async function getUser() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+export const login = async (credentials: { email: string; password: string }): Promise<{
+  access_token: string;
+  refresh_token: string;
+  user: User;
+}> => {
+  const response = await fetch(`${VITE_BASE_URL}/users/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
 
-  const authToken = generateAuthToken();
-
-  return [200, { authToken, user: testUser }] as const;
-}
-
-export async function login(data: LoginFormValues) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  if (data.email === 'test@example.com' && data.password === 'password123') {
-    const authToken = generateAuthToken();
-  
-  return [200, { authToken, user: testUser }] as const;
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Login failed');
   }
-  throw new Error('Invalid credentials')
 
-}
-
-function generateAuthToken() {
-  return Math.random().toString(36).substring(2);
-}
+  const data = await response.json();
+  return data.data;
+};
