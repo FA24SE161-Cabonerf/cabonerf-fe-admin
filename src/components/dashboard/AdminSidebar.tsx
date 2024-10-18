@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, Settings, Users } from "lucide-react";
+import { BoxIcon, ChartBarStackedIcon, FileText, LayoutDashboard, RecycleIcon, Settings, UngroupIcon, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type AdminSidebarProps = {
@@ -50,11 +50,47 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
           </li>
           <li>
             <Link
-              to="/settings"
+              to="/impact-category"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <ChartBarStackedIcon className="h-5 w-5" />
+              <span className="ml-3">Manage impact category</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/impact-method"
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
               <Settings className="h-5 w-5" />
-              <span className="ml-3">Manage impact category</span>
+              <span className="ml-3">Manage impact method</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/unit-group"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <BoxIcon className="h-5 w-5" />
+              <span className="ml-3">Manage unit group</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/unit"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <UngroupIcon className="h-5 w-5" />
+              <span className="ml-3">Manage unit</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/life-cycle-stage"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <RecycleIcon className="h-5 w-5" />
+              <span className="ml-3">Manage Life Cycle Stage</span>
             </Link>
           </li>
         </ul>

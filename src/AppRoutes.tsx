@@ -8,6 +8,12 @@ import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import ManageUserPage from "./pages/ManageUserPage";
+import ManageImpactCategoryPage from "./pages/ManageImpactCategoryPage";
+import ManageImpactMethodPage from "./pages/MangeImpactMethodPage";
+import ManageUnitGroupPage from "./pages/MangeUnitGroupPage";
+import ManageUnitPage from "./pages/ManageUnitPage";
+import ManageLifeCycleStagePage from "./pages/ManageLifeCycleStagePage";
+
 
 const AppRoutes = () => {
   return (
@@ -43,6 +49,46 @@ const AppRoutes = () => {
           element={
             <AdminDashboardLayout>
               <ManageUserPage />
+            </AdminDashboardLayout>
+          }
+        />
+          <Route
+          path="/impact-category"
+          element={
+            <AdminDashboardLayout>
+              <ManageImpactCategoryPage />
+            </AdminDashboardLayout>
+          }
+        />
+         <Route
+          path="/impact-method"
+          element={
+            <AdminDashboardLayout>
+              <ManageImpactMethodPage />
+            </AdminDashboardLayout>
+          }
+        />
+           <Route
+          path="/unit-group"
+          element={
+            <AdminDashboardLayout>
+              <ManageUnitGroupPage />
+            </AdminDashboardLayout>
+          }
+        />
+           <Route
+          path="/unit"
+          element={
+            <AdminDashboardLayout>
+              <ManageUnitPage />
+            </AdminDashboardLayout>
+          }
+        />
+           <Route
+          path="/life-cycle-stage"
+          element={
+            <AdminDashboardLayout>
+              <ManageLifeCycleStagePage />
             </AdminDashboardLayout>
           }
         />

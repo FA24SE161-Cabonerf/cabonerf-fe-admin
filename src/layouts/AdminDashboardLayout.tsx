@@ -9,12 +9,12 @@ type AdminDashboardLayoutProps = {
 
 const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const {handleLogout, currentUser} = useAuth()
-  
+  const { handleLogout, currentUser } = useAuth();
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
- 
+
   const handleUpdateProfile = () => {
     // Implement update profile logic here
     console.log("Updating profile...");
