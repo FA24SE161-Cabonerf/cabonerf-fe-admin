@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 
@@ -9,6 +8,7 @@ import { AlertCircle, Plus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useUnitGroups } from '@/api/manageUnitGroup'
 import UnitGroupTable from '@/components/manageUnitGroup/UnitGroupTable'
+import SkeletonTable from '@/components/sketeton/SkeletonTable'
 
 
 const ManageUnitGroupPage = () => {
@@ -30,23 +30,7 @@ const ManageUnitGroupPage = () => {
     console.log(`Delete unit group with id: ${id}`)
   }
 
-  if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error.status === 404 ? 'Unit groups not found.' : 
-           error.status >= 500 ? 'Server error. Please try again later.' : 
-           error.message}
-        </AlertDescription>
-      </Alert>
-    )
-  }
+ 
 
   return (
     <div className="container mx-auto p-4">
@@ -64,13 +48,27 @@ const ManageUnitGroupPage = () => {
           className="max-w-sm"
         />
       </div>
-      <ScrollArea className="h-[calc(100vh-200px)]">
-        <UnitGroupTable
-          unitGroups={filteredUnitGroups}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </ScrollArea>
+      {isLoading ? (
+        <SkeletonTable />
+      ) : error ? (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {error.status === 404 ? 'Unit groups not found.' : 
+             error.status >= 500 ? 'Server error. Please try again later.' : 
+             error.message}
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <UnitGroupTable
+            unitGroups={filteredUnitGroups}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </ScrollArea>
+      )}
     </div>
   )
 }

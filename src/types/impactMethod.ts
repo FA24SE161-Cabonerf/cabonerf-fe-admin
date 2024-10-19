@@ -14,8 +14,8 @@ export type ImpactMethod = {
   perspective: Perspective;
 }
 
-export type ApiResponse = {
+export type ApiResponse<T> = {
   status: string;
   message: string;
-  data: ImpactMethod[];
+  data: T;
 }

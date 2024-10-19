@@ -41,11 +41,11 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
           </li>
           <li>
             <Link
-              to="/reports"
+              to="/midpoint-substance"
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
               <FileText className="h-5 w-5" />
-              <span className="ml-3">Manage midpoint factor</span>
+              <span className="ml-3">Manage midpoint substance</span>
             </Link>
           </li>
           <li>

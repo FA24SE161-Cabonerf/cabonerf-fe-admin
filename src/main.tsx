@@ -9,7 +9,15 @@ import {
 } from '@tanstack/react-query'
 import AuthProvider from './contexts/auth/AuthContext';
 import { Toaster } from "@/components/ui/toaster"
-const queryClient = new QueryClient()
+const queryClient = new QueryClient(
+  {
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  }
+)
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
      <Router>

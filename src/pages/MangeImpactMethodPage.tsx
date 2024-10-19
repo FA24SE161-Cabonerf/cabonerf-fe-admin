@@ -7,6 +7,7 @@ import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useImpactMethods } from "@/api/manageImpactMethod";
 import ImpactMethodsTable from "@/components/manageImpactMethod/impactMethodTable";
+import SkeletonTable from "@/components/sketeton/SkeletonTable";
 
 const ManageImpactMethodPage = () => {
   const { data: impactMethods, isLoading, error } = useImpactMethods();
@@ -30,29 +31,7 @@ const ManageImpactMethodPage = () => {
     console.log(`Delete method with id: ${id}`);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error.status === 404
-            ? "Impact methods not found."
-            : error.status >= 500
-            ? "Server error. Please try again later."
-            : error.message}
-        </AlertDescription>
-      </Alert>
-    );
-  }
 
   return (
     <div className="container mx-auto p-4">
@@ -70,13 +49,29 @@ const ManageImpactMethodPage = () => {
           className="max-w-sm"
         />
       </div>
-      <ScrollArea className="h-[calc(100vh-200px)]">
-        <ImpactMethodsTable
-          methods={filteredMethods}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </ScrollArea>
+      {isLoading ? (
+        <SkeletonTable/>
+      ) : error ? (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {error.status === 404
+              ? "Impact methods not found."
+              : error.status >= 500
+              ? "Server error. Please try again later."
+              : error.message}
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <ImpactMethodsTable
+            methods={filteredMethods}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </ScrollArea>
+      )}
     </div>
   );
 };
