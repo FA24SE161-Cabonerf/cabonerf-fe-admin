@@ -7,6 +7,7 @@ import { AlertCircle, Plus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useLifeCycleStages } from '@/api/manageLifeCycleStage'
 import LifeCycleStagesTable from '@/components/manageLifeCycleStage/LifeCycleStageTable'
+import SkeletonTable from '@/components/sketeton/SkeletonTable'
 
 
  const ManageLifeCycleStagePage = () => {
@@ -28,21 +29,6 @@ import LifeCycleStagesTable from '@/components/manageLifeCycleStage/LifeCycleSta
     // Implement delete functionality
   }
 
-  if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error instanceof Error ? error.message : 'An unknown error occurred'}
-        </AlertDescription>
-      </Alert>
-    )
-  }
 
   return (
     <div className="container mx-auto p-4">
@@ -60,13 +46,25 @@ import LifeCycleStagesTable from '@/components/manageLifeCycleStage/LifeCycleSta
           className="max-w-sm"
         />
       </div>
-      <ScrollArea className="h-[calc(100vh-200px)]">
+      {isLoading ? (
+        <SkeletonTable />
+      ) : error ? (<Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          {error instanceof Error ? error.message : 'An unknown error occurred'}
+        </AlertDescription>
+      </Alert>):(
+        <ScrollArea className="h-[calc(100vh-200px)]">
         <LifeCycleStagesTable
           stages={filteredStages}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
       </ScrollArea>
+      )
+    }
+      
     </div>
   )
 }

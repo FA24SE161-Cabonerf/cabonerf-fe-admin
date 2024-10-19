@@ -13,6 +13,7 @@ import ManageImpactMethodPage from "./pages/MangeImpactMethodPage";
 import ManageUnitGroupPage from "./pages/MangeUnitGroupPage";
 import ManageUnitPage from "./pages/ManageUnitPage";
 import ManageLifeCycleStagePage from "./pages/ManageLifeCycleStagePage";
+import ManageMidpointSubstancePage from "./pages/ManageMidpointSubstancePage";
 
 
 const AppRoutes = () => {
@@ -49,6 +50,14 @@ const AppRoutes = () => {
           element={
             <AdminDashboardLayout>
               <ManageUserPage />
+            </AdminDashboardLayout>
+          }
+        />
+             <Route
+          path="/midpoint-substance"
+          element={
+            <AdminDashboardLayout>
+              <ManageMidpointSubstancePage />
             </AdminDashboardLayout>
           }
         />
