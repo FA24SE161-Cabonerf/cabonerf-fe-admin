@@ -64,6 +64,10 @@ const ManageImpactCategoryPage = () => {
     console.log(`Delete impact category with id: ${id}`)
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }
+
   const isLoading = isLoadingImpactMethods || isLoadingSelectedMethod || isLoadingCategories
 
   if (isLoading) return <SkeletonTable />
@@ -94,7 +98,7 @@ const ManageImpactCategoryPage = () => {
         <Input
           placeholder="Search impact categories..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="max-w-sm"
         />
         <Select

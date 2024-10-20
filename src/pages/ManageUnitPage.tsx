@@ -27,7 +27,7 @@ const ManageUnitPage = () => {
 
   const [page, setPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [pageSize, setPageSize] = useState(
-    parseInt(searchParams.get("pageSize") || "5")
+    parseInt(searchParams.get("pageSize") || "10")
   );
   const [unitGroupId, setUnitGroupId] = useState(
     parseInt(searchParams.get("unitGroupId") || "0")
