@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +11,23 @@ import ImpactMethodsTable from "@/components/manageImpactMethod/impactMethodTabl
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 
 const ManageImpactMethodPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
+
   const { data: impactMethods, isLoading, error } = useImpactMethods();
-  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (searchTerm) {
+      params.set("search", searchTerm);
+    } else {
+      params.delete("search");
+    }
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [searchTerm, navigate, location.search]);
 
   const filteredMethods = impactMethods
     ? impactMethods.filter(
@@ -23,6 +39,10 @@ const ManageImpactMethodPage = () => {
       )
     : [];
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   const handleEdit = (id: number) => {
     console.log(`Edit method with id: ${id}`);
   };
@@ -30,8 +50,6 @@ const ManageImpactMethodPage = () => {
   const handleDelete = (id: number) => {
     console.log(`Delete method with id: ${id}`);
   };
-
-
 
   return (
     <div className="container mx-auto p-4">
@@ -45,12 +63,12 @@ const ManageImpactMethodPage = () => {
         <Input
           placeholder="Search methods..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="max-w-sm"
         />
       </div>
       {isLoading ? (
-        <SkeletonTable/>
+        <SkeletonTable />
       ) : error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />

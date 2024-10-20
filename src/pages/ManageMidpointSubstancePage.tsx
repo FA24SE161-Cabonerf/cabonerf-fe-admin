@@ -24,7 +24,7 @@ const ManageMidpointSubstancePage = () => {
 
   const [page, setPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [pageSize, setPageSize] = useState(
-    parseInt(searchParams.get("pageSize") || "5")
+    parseInt(searchParams.get("pageSize") || "10")
   );
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || ""
@@ -48,7 +48,9 @@ const ManageMidpointSubstancePage = () => {
     midpointSubstancesData?.data.listResult.filter(
       (substance) =>
         substance.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        substance.casNumber.toLowerCase().includes(searchTerm.toLowerCase())
+        substance.casNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        substance.compartmentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        substance.molecularFormula.toLowerCase().includes(searchTerm.toLowerCase()) 
     ) || [];
 
   const handlePreviousPage = () => {

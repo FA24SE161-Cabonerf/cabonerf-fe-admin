@@ -1,5 +1,5 @@
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,10 +10,24 @@ import { useUnitGroups } from '@/api/manageUnitGroup'
 import UnitGroupTable from '@/components/manageUnitGroup/UnitGroupTable'
 import SkeletonTable from '@/components/sketeton/SkeletonTable'
 
-
 const ManageUnitGroupPage = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const searchParams = new URLSearchParams(location.search)
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+
   const { data: unitGroups, isLoading, error } = useUnitGroups()
-  const [searchTerm, setSearchTerm] = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (searchTerm) {
+      params.set('search', searchTerm)
+    } else {
+      params.delete('search')
+    }
+    navigate(`?${params.toString()}`, { replace: true })
+  }, [searchTerm, navigate, location.search])
 
   const filteredUnitGroups = unitGroups
     ? unitGroups.filter(unitGroup =>
@@ -22,6 +36,10 @@ const ManageUnitGroupPage = () => {
       )
     : []
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }
+
   const handleEdit = (id: number) => {
     console.log(`Edit unit group with id: ${id}`)
   }
@@ -29,8 +47,6 @@ const ManageUnitGroupPage = () => {
   const handleDelete = (id: number) => {
     console.log(`Delete unit group with id: ${id}`)
   }
-
- 
 
   return (
     <div className="container mx-auto p-4">
@@ -44,7 +60,7 @@ const ManageUnitGroupPage = () => {
         <Input
           placeholder="Search unit groups..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="max-w-sm"
         />
       </div>

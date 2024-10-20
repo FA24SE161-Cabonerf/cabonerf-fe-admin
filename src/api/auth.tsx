@@ -1,5 +1,3 @@
-// api/auth.ts
-
 import { User } from "@/types/user";
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -19,11 +17,21 @@ export const login = async (credentials: {
     body: JSON.stringify(credentials),
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Login failed");
+    if (data.data) {
+      if (data.data.email) {
+        throw new Error(data.data.email);
+      } else if (data.data.password) {
+        throw new Error(data.data.password);
+      }
+    }
+    if (data.message) {
+      throw new Error(data.message);
+    }
+    throw new Error("Login failed");
   }
 
-  const data = await response.json();
   return data.data;
 };
