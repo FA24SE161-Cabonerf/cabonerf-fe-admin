@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertCircle, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import UnitTable from "@/components/manageUnit/UnitTable";
@@ -18,6 +17,7 @@ import { UnitGroup } from "@/types/unitGroup";
 import { useUnitGroups } from "@/api/manageUnitGroup";
 import { useUnits } from "@/api/manageUnit";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
+import Pagination from "@/components/pagination/Pagination";
 
 const ManageUnitPage = () => {
   const navigate = useNavigate();
@@ -67,16 +67,14 @@ const ManageUnitPage = () => {
     console.log(`Delete unit with id: ${id}`);
   };
 
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
-  const handleNextPage = () => {
-    setPage((prevPage) =>
-      Math.min(prevPage + 1, unitsData?.data.totalPage || prevPage)
-    );
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1);
   };
-
 
   return (
     <div className="container mx-auto p-4">
@@ -124,54 +122,22 @@ const ManageUnitPage = () => {
         </Alert>
       ) : (
         <div>
-        <ScrollArea className="h-[calc(100vh-250px)]">
-          <UnitTable
-            units={filteredUnits}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+          <ScrollArea className="h-[calc(100vh-250px)]">
+            <UnitTable
+              units={filteredUnits}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </ScrollArea>
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            totalPages={unitsData?.data.totalPage || 1}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
           />
-        </ScrollArea>
-        <div className="flex justify-between items-center mt-4">
-        <div className="flex items-center space-x-2">
-          <span>Rows per page:</span>
-          <Select
-            value={pageSize.toString()}
-            onValueChange={(value) => setPageSize(Number(value))}
-          >
-            <SelectTrigger className="w-[70px]">
-              <SelectValue placeholder="5" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="20">20</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handlePreviousPage}
-            disabled={page === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span>{`Page ${page} of ${unitsData?.data.totalPage}`}</span>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleNextPage}
-            disabled={page === unitsData?.data.totalPage}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
         </div>
       )}
-
-    
     </div>
   );
 };
