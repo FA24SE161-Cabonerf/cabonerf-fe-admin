@@ -1,3 +1,4 @@
+import { headers } from "@/constants/headers";
 import { ApiResponse, ImpactCategory } from "@/types/impactCategory";
 import { useQuery } from "@tanstack/react-query";
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -9,7 +10,9 @@ class ApiError extends Error {
 }
 const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`);
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`,{
+      headers
+    });
 
     if (!response.ok) {
       // Handle HTTP errors
@@ -49,7 +52,9 @@ const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
 
 const fetchImpactCategoriesByMethod = async (methodId: number): Promise<ImpactCategory[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/categories`);
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/categories`,{
+      headers
+    });
 
     if (!response.ok) {
       throw new ApiError(

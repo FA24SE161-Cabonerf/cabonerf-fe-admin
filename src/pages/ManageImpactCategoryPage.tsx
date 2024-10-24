@@ -18,7 +18,7 @@ import { ImpactMethod } from "@/types/impactMethod"
 import { useImpactMethods, useImpactMethod } from "@/api/manageImpactMethod"
 import { useImpactCategoriesByMethod } from "@/api/manageImpactCategory"
 import SkeletonTable from "@/components/sketeton/SkeletonTable"
-import ImpactCategoryTable from "@/components/manageImactCatrgory/ImpactCategoryTable"
+import ImpactCategoryTable from "@/components/manageImpactCategory/ImpactCategoryTable"
 
 const ManageImpactCategoryPage = () => {
   const navigate = useNavigate()

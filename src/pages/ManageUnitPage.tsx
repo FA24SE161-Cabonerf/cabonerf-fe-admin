@@ -14,12 +14,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import UnitTable from "@/components/manageUnit/UnitTable";
 import { UnitGroup } from "@/types/unitGroup";
+import { Unit } from "@/types/unit";
 import { useUnitGroups } from "@/api/manageUnitGroup";
 import { useUnits } from "@/api/manageUnit";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import Pagination from "@/components/pagination/Pagination";
+import UpdateUnitModal from "@/forms/manage-unit-form/UpdateUnitModal";
 
-const ManageUnitPage = () => {
+export default function ManageUnitPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,12 +37,15 @@ const ManageUnitPage = () => {
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || ""
   );
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
 
   const { data: unitGroups, isLoading: isLoadingUnitGroups } = useUnitGroups();
   const {
     data: unitsData,
     isLoading: isLoadingUnits,
     error,
+    refetch,
   } = useUnits(page, pageSize, unitGroupId);
 
   useEffect(() => {
@@ -52,19 +57,22 @@ const ManageUnitPage = () => {
     navigate(`?${params.toString()}`, { replace: true });
   }, [page, pageSize, unitGroupId, searchTerm, navigate]);
 
-  const filteredUnits =
-    unitsData?.data.listResult.filter(
-      (unit) =>
-        unit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        unit.unitGroup.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+  const filteredUnits = unitsData?.data.listResult
+    ? unitsData.data.listResult.filter(
+        (unit) =>
+          unit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          unit.unitGroup.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   const handleEdit = (id: number) => {
-    console.log(`Edit unit with id: ${id}`);
+    setSelectedUnitId(id);
+    setIsUpdateModalOpen(true);
   };
 
   const handleDelete = (id: number) => {
     console.log(`Delete unit with id: ${id}`);
+    // Implement delete functionality here
   };
 
   const handlePageChange = (newPage: number) => {
@@ -74,6 +82,13 @@ const ManageUnitPage = () => {
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     setPage(1);
+  };
+
+  const handleUpdateUnit = async (updatedUnit: Unit) => {
+    // Implement the API call to update the unit here
+    console.log('Updating unit:', updatedUnit);
+    // After successful update, refetch the units data
+    await refetch();
   };
 
   return (
@@ -138,8 +153,14 @@ const ManageUnitPage = () => {
           />
         </div>
       )}
+      {selectedUnitId && (
+        <UpdateUnitModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          unitId={selectedUnitId}
+          onUpdateUnit={handleUpdateUnit}
+        />
+      )}
     </div>
   );
-};
-
-export default ManageUnitPage;
+}
