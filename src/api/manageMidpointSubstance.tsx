@@ -1,3 +1,4 @@
+import { headers } from '@/constants/headers'
 import { ApiResponse } from '@/types/midpointSubstance'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
@@ -12,7 +13,9 @@ class ApiError extends Error {
 }
 
 const fetchMidpointSubstances = async (page: number, pageSize: number): Promise<ApiResponse> => {
-  const response = await fetch(`${VITE_BASE_URL}/impacts/admin/midpoints?currentPage=${page}&pageSize=${pageSize}`)
+  const response = await fetch(`${VITE_BASE_URL}/impacts/admin/midpoints?currentPage=${page}&pageSize=${pageSize}`,{
+    headers
+  })
   
   if (!response.ok) {
     throw new ApiError(response.status, `HTTP error! status: ${response.status}`)

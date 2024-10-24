@@ -1,5 +1,7 @@
+import { headers } from '@/constants/headers'
 import { ApiResponse, LifeCycleStage } from '@/types/lifeCycleStage'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+
 
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
@@ -12,7 +14,9 @@ class ApiError extends Error {
 }
 
 const fetchLifeCycleStages = async (): Promise<LifeCycleStage[]> => {
-  const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages`)
+  const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages`,{
+    headers
+  })
   
   if (!response.ok) {
     throw new ApiError(response.status, `HTTP error! status: ${response.status}`)

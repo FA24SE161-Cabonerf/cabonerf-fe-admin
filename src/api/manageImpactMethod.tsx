@@ -1,3 +1,4 @@
+import { headers } from "@/constants/headers";
 import { ApiResponse, ImpactMethod } from "@/types/impactMethod";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,7 +13,9 @@ class ApiError extends Error {
 
 const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`);
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`,{
+      headers
+    });
 
     if (!response.ok) {
       throw new ApiError(
@@ -41,7 +44,9 @@ const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
 
 const fetchImpactMethod = async (id: number): Promise<ImpactMethod> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`);
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`,{
+      headers
+    });
 
     if (!response.ok) {
       throw new ApiError(

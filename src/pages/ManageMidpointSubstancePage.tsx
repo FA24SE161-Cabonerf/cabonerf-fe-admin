@@ -2,19 +2,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { AlertCircle, ChevronLeft, ChevronRight, ImportIcon } from "lucide-react";
+import { AlertCircle, ImportIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import MidpointSubstanceTable from "@/components/manageMidpointSubstance/MidpointSubstanceTable";
 import { useMidpointSubstances } from "@/api/manageMidpointSubstance";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
+import Pagination from "@/components/pagination/Pagination";
+
 
 const ManageMidpointSubstancePage = () => {
   const navigate = useNavigate();
@@ -53,14 +48,13 @@ const ManageMidpointSubstancePage = () => {
         substance.molecularFormula.toLowerCase().includes(searchTerm.toLowerCase()) 
     ) || [];
 
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
-  const handleNextPage = () => {
-    setPage((prevPage) =>
-      Math.min(prevPage + 1, midpointSubstancesData?.data.totalPage || prevPage)
-    );
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1); // Reset to first page when changing page size
   };
 
   return (
@@ -96,43 +90,13 @@ const ManageMidpointSubstancePage = () => {
           <ScrollArea className="h-[calc(100vh-250px)]">
             <MidpointSubstanceTable substances={filteredSubstances} />
           </ScrollArea>
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex items-center space-x-2">
-              <span>Rows per page:</span>
-              <Select
-                value={pageSize.toString()}
-                onValueChange={(value) => setPageSize(Number(value))}
-              >
-                <SelectTrigger className="w-[70px]">
-                  <SelectValue placeholder="5" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handlePreviousPage}
-                disabled={page === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span>{`Page ${page} of ${midpointSubstancesData?.data.totalPage}`}</span>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleNextPage}
-                disabled={page === midpointSubstancesData?.data.totalPage}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            totalPages={midpointSubstancesData?.data.totalPage || 1}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+          />
         </div>
       )}
     </div>
