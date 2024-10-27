@@ -13,8 +13,8 @@ import { ImpactMethod } from "@/types/impactMethod";
 
 interface ImpactMethodsTableProps {
   methods: ImpactMethod[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const ImpactMethodsTable = ({

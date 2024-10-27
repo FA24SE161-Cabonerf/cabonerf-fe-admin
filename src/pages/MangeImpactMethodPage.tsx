@@ -43,11 +43,11 @@ const ManageImpactMethodPage = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     console.log(`Edit method with id: ${id}`);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log(`Delete method with id: ${id}`);
   };
 

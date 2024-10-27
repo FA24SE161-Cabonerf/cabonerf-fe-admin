@@ -42,12 +42,12 @@ const ManageLifeCycleStagePage = () => {
     setSearchTerm(e.target.value)
   }
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     console.log(`Edit life cycle stage with id: ${id}`)
     // Implement edit functionality
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log(`Delete life cycle stage with id: ${id}`)
     // Implement delete functionality
   }
