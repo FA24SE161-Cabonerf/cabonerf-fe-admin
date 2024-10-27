@@ -1,25 +1,22 @@
-export type UnitGroup = {
-  id: number;
-  name: string;
-  unitGroupType: string;
-}
+import { UnitGroup } from "./unitGroup";
 
 export type Unit = {
-  id: number;
+  id: string;
   name: string;
   conversionFactor: number;
   unitGroup: UnitGroup;
   default: boolean;
 }
 
-export type PaginatedResponse = {
-  currentPage: number;
-  totalPage: number;
-  listResult: Unit[];
-}
-
 export type ApiResponse = {
   status: string;
   message: string;
-  data: PaginatedResponse;
+  data: Unit[];
+}
+
+export type UnitListResponse = ApiResponse;
+export type UnitResponse = {
+  status: string;
+  message: string;
+  data: Unit;
 }

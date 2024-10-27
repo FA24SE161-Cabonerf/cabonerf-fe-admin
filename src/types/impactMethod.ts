@@ -1,12 +1,12 @@
 export type Perspective = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   abbr: string;
 }
 
 export type ImpactMethod = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   version: string;
@@ -19,3 +19,6 @@ export type ApiResponse<T> = {
   message: string;
   data: T;
 }
+
+export type ImpactMethodListResponse = ApiResponse<ImpactMethod[]>;
+export type ImpactMethodResponse = ApiResponse<ImpactMethod>;

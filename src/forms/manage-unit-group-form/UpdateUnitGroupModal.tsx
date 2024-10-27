@@ -33,7 +33,7 @@ type FormData = z.infer<typeof formSchema>;
 interface UpdateUnitGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (id: number, data: FormData) => void;
+  onSubmit: (id: string, data: FormData) => void;
   isSubmitting: boolean;
   error: string | null;
   unitGroup: UnitGroup | null;

@@ -1,6 +1,6 @@
 
 export type UnitGroup = {
-  id: number;
+  id: string;
   name: string;
   unitGroupType: string;
 }

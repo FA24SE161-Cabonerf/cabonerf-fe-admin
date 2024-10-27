@@ -1,45 +1,37 @@
 import { headers } from "@/constants/headers";
-import { ApiResponse, ImpactCategory } from "@/types/impactCategory";
+import { ImpactCategory, ImpactCategoryListResponse } from "@/types/impactCategory";
 import { useQuery } from "@tanstack/react-query";
+
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
     this.name = "ApiError";
   }
 }
+
 const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`,{
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`, {
       headers
     });
 
     if (!response.ok) {
-      // Handle HTTP errors
       throw new ApiError(
         response.status,
         `HTTP error! status: ${response.status}`
       );
     }
 
-    const data: ApiResponse = await response.json();
+    const data: ImpactCategoryListResponse = await response.json();
 
-    // Check if the API returned an error status
     if (data.status !== "Success") {
       throw new ApiError(response.status, data.message || "Unknown API error");
     }
 
-    return data.data.map((category) => ({
-      ...category,
-      name: category.name || null,
-      indicator: category.indicator || null,
-      indicatorDescription: category.indicatorDescription || null,
-      unit: category.unit || null,
-      midpointImpactCategory: category.midpointImpactCategory || null,
-      emissionCompartment: category.emissionCompartment || null,
-    }));
+    return data.data;
   } catch (error) {
-    // Handle network errors or errors thrown above
     if (error instanceof ApiError) {
       throw error;
     } else if (error instanceof Error) {
@@ -50,9 +42,9 @@ const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
   }
 };
 
-const fetchImpactCategoriesByMethod = async (methodId: number): Promise<ImpactCategory[]> => {
+const fetchImpactCategoriesByMethod = async (methodId: string): Promise<ImpactCategory[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/categories`,{
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/impact-categories`, {
       headers
     });
 
@@ -63,7 +55,7 @@ const fetchImpactCategoriesByMethod = async (methodId: number): Promise<ImpactCa
       );
     }
 
-    const data: ApiResponse = await response.json();
+    const data: ImpactCategoryListResponse = await response.json();
 
     if (data.status !== "Success") {
       throw new ApiError(response.status, data.message || "Unknown API error");
@@ -97,10 +89,11 @@ export const useImpactCategories = () => {
     },
   });
 };
-export const useImpactCategoriesByMethod = (methodId: number | null) => {
+
+export const useImpactCategoriesByMethod = (methodId: string) => {
   return useQuery<ImpactCategory[], ApiError>({
     queryKey: ["impactCategories", methodId],
-    queryFn: () => fetchImpactCategoriesByMethod(methodId!),
+    queryFn: () => fetchImpactCategoriesByMethod(methodId),
     enabled: !!methodId,
     retry: (failureCount, error) => {
       if (

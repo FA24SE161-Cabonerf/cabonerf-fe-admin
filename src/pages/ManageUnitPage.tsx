@@ -18,7 +18,6 @@ import { Unit } from "@/types/unit";
 import { useUnitGroups } from "@/api/manageUnitGroup";
 import { useUnits } from "@/api/manageUnit";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
-import Pagination from "@/components/pagination/Pagination";
 import UpdateUnitModal from "@/forms/manage-unit-form/UpdateUnitModal";
 
 export default function ManageUnitPage() {
@@ -27,18 +26,14 @@ export default function ManageUnitPage() {
 
   const searchParams = new URLSearchParams(location.search);
 
-  const [page, setPage] = useState(parseInt(searchParams.get("page") || "1"));
-  const [pageSize, setPageSize] = useState(
-    parseInt(searchParams.get("pageSize") || "10")
-  );
   const [unitGroupId, setUnitGroupId] = useState(
-    parseInt(searchParams.get("unitGroupId") || "0")
+    searchParams.get("unitGroupId") || "all"
   );
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || ""
   );
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
+  const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
 
   const { data: unitGroups, isLoading: isLoadingUnitGroups } = useUnitGroups();
   const {
@@ -46,42 +41,31 @@ export default function ManageUnitPage() {
     isLoading: isLoadingUnits,
     error,
     refetch,
-  } = useUnits(page, pageSize, unitGroupId);
+  } = useUnits(unitGroupId === "all" ? "" : unitGroupId);
 
   useEffect(() => {
     const params = new URLSearchParams();
-    params.set("page", page.toString());
-    params.set("pageSize", pageSize.toString());
-    params.set("unitGroupId", unitGroupId.toString());
+    if (unitGroupId !== "all") params.set("unitGroupId", unitGroupId);
     if (searchTerm) params.set("search", searchTerm);
     navigate(`?${params.toString()}`, { replace: true });
-  }, [page, pageSize, unitGroupId, searchTerm, navigate]);
+  }, [unitGroupId, searchTerm, navigate]);
 
-  const filteredUnits = unitsData?.data.listResult
-    ? unitsData.data.listResult.filter(
+  const filteredUnits = unitsData?.data
+    ? unitsData.data.filter(
         (unit) =>
           unit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           unit.unitGroup.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : [];
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     setSelectedUnitId(id);
     setIsUpdateModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log(`Delete unit with id: ${id}`);
     // Implement delete functionality here
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize);
-    setPage(1);
   };
 
   const handleUpdateUnit = async (updatedUnit: Unit) => {
@@ -107,16 +91,16 @@ export default function ManageUnitPage() {
           className="max-w-sm"
         />
         <Select
-          value={unitGroupId.toString()}
-          onValueChange={(value) => setUnitGroupId(Number(value))}
+          value={unitGroupId}
+          onValueChange={(value) => setUnitGroupId(value)}
         >
           <SelectTrigger className="w-fit">
             <SelectValue placeholder="Select Unit Group" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="0">All Unit Groups</SelectItem>
+            <SelectItem value="all">All Unit Groups</SelectItem>
             {unitGroups?.map((group: UnitGroup) => (
-              <SelectItem key={group.id} value={group.id.toString()}>
+              <SelectItem key={group.id} value={group.id}>
                 {group.name}
               </SelectItem>
             ))}
@@ -136,22 +120,13 @@ export default function ManageUnitPage() {
           </AlertDescription>
         </Alert>
       ) : (
-        <div>
-          <ScrollArea className="h-[calc(100vh-250px)]">
-            <UnitTable
-              units={filteredUnits}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          </ScrollArea>
-          <Pagination
-            page={page}
-            pageSize={pageSize}
-            totalPages={unitsData?.data.totalPage || 1}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
+        <ScrollArea className="h-[calc(100vh-250px)]">
+          <UnitTable
+            units={filteredUnits}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
-        </div>
+        </ScrollArea>
       )}
       {selectedUnitId && (
         <UpdateUnitModal

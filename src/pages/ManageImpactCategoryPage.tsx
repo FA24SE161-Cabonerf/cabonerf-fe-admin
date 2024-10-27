@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,25 +25,32 @@ const ManageImpactCategoryPage = () => {
 
   const searchParams = new URLSearchParams(location.search)
 
-  const [impactMethodId, setImpactMethodId] = useState<number | null>(
-    parseInt(searchParams.get("impactMethodId") || "1")
+  const [impactMethodId, setImpactMethodId] = useState<string | null>(
+    searchParams.get("impactMethodId") || null
   )
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || ""
   )
 
   const { data: impactMethods, isLoading: isLoadingImpactMethods } = useImpactMethods()
-  const { data: selectedMethod, isLoading: isLoadingSelectedMethod } = useImpactMethod(impactMethodId || 1)
+  
+  useEffect(() => {
+    if (impactMethods && impactMethods.length > 0 && !impactMethodId) {
+      setImpactMethodId(impactMethods[0].id)
+    }
+  }, [impactMethods, impactMethodId])
+
+  const { data: selectedMethod, isLoading: isLoadingSelectedMethod } = useImpactMethod(impactMethodId || '')
   const {
     data: impactCategories,
     isLoading: isLoadingCategories,
     error,
-  } = useImpactCategoriesByMethod(impactMethodId || 1)
+  } = useImpactCategoriesByMethod(impactMethodId || '')
 
   useEffect(() => {
     const params = new URLSearchParams()
     if (impactMethodId !== null) {
-      params.set("impactMethodId", impactMethodId.toString())
+      params.set("impactMethodId", impactMethodId)
     }
     if (searchTerm) params.set("search", searchTerm)
     navigate(`?${params.toString()}`, { replace: true })
@@ -52,15 +58,15 @@ const ManageImpactCategoryPage = () => {
 
   const filteredCategories = impactCategories?.filter(
     (category) =>
-      (category.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-      (category.indicator?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.indicator.toLowerCase().includes(searchTerm.toLowerCase())
   ) || []
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     console.log(`Edit impact category with id: ${id}`)
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log(`Delete impact category with id: ${id}`)
   }
 
@@ -102,15 +108,15 @@ const ManageImpactCategoryPage = () => {
           className="max-w-sm"
         />
         <Select
-          value={impactMethodId?.toString() || ""}
-          onValueChange={(value) => setImpactMethodId(Number(value))}
+          value={impactMethodId || ""}
+          onValueChange={(value) => setImpactMethodId(value)}
         >
           <SelectTrigger className="w-fit">
             <SelectValue placeholder="Select Impact Method" />
           </SelectTrigger>
           <SelectContent>
             {impactMethods?.map((method: ImpactMethod) => (
-              <SelectItem key={method.id} value={method.id.toString()}>
+              <SelectItem key={method.id} value={method.id}>
                 {method.name}
               </SelectItem>
             ))}

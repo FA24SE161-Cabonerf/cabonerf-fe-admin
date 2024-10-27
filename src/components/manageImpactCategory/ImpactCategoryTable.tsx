@@ -19,8 +19,8 @@ import { ImpactCategory } from "@/types/impactCategory";
 
 interface ImpactCategoriesTableProps {
   categories: ImpactCategory[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const ImpactCategoryTable = ({

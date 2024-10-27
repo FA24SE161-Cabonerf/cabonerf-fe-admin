@@ -42,7 +42,7 @@ const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
   }
 };
 
-const fetchImpactMethod = async (id: number): Promise<ImpactMethod> => {
+const fetchImpactMethod = async (id: string): Promise<ImpactMethod> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`,{
       headers
@@ -90,7 +90,7 @@ export const useImpactMethods = () => {
   });
 };
 
-export const useImpactMethod = (id: number) => {
+export const useImpactMethod = (id: string) => {
   return useQuery<ImpactMethod, ApiError>({
     queryKey: ["impactMethod", id],
     queryFn: () => fetchImpactMethod(id),
