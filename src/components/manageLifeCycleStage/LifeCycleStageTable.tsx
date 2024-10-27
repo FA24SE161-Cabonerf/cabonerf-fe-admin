@@ -6,8 +6,8 @@ import { LifeCycleStage } from '@/types/lifeCycleStage'
 
 interface LifeCycleStagesTableProps {
   stages: LifeCycleStage[]
-  onEdit: (id: number) => void
-  onDelete: (id: number) => void
+  onEdit: (id: string) => void
+  onDelete: (id: string) => void
 }
 
 const LifeCycleStagesTable = ({ stages, onEdit, onDelete }: LifeCycleStagesTableProps) => {

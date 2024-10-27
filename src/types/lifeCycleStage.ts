@@ -1,5 +1,5 @@
 export type LifeCycleStage = {
-  id: number;
+  id: string;
   name: string;
   description: string;
 }
