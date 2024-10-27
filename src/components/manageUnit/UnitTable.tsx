@@ -13,8 +13,8 @@ import { Unit } from "@/types/unit";
 
 interface UnitsTableProps {
   units: Unit[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const UnitTable = ({ units, onEdit, onDelete }: UnitsTableProps) => {

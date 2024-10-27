@@ -11,14 +11,10 @@ class ApiError extends Error {
   }
 }
 
-const fetchUnits = async (
-  page: number,
-  pageSize: number,
-  unitGroupId: number
-): Promise<ApiResponse> => {
+const fetchUnits = async (unitGroupId: string): Promise<ApiResponse> => {
   try {
     const response = await fetch(
-      `${VITE_BASE_URL}/units?currentPage=${page}&pageSize=${pageSize}&unitGroupId=${unitGroupId}`,
+      `${VITE_BASE_URL}/units?unitGroupId=${unitGroupId}`,
       { headers }
     );
 
@@ -47,14 +43,10 @@ const fetchUnits = async (
   }
 };
 
-export const useUnits = (
-  page: number,
-  pageSize: number,
-  unitGroupId: number
-) => {
+export const useUnits = (unitGroupId: string) => {
   return useQuery<ApiResponse, ApiError>({
-    queryKey: ["units", page, pageSize, unitGroupId],
-    queryFn: () => fetchUnits(page, pageSize, unitGroupId),
+    queryKey: ["units", unitGroupId],
+    queryFn: () => fetchUnits(unitGroupId),
     retry: (failureCount, error) => {
       if (
         error instanceof ApiError &&
@@ -68,7 +60,7 @@ export const useUnits = (
   });
 };
 
-const fetchUnit = async (id: number): Promise<Unit> => {
+const fetchUnit = async (id: string): Promise<Unit> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/units/${id}`, {
       headers,
@@ -99,7 +91,7 @@ const fetchUnit = async (id: number): Promise<Unit> => {
   }
 };
 
-export const useUnit = (id: number) => {
+export const useUnit = (id: string) => {
   return useQuery<Unit, ApiError>({
     queryKey: ["unit", id],
     queryFn: () => fetchUnit(id),

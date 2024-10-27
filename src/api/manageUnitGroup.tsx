@@ -4,7 +4,12 @@ import {
   UnitGroupListResponse,
   UnitGroupResponse,
 } from "@/types/unitGroup";
-import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -46,10 +51,10 @@ const fetchUnitGroups = async (): Promise<UnitGroup[]> => {
   }
 };
 
-const fetchUnitGroup = async (id: number): Promise<UnitGroup> => {
+const fetchUnitGroup = async (id: string): Promise<UnitGroup> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
-      headers
+      headers,
     });
 
     if (!response.ok) {
@@ -77,13 +82,16 @@ const fetchUnitGroup = async (id: number): Promise<UnitGroup> => {
   }
 };
 
-const createUnitGroup = async (newUnitGroup: { unitGroupName: string; unitGroupType: string }): Promise<UnitGroup> => {
+const createUnitGroup = async (newUnitGroup: {
+  unitGroupName: string;
+  unitGroupType: string;
+}): Promise<UnitGroup> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/`, {
-      method: 'POST',
+      method: "POST",
       headers: {
         ...headers,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(newUnitGroup),
     });
@@ -106,13 +114,16 @@ const createUnitGroup = async (newUnitGroup: { unitGroupName: string; unitGroupT
   }
 };
 
-const updateUnitGroup = async (id: number, updatedUnitGroup: { unitGroupName: string; unitGroupType: string }): Promise<UnitGroup> => {
+const updateUnitGroup = async (
+  id: string,
+  updatedUnitGroup: { unitGroupName: string; unitGroupType: string }
+): Promise<UnitGroup> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
         ...headers,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedUnitGroup),
     });
@@ -135,10 +146,10 @@ const updateUnitGroup = async (id: number, updatedUnitGroup: { unitGroupName: st
   }
 };
 
-const deleteUnitGroup = async (id: number): Promise<UnitGroup> => {
+const deleteUnitGroup = async (id: string): Promise<UnitGroup> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers,
     });
 
@@ -160,20 +171,40 @@ const deleteUnitGroup = async (id: number): Promise<UnitGroup> => {
   }
 };
 
-export const useCreateUnitGroup = (): UseMutationResult<UnitGroup, ApiError, { unitGroupName: string; unitGroupType: string }> => {
-  return useMutation<UnitGroup, ApiError, { unitGroupName: string; unitGroupType: string }>({
+export const useCreateUnitGroup = (): UseMutationResult<
+  UnitGroup,
+  ApiError,
+  { unitGroupName: string; unitGroupType: string }
+> => {
+  return useMutation<
+    UnitGroup,
+    ApiError,
+    { unitGroupName: string; unitGroupType: string }
+  >({
     mutationFn: createUnitGroup,
   });
 };
 
-export const useUpdateUnitGroup = (): UseMutationResult<UnitGroup, ApiError, { id: number; unitGroupName: string; unitGroupType: string }> => {
-  return useMutation<UnitGroup, ApiError, { id: number; unitGroupName: string; unitGroupType: string }>({
+export const useUpdateUnitGroup = (): UseMutationResult<
+  UnitGroup,
+  ApiError,
+  { id: string; unitGroupName: string; unitGroupType: string }
+> => {
+  return useMutation<
+    UnitGroup,
+    ApiError,
+    { id: string; unitGroupName: string; unitGroupType: string }
+  >({
     mutationFn: ({ id, ...data }) => updateUnitGroup(id, data),
   });
 };
 
-export const useDeleteUnitGroup = (): UseMutationResult<UnitGroup, ApiError, number> => {
-  return useMutation<UnitGroup, ApiError, number>({
+export const useDeleteUnitGroup = (): UseMutationResult<
+  UnitGroup,
+  ApiError,
+  string
+> => {
+  return useMutation<UnitGroup, ApiError, string>({
     mutationFn: deleteUnitGroup,
   });
 };
@@ -196,7 +227,7 @@ export const useUnitGroups = (): UseQueryResult<UnitGroup[], ApiError> => {
 };
 
 export const useUnitGroup = (
-  id: number
+  id: string
 ): UseQueryResult<UnitGroup, ApiError> => {
   return useQuery<UnitGroup, ApiError>({
     queryKey: ["unitGroup", id],

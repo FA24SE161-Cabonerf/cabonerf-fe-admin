@@ -93,7 +93,7 @@ const ManageUnitGroupPage = () => {
   };
 
   const handleUpdateUnitGroup = async (
-    id: number,
+    id: string,
     data: { unitGroupName: string; unitGroupType: string }
   ) => {
     try {
@@ -115,7 +115,7 @@ const ManageUnitGroupPage = () => {
     }
   };
 
-  const handleDeleteUnitGroup = async (id: number) => {
+  const handleDeleteUnitGroup = async (id: string) => {
     try {
       await deleteUnitGroupMutation.mutateAsync(id);
       refetch();
@@ -136,7 +136,7 @@ const ManageUnitGroupPage = () => {
     }
   };
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     const unitGroup = unitGroups?.find((ug) => ug.id === id);
     if (unitGroup) {
       setSelectedUnitGroup(unitGroup);
@@ -144,7 +144,7 @@ const ManageUnitGroupPage = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     const unitGroup = unitGroups?.find((ug) => ug.id === id);
     if (unitGroup) {
       setSelectedUnitGroup(unitGroup);

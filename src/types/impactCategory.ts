@@ -1,40 +1,51 @@
+// Unit type
 export type Unit = {
-  id: number
-  name: string
-  conversionFactor: number
+  id: string;
+  name: string;
+  conversionFactor: number;
   unitGroup: {
-    id: number
-    name: string
-    unitGroupType: string
-  }
-  default: boolean
+    id: string;
+    name: string;
+    unitGroupType: string;
+  };
+  default: boolean;
 }
 
+// MidpointImpactCategory type
 export type MidpointImpactCategory = {
-  id: number
-  name: string
-  description: string
-  abbr: string
-  unit: Unit
+  id: string;
+  name: string;
+  description: string;
+  abbr: string;
+  unit: Unit;
 }
 
+// EmissionCompartment type
 export type EmissionCompartment = {
-  id: number
-  name: string
+  id: string;
+  name: string;
+  description: string;
 }
 
+// ImpactCategory type
 export type ImpactCategory = {
-  id: number
-  name: string | null
-  indicator: string | null
-  indicatorDescription: string | null
-  unit: string | null
-  midpointImpactCategory: MidpointImpactCategory | null
-  emissionCompartment: EmissionCompartment | null
+  id: string;
+  name: string;
+  indicator: string;
+  iconUrl: string;
+  indicatorDescription: string;
+  unit: string;
+  midpointImpactCategory: MidpointImpactCategory;
+  emissionCompartment: EmissionCompartment;
 }
 
-export type ApiResponse = {
-  status: string
-  message: string
-  data: ImpactCategory[]
+// ApiResponse type
+export type ApiResponse<T> = {
+  status: string;
+  message: string;
+  data: T;
 }
+
+// Specific response types
+export type ImpactCategoryResponse = ApiResponse<ImpactCategory>;
+export type ImpactCategoryListResponse = ApiResponse<ImpactCategory[]>;

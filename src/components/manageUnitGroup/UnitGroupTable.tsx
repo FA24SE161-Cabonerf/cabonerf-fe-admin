@@ -13,8 +13,8 @@ import { UnitGroup } from "@/types/unitGroup";
 
 interface UnitGroupsTableProps {
   unitGroups: UnitGroup[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const UnitGroupTable = ({

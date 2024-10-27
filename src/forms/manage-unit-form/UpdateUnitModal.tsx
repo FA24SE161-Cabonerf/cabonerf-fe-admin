@@ -19,7 +19,7 @@ const formSchema = z.object({
 type UpdateUnitModalProps = {
   isOpen: boolean
   onClose: () => void
-  unitId: number
+  unitId: string
   onUpdateUnit: (unit: Unit) => void
 }
 
