@@ -13,7 +13,7 @@ class ApiError extends Error {
 
 const fetchMidpointSubstances = async (page: number, pageSize: number): Promise<ApiResponse> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/admin/midpoints?currentPage=${page}&pageSize=${pageSize}`, {
+    const response = await fetch(`${VITE_BASE_URL}/impacts/admin/midpoint-factors?currentPage=${page}&pageSize=${pageSize}`, {
       headers
     })
     

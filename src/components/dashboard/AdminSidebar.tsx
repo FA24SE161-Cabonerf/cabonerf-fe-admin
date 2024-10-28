@@ -93,6 +93,15 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
               <span className="ml-3">Manage Life Cycle Stage</span>
             </Link>
           </li>
+          <li>
+            <Link
+              to="/emission-compartment"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <RecycleIcon className="h-5 w-5" />
+              <span className="ml-3">Manage Emission Compartment</span>
+            </Link>
+          </li>
         </ul>
       </div>
     </aside>
