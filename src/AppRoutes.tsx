@@ -14,6 +14,7 @@ import ManageUnitGroupPage from "./pages/MangeUnitGroupPage";
 import ManageUnitPage from "./pages/ManageUnitPage";
 import ManageLifeCycleStagePage from "./pages/ManageLifeCycleStagePage";
 import ManageMidpointSubstancePage from "./pages/ManageMidpointSubstancePage";
+import ManageEmissionCompartmentPage from "./pages/ManageEmissionCompartmentPage ";
 
 
 const AppRoutes = () => {
@@ -98,6 +99,14 @@ const AppRoutes = () => {
           element={
             <AdminDashboardLayout>
               <ManageLifeCycleStagePage />
+            </AdminDashboardLayout>
+          }
+        />
+            <Route
+          path="/emission-compartment"
+          element={
+            <AdminDashboardLayout>
+              <ManageEmissionCompartmentPage />
             </AdminDashboardLayout>
           }
         />
