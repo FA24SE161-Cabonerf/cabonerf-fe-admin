@@ -1,4 +1,15 @@
-import { BoxIcon, ChartBarStackedIcon, FileText, LayoutDashboard, RecycleIcon, Settings, UngroupIcon, Users } from "lucide-react";
+import {
+  BoxIcon,
+  ChartBarStackedIcon,
+  FileText,
+  LayoutDashboard,
+  LeafyGreenIcon,
+  RecycleIcon,
+  Settings,
+  TelescopeIcon,
+  UngroupIcon,
+  Users,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 type AdminSidebarProps = {
@@ -98,8 +109,17 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
               to="/emission-compartment"
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
-              <RecycleIcon className="h-5 w-5" />
+              <LeafyGreenIcon className="h-5 w-5" />
               <span className="ml-3">Manage Emission Compartment</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/perspective"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <TelescopeIcon className="h-5 w-5" />
+              <span className="ml-3">Manage Perspective</span>
             </Link>
           </li>
         </ul>

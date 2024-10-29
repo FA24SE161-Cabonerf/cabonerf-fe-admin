@@ -1,9 +1,4 @@
-export type Perspective = {
-  id: string;
-  name: string;
-  description: string;
-  abbr: string;
-}
+import { Perspective } from "./perspective";
 
 export type ImpactMethod = {
   id: string;
