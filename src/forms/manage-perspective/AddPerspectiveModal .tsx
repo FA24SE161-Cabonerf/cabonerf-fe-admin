@@ -7,18 +7,17 @@ import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 const formSchema = z.object({
-  unitGroupName: z.string().min(1, 'Unit group name is required'),
-  unitGroupType: z.enum(['Impact', 'Normal'], {
-    required_error: 'Please select a unit group type',
-  }),
+  name: z.string().min(1, 'Perspective name is required'),
+  description: z.string().min(1, 'Description is required'),
+  abbr: z.string().min(1, 'Abbreviation is required'),
 })
 
 type FormData = z.infer<typeof formSchema>;
 
-interface AddUnitGroupModalProps {
+interface AddPerspectiveModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: FormData) => Promise<void>;
@@ -26,12 +25,13 @@ interface AddUnitGroupModalProps {
   error: string | null;
 }
 
-const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddUnitGroupModalProps) => {
+const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddPerspectiveModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      unitGroupName: '',
-      unitGroupType: undefined,
+      name: '',
+      description: '',
+      abbr: '',
     },
   })
 
@@ -41,20 +41,20 @@ const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: A
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] h-[350px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Unit Group</DialogTitle>
+          <DialogTitle>Add New Perspective</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="unitGroupName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter unit group name" {...field} />
+                    <Input placeholder="Enter perspective name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -62,21 +62,26 @@ const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: A
             />
             <FormField
               control={form.control}
-              name="unitGroupType"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a unit group type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Impact">Impact</SelectItem>
-                      <SelectItem value="Normal">Normal</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter perspective description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="abbr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Abbreviation</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter abbreviation" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -90,7 +95,7 @@ const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: A
             )}
             <DialogFooter>
               <Button className='mt-6' type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Unit Group'}
+                {isSubmitting ? 'Adding...' : 'Add Perspective'}
               </Button>
             </DialogFooter>
           </form>
@@ -100,4 +105,4 @@ const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: A
   )
 }
 
-export default AddUnitGroupModal
+export default AddPerspectiveModal

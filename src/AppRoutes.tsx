@@ -15,7 +15,7 @@ import ManageUnitPage from "./pages/ManageUnitPage";
 import ManageLifeCycleStagePage from "./pages/ManageLifeCycleStagePage";
 import ManageMidpointSubstancePage from "./pages/ManageMidpointSubstancePage";
 import ManageEmissionCompartmentPage from "./pages/ManageEmissionCompartmentPage ";
-
+import ManagePerspectivePage from "./pages/ManagePerspectivePage ";
 
 const AppRoutes = () => {
   return (
@@ -38,7 +38,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-          <Route
+        <Route
           path="/update-profile"
           element={
             <AdminDashboardLayout>
@@ -46,7 +46,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-          <Route
+        <Route
           path="/manage-user"
           element={
             <AdminDashboardLayout>
@@ -54,7 +54,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-             <Route
+        <Route
           path="/midpoint-substance"
           element={
             <AdminDashboardLayout>
@@ -62,7 +62,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-          <Route
+        <Route
           path="/impact-category"
           element={
             <AdminDashboardLayout>
@@ -70,7 +70,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-         <Route
+        <Route
           path="/impact-method"
           element={
             <AdminDashboardLayout>
@@ -78,7 +78,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-           <Route
+        <Route
           path="/unit-group"
           element={
             <AdminDashboardLayout>
@@ -86,7 +86,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-           <Route
+        <Route
           path="/unit"
           element={
             <AdminDashboardLayout>
@@ -94,7 +94,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-           <Route
+        <Route
           path="/life-cycle-stage"
           element={
             <AdminDashboardLayout>
@@ -102,11 +102,19 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-            <Route
+        <Route
           path="/emission-compartment"
           element={
             <AdminDashboardLayout>
               <ManageEmissionCompartmentPage />
+            </AdminDashboardLayout>
+          }
+        />
+        <Route
+          path="/perspective"
+          element={
+            <AdminDashboardLayout>
+              <ManagePerspectivePage />
             </AdminDashboardLayout>
           }
         />
