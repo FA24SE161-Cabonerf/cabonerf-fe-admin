@@ -20,7 +20,7 @@ import { useUnits } from "@/api/manageUnit";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import UpdateUnitModal from "@/forms/manage-unit-form/UpdateUnitModal";
 
-export default function ManageUnitPage() {
+const ManageUnitPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -37,7 +37,7 @@ export default function ManageUnitPage() {
 
   const { data: unitGroups, isLoading: isLoadingUnitGroups } = useUnitGroups();
   const {
-    data: unitsData,
+    data: units,
     isLoading: isLoadingUnits,
     error,
     refetch,
@@ -50,8 +50,8 @@ export default function ManageUnitPage() {
     navigate(`?${params.toString()}`, { replace: true });
   }, [unitGroupId, searchTerm, navigate]);
 
-  const filteredUnits = unitsData?.data
-    ? unitsData.data.filter(
+  const filteredUnits = units
+    ? units.filter(
         (unit) =>
           unit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           unit.unitGroup.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -70,7 +70,7 @@ export default function ManageUnitPage() {
 
   const handleUpdateUnit = async (updatedUnit: Unit) => {
     // Implement the API call to update the unit here
-    console.log('Updating unit:', updatedUnit);
+    console.log("Updating unit:", updatedUnit);
     // After successful update, refetch the units data
     await refetch();
   };
@@ -138,4 +138,6 @@ export default function ManageUnitPage() {
       )}
     </div>
   );
-}
+};
+
+export default ManageUnitPage;

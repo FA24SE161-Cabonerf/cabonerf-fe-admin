@@ -1,3 +1,5 @@
+import { ApiResponse } from "./apiResponse";
+
 // Unit type
 export type Unit = {
   id: string;
@@ -39,12 +41,6 @@ export type ImpactCategory = {
   emissionCompartment: EmissionCompartment;
 }
 
-// ApiResponse type
-export type ApiResponse<T> = {
-  status: string;
-  message: string;
-  data: T;
-}
 
 // Specific response types
 export type ImpactCategoryResponse = ApiResponse<ImpactCategory>;

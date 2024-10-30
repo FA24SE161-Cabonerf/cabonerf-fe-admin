@@ -1,5 +1,5 @@
 import { headers } from '@/constants/headers'
-import { ApiResponse, LifeCycleStage } from '@/types/lifeCycleStage'
+import {  LifeCycleStage, LifeCycleStageListResponse } from '@/types/lifeCycleStage'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
@@ -21,7 +21,7 @@ const fetchLifeCycleStages = async (): Promise<LifeCycleStage[]> => {
       throw new ApiError(response.status, `HTTP error! status: ${response.status}`)
     }
     
-    const data: ApiResponse = await response.json()
+    const data: LifeCycleStageListResponse = await response.json()
     
     if (data.status !== 'Success') {
       throw new ApiError(response.status, data.message || 'Unknown API error')

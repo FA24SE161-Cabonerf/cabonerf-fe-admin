@@ -10,15 +10,10 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { handleApiResponse } from "./apiUtility";
+import { ApiResponse } from "@/types/apiResponse";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
 
 const fetchUnitGroups = async (): Promise<UnitGroup[]> => {
   try {
@@ -26,27 +21,14 @@ const fetchUnitGroups = async (): Promise<UnitGroup[]> => {
       headers,
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: UnitGroupListResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Unexpected error: ${error.message}`);
+    console.error("Error in fetchUnitGroups:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch unit groups: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching unit groups");
     }
   }
 };
@@ -57,27 +39,14 @@ const fetchUnitGroup = async (id: string): Promise<UnitGroup> => {
       headers,
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: UnitGroupResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Unexpected error: ${error.message}`);
+    console.error("Error in fetchUnitGroup:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch unit group: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching the unit group");
     }
   }
 };
@@ -97,19 +66,13 @@ const createUnitGroup = async (newUnitGroup: {
     });
 
     const data: UnitGroupResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in createUnitGroup:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to create unit group: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while creating the unit group");
     }
   }
 };
@@ -129,56 +92,44 @@ const updateUnitGroup = async (
     });
 
     const data: UnitGroupResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in updateUnitGroup:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to update unit group: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while updating the unit group");
     }
   }
 };
 
-const deleteUnitGroup = async (id: string): Promise<UnitGroup> => {
+const deleteUnitGroup = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
       method: "DELETE",
       headers,
     });
 
-    const data: UnitGroupResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    const data: ApiResponse<void> = await response.json();
+    handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in deleteUnitGroup:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete unit group: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while deleting the unit group");
     }
   }
 };
 
 export const useCreateUnitGroup = (): UseMutationResult<
   UnitGroup,
-  ApiError,
+  Error,
   { unitGroupName: string; unitGroupType: string }
 > => {
   return useMutation<
     UnitGroup,
-    ApiError,
+    Error,
     { unitGroupName: string; unitGroupType: string }
   >({
     mutationFn: createUnitGroup,
@@ -187,61 +138,35 @@ export const useCreateUnitGroup = (): UseMutationResult<
 
 export const useUpdateUnitGroup = (): UseMutationResult<
   UnitGroup,
-  ApiError,
+  Error,
   { id: string; unitGroupName: string; unitGroupType: string }
 > => {
   return useMutation<
     UnitGroup,
-    ApiError,
+    Error,
     { id: string; unitGroupName: string; unitGroupType: string }
   >({
     mutationFn: ({ id, ...data }) => updateUnitGroup(id, data),
   });
 };
 
-export const useDeleteUnitGroup = (): UseMutationResult<
-  UnitGroup,
-  ApiError,
-  string
-> => {
-  return useMutation<UnitGroup, ApiError, string>({
+export const useDeleteUnitGroup = (): UseMutationResult<void, Error, string> => {
+  return useMutation<void, Error, string>({
     mutationFn: deleteUnitGroup,
   });
 };
 
-export const useUnitGroups = (): UseQueryResult<UnitGroup[], ApiError> => {
-  return useQuery<UnitGroup[], ApiError>({
+export const useUnitGroups = (): UseQueryResult<UnitGroup[], Error> => {
+  return useQuery<UnitGroup[], Error>({
     queryKey: ["unitGroups"],
     queryFn: fetchUnitGroups,
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
   });
 };
 
-export const useUnitGroup = (
-  id: string
-): UseQueryResult<UnitGroup, ApiError> => {
-  return useQuery<UnitGroup, ApiError>({
+export const useUnitGroup = (id: string): UseQueryResult<UnitGroup, Error> => {
+  return useQuery<UnitGroup, Error>({
     queryKey: ["unitGroup", id],
     queryFn: () => fetchUnitGroup(id),
     enabled: !!id,
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
   });
 };

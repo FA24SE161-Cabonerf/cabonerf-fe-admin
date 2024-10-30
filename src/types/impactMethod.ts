@@ -1,3 +1,4 @@
+import { ApiResponse } from "./apiResponse";
 import { Perspective } from "./perspective";
 
 export type ImpactMethod = {
@@ -9,11 +10,6 @@ export type ImpactMethod = {
   perspective: Perspective;
 }
 
-export type ApiResponse<T> = {
-  status: string;
-  message: string;
-  data: T;
-}
 
 export type ImpactMethodListResponse = ApiResponse<ImpactMethod[]>;
 export type ImpactMethodResponse = ApiResponse<ImpactMethod>;

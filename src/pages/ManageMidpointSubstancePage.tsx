@@ -10,7 +10,6 @@ import { useMidpointSubstances } from "@/api/manageMidpointSubstance";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import Pagination from "@/components/pagination/Pagination";
 
-
 const ManageMidpointSubstancePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +39,7 @@ const ManageMidpointSubstancePage = () => {
   }, [page, pageSize, searchTerm, navigate]);
 
   const filteredSubstances =
-    midpointSubstancesData?.data.listResult.filter(
+    midpointSubstancesData?.listResult.filter(
       (substance) =>
         substance.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         substance.casNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,7 +92,7 @@ const ManageMidpointSubstancePage = () => {
           <Pagination
             page={page}
             pageSize={pageSize}
-            totalPages={midpointSubstancesData?.data.totalPage || 1}
+            totalPages={midpointSubstancesData?.totalPage || 1}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
           />

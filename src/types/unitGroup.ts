@@ -1,3 +1,4 @@
+import { ApiResponse } from "./apiResponse";
 
 export type UnitGroup = {
   id: string;
@@ -5,11 +6,7 @@ export type UnitGroup = {
   unitGroupType: string;
 }
 
-export type ApiResponse<T> = {
-  status: string;
-  message: string;
-  data: T;
-}
+
 
 export type UnitGroupListResponse = ApiResponse<UnitGroup[]>;
 export type UnitGroupResponse = ApiResponse<UnitGroup>;
