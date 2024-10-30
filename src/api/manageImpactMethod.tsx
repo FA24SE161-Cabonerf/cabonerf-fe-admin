@@ -1,109 +1,198 @@
 import { headers } from "@/constants/headers";
-import { ApiResponse, ImpactMethod } from "@/types/impactMethod";
-import { useQuery } from "@tanstack/react-query";
+import { ImpactMethod, ImpactMethodListResponse, ImpactMethodResponse } from "@/types/impactMethod";
+import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
+import { handleApiResponse } from "./apiUtility";
+import { ApiResponse } from "@/types/apiResponse";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
-
 const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`,{
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`, {
       headers
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
-    const data: ApiResponse<ImpactMethod[]> = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    const data: ImpactMethodListResponse = await response.json();
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Network error: ${error.message}`);
+    console.error("Error in fetchImpactMethods:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch impact methods: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching impact methods");
     }
   }
 };
 
 const fetchImpactMethod = async (id: string): Promise<ImpactMethod> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`,{
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
       headers
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
-    const data: ApiResponse<ImpactMethod> = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    const data: ImpactMethodResponse = await response.json();
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Network error: ${error.message}`);
+    console.error("Error in fetchImpactMethod:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch impact method: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching the impact method");
     }
   }
 };
 
-export const useImpactMethods = () => {
-  return useQuery<ImpactMethod[], ApiError>({
+const createImpactMethod = async (newMethod: {
+  name: string;
+  description: string;
+  version: string;
+  reference: string;
+  perspectiveId: string;
+}): Promise<ImpactMethod> => {
+  try {
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newMethod),
+    });
+
+    const data: ImpactMethodResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in createImpactMethod:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to create impact method: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while creating the impact method");
+    }
+  }
+};
+
+const updateImpactMethod = async (
+  id: string,
+  updatedMethod: {
+    name: string;
+    description: string;
+    version: string;
+    reference: string;
+    perspectiveId: string;
+  }
+): Promise<ImpactMethod> => {
+  try {
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
+      method: "PUT",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedMethod),
+    });
+
+    const data: ImpactMethodResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in updateImpactMethod:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to update impact method: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while updating the impact method");
+    }
+  }
+};
+
+const deleteImpactMethod = async (id: string): Promise<void> => {
+  try {
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
+      method: "DELETE",
+      headers,
+    });
+
+    const data: ApiResponse<void> = await response.json();
+    handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in deleteImpactMethod:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete impact method: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while deleting the impact method");
+    }
+  }
+};
+
+export const useImpactMethods = (): UseQueryResult<ImpactMethod[], Error> => {
+  return useQuery<ImpactMethod[], Error>({
     queryKey: ["impactMethods"],
     queryFn: fetchImpactMethods,
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
   });
 };
 
-export const useImpactMethod = (id: string) => {
-  return useQuery<ImpactMethod, ApiError>({
+export const useImpactMethod = (id: string): UseQueryResult<ImpactMethod, Error> => {
+  return useQuery<ImpactMethod, Error>({
     queryKey: ["impactMethod", id],
     queryFn: () => fetchImpactMethod(id),
     enabled: !!id,
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
+  });
+};
+
+export const useCreateImpactMethod = (): UseMutationResult<
+  ImpactMethod,
+  Error,
+  {
+    name: string;
+    description: string;
+    version: string;
+    reference: string;
+    perspectiveId: string;
+  }
+> => {
+  return useMutation<
+    ImpactMethod,
+    Error,
+    {
+      name: string;
+      description: string;
+      version: string;
+      reference: string;
+      perspectiveId: string;
+    }
+  >({
+    mutationFn: createImpactMethod,
+  });
+};
+
+export const useUpdateImpactMethod = (): UseMutationResult<
+  ImpactMethod,
+  Error,
+  {
+    id: string;
+    name: string;
+    description: string;
+    version: string;
+    reference: string;
+    perspectiveId: string;
+  }
+> => {
+  return useMutation<
+    ImpactMethod,
+    Error,
+    {
+      id: string;
+      name: string;
+      description: string;
+      version: string;
+      reference: string;
+      perspectiveId: string;
+    }
+  >({
+    mutationFn: ({ id, ...data }) => updateImpactMethod(id, data),
+  });
+};
+
+export const useDeleteImpactMethod = (): UseMutationResult<void, Error, string> => {
+  return useMutation<void, Error, string>({
+    mutationFn: deleteImpactMethod,
   });
 };

@@ -1,6 +1,6 @@
 import { headers } from "@/constants/headers";
-import { ApiResponse, Unit } from "@/types/unit";
-import { useQuery } from "@tanstack/react-query";
+import { UnitListResponse, UnitResponse, Unit } from "@/types/unit";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -11,7 +11,7 @@ class ApiError extends Error {
   }
 }
 
-const fetchUnits = async (unitGroupId: string): Promise<ApiResponse> => {
+const fetchUnits = async (unitGroupId: string): Promise<Unit[]> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/units?unitGroupId=${unitGroupId}`,
@@ -25,13 +25,13 @@ const fetchUnits = async (unitGroupId: string): Promise<ApiResponse> => {
       );
     }
 
-    const data: ApiResponse = await response.json();
+    const data: UnitListResponse = await response.json();
 
     if (data.status !== "Success") {
       throw new ApiError(response.status, data.message || "Unknown API error");
     }
 
-    return data;
+    return data.data;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
@@ -43,8 +43,8 @@ const fetchUnits = async (unitGroupId: string): Promise<ApiResponse> => {
   }
 };
 
-export const useUnits = (unitGroupId: string) => {
-  return useQuery<ApiResponse, ApiError>({
+export const useUnits = (unitGroupId: string): UseQueryResult<Unit[], ApiError> => {
+  return useQuery<Unit[], ApiError>({
     queryKey: ["units", unitGroupId],
     queryFn: () => fetchUnits(unitGroupId),
     retry: (failureCount, error) => {
@@ -73,7 +73,7 @@ const fetchUnit = async (id: string): Promise<Unit> => {
       );
     }
 
-    const data = await response.json();
+    const data: UnitResponse = await response.json();
 
     if (data.status !== "Success") {
       throw new ApiError(response.status, data.message || "Unknown API error");
@@ -91,7 +91,7 @@ const fetchUnit = async (id: string): Promise<Unit> => {
   }
 };
 
-export const useUnit = (id: string) => {
+export const useUnit = (id: string): UseQueryResult<Unit, ApiError> => {
   return useQuery<Unit, ApiError>({
     queryKey: ["unit", id],
     queryFn: () => fetchUnit(id),

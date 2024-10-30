@@ -1,3 +1,4 @@
+import { ApiResponse } from "./apiResponse";
 import { UnitGroup } from "./unitGroup";
 
 export type Unit = {
@@ -6,17 +7,7 @@ export type Unit = {
   conversionFactor: number;
   unitGroup: UnitGroup;
   default: boolean;
-}
+};
 
-export type ApiResponse = {
-  status: string;
-  message: string;
-  data: Unit[];
-}
-
-export type UnitListResponse = ApiResponse;
-export type UnitResponse = {
-  status: string;
-  message: string;
-  data: Unit;
-}
+export type UnitListResponse = ApiResponse<Unit[]>;
+export type UnitResponse = ApiResponse<Unit>;

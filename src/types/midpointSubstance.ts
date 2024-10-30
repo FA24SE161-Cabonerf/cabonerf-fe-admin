@@ -1,3 +1,5 @@
+import { ApiResponse, PaginatedResponse } from "./apiResponse";
+
 export type MidpointSubstance = {
   id: string;
   casNumber: string;
@@ -9,16 +11,7 @@ export type MidpointSubstance = {
   individualist: number;
   hierarchist: number;
   egalitarian: number;
-}
+};
 
-export type PaginatedResponse = {
-  currentPage: number;
-  totalPage: number;
-  listResult: MidpointSubstance[];
-}
-
-export type ApiResponse = {
-  status: string;
-  message: string;
-  data: PaginatedResponse;
-}
+export type MidpointSubstanceListResponse = ApiResponse<PaginatedResponse<MidpointSubstance>>;
+export type MidpointSubstanceResponse = ApiResponse<MidpointSubstance>;

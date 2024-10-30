@@ -41,7 +41,7 @@ const AddUnitGroupModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: A
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] h-[350px]">
+      <DialogContent className="sm:max-w-[500px] h-[420px]">
         <DialogHeader>
           <DialogTitle>Add New Unit Group</DialogTitle>
         </DialogHeader>

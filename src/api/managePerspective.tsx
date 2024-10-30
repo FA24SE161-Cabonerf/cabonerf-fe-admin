@@ -10,15 +10,10 @@ import {
   useQuery,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { handleApiResponse } from "./apiUtility";
+import { ApiResponse } from "@/types/apiResponse";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
 
 const fetchPerspectives = async (): Promise<Perspective[]> => {
   try {
@@ -26,27 +21,14 @@ const fetchPerspectives = async (): Promise<Perspective[]> => {
       headers,
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: PerspectiveListResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Unexpected error: ${error.message}`);
+    console.error("Error in fetchPerspectives:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch perspectives: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching perspectives");
     }
   }
 };
@@ -66,27 +48,14 @@ const createPerspective = async (newPerspective: {
       body: JSON.stringify(newPerspective),
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: PerspectiveResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in createPerspective:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to create perspective: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while creating the perspective");
     }
   }
 };
@@ -109,27 +78,14 @@ const updatePerspective = async (
       body: JSON.stringify(updatedPerspective),
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: PerspectiveResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in updatePerspective:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to update perspective: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while updating the perspective");
     }
   }
 };
@@ -141,37 +97,26 @@ const deletePerspective = async (id: string): Promise<void> => {
       headers,
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
-    const data: PerspectiveResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
+    const data: ApiResponse<void> = await response.json();
+    handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(404, error.message);
+    console.error("Error in deletePerspective:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete perspective: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while deleting the perspective");
     }
   }
 };
 
 export const useCreatePerspective = (): UseMutationResult<
   Perspective,
-  ApiError,
+  Error,
   { name: string; description: string; abbr: string }
 > => {
   return useMutation<
     Perspective,
-    ApiError,
+    Error,
     { name: string; description: string; abbr: string }
   >({
     mutationFn: createPerspective,
@@ -180,41 +125,27 @@ export const useCreatePerspective = (): UseMutationResult<
 
 export const useUpdatePerspective = (): UseMutationResult<
   Perspective,
-  ApiError,
+  Error,
   { id: string; name: string; description: string; abbr: string }
 > => {
   return useMutation<
     Perspective,
-    ApiError,
+    Error,
     { id: string; name: string; description: string; abbr: string }
   >({
     mutationFn: ({ id, ...data }) => updatePerspective(id, data),
   });
 };
 
-export const useDeletePerspective = (): UseMutationResult<
-  void,
-  ApiError,
-  string
-> => {
-  return useMutation<void, ApiError, string>({
+export const useDeletePerspective = (): UseMutationResult<void, Error, string> => {
+  return useMutation<void, Error, string>({
     mutationFn: deletePerspective,
   });
 };
 
-export const usePerspectives = (): UseQueryResult<Perspective[], ApiError> => {
-  return useQuery<Perspective[], ApiError>({
+export const usePerspectives = (): UseQueryResult<Perspective[], Error> => {
+  return useQuery<Perspective[], Error>({
     queryKey: ["perspectives"],
     queryFn: fetchPerspectives,
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
   });
 };
