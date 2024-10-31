@@ -181,11 +181,9 @@ const ManageUnitGroupPage = () => {
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error.status === 404
-              ? "Unit groups not found."
-              : error.status >= 500
-              ? "Server error. Please try again later."
-              : error.message}
+            {error instanceof Error
+              ? error.message
+              : "An unknown error occurred"}
           </AlertDescription>
         </Alert>
       ) : (

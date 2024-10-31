@@ -70,6 +70,15 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
           </li>
           <li>
             <Link
+              to="/midpoint-impact-category"
+              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
+            >
+              <ChartBarStackedIcon className="h-5 w-5" />
+              <span className="ml-3">Manage midpoint impact category</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/impact-method"
               className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
             >
