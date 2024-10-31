@@ -16,9 +16,10 @@ import UnitTable from "@/components/manageUnit/UnitTable";
 import { UnitGroup } from "@/types/unitGroup";
 import { Unit } from "@/types/unit";
 import { useUnitGroups } from "@/api/manageUnitGroup";
-import { useUnits } from "@/api/manageUnit";
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
+import { useUnits, useUnitsByUnitGroup } from "@/api/manageUnit";
+
 import UpdateUnitModal from "@/forms/manage-unit-form/UpdateUnitModal";
+import SkeletonTable from "@/components/sketeton/SkeletonTable";
 
 const ManageUnitPage = () => {
   const navigate = useNavigate();
@@ -36,12 +37,16 @@ const ManageUnitPage = () => {
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
 
   const { data: unitGroups, isLoading: isLoadingUnitGroups } = useUnitGroups();
-  const {
-    data: units,
-    isLoading: isLoadingUnits,
-    error,
-    refetch,
-  } = useUnits(unitGroupId === "all" ? "" : unitGroupId);
+  const { 
+    data: allUnits, 
+    isLoading: isLoadingAllUnits, 
+    error: allUnitsError 
+  } = useUnits();
+  const { 
+    data: unitsByGroup, 
+    isLoading: isLoadingUnitsByGroup, 
+    error: unitsByGroupError 
+  } = useUnitsByUnitGroup(unitGroupId !== "all" ? unitGroupId : "");
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -49,6 +54,10 @@ const ManageUnitPage = () => {
     if (searchTerm) params.set("search", searchTerm);
     navigate(`?${params.toString()}`, { replace: true });
   }, [unitGroupId, searchTerm, navigate]);
+
+  const units = unitGroupId === "all" ? allUnits : unitsByGroup;
+  const isLoadingUnits = unitGroupId === "all" ? isLoadingAllUnits : isLoadingUnitsByGroup;
+  const error = unitGroupId === "all" ? allUnitsError : unitsByGroupError;
 
   const filteredUnits = units
     ? units.filter(
@@ -72,7 +81,11 @@ const ManageUnitPage = () => {
     // Implement the API call to update the unit here
     console.log("Updating unit:", updatedUnit);
     // After successful update, refetch the units data
-    await refetch();
+    if (unitGroupId === "all") {
+      // Refetch all units
+    } else {
+      // Refetch units for the specific group
+    }
   };
 
   return (

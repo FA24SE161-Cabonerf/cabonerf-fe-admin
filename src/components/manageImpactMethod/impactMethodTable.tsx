@@ -29,6 +29,7 @@ const ImpactMethodsTable = ({
           <TableHead>Name</TableHead>
           <TableHead>Version</TableHead>
           <TableHead>Perspective</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Reference</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -39,6 +40,7 @@ const ImpactMethodsTable = ({
             <TableCell className="font-medium">{method.name}</TableCell>
             <TableCell>{method.version}</TableCell>
             <TableCell>{`${method.perspective.name} (${method.perspective.abbr})`}</TableCell>
+            <TableCell>{`${method.description}`}</TableCell>
             <TableCell>{method.reference || "N/A"}</TableCell>
             <TableCell>
               <Button

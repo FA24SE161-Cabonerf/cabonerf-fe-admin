@@ -30,30 +30,38 @@ const UnitTable = ({ units, onEdit, onDelete }: UnitsTableProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {units.map((unit) => (
-          <TableRow key={unit.id}>
-            <TableCell className="font-medium">{unit.name}</TableCell>
-            <TableCell>{unit.conversionFactor}</TableCell>
-            <TableCell>{unit.unitGroup.name}</TableCell>
-            <TableCell>{unit.default ? "Yes" : "No"}</TableCell>
-            <TableCell>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onEdit(unit.id)}
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onDelete(unit.id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+        {units.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={5} className="h-24 text-center">
+              No units found.
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          units.map((unit) => (
+            <TableRow key={unit.id}>
+              <TableCell className="font-medium">{unit.name}</TableCell>
+              <TableCell>{unit.conversionFactor}</TableCell>
+              <TableCell>{unit.unitGroup.name}</TableCell>
+              <TableCell>{unit.default ? "Yes" : "No"}</TableCell>
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onEdit(unit.id)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDelete(unit.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );

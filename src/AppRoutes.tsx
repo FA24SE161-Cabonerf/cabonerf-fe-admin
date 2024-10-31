@@ -16,6 +16,7 @@ import ManageLifeCycleStagePage from "./pages/ManageLifeCycleStagePage";
 import ManageMidpointSubstancePage from "./pages/ManageMidpointSubstancePage";
 import ManageEmissionCompartmentPage from "./pages/ManageEmissionCompartmentPage ";
 import ManagePerspectivePage from "./pages/ManagePerspectivePage ";
+import ManageMidpointImpactCategoryPage from "./pages/ManageMidpointImpactCategoryPage";
 
 const AppRoutes = () => {
   return (
@@ -67,6 +68,14 @@ const AppRoutes = () => {
           element={
             <AdminDashboardLayout>
               <ManageImpactCategoryPage />
+            </AdminDashboardLayout>
+          }
+        />
+         <Route
+          path="/midpoint-impact-category"
+          element={
+            <AdminDashboardLayout>
+              <ManageMidpointImpactCategoryPage />
             </AdminDashboardLayout>
           }
         />

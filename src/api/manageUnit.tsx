@@ -1,63 +1,43 @@
 import { headers } from "@/constants/headers";
 import { UnitListResponse, UnitResponse, Unit } from "@/types/unit";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { handleApiResponse } from "./apiUtility";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
-
-const fetchUnits = async (unitGroupId: string): Promise<Unit[]> => {
+const fetchUnits = async (): Promise<Unit[]> => {
   try {
-    const response = await fetch(
-      `${VITE_BASE_URL}/units?unitGroupId=${unitGroupId}`,
-      { headers }
-    );
-
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
+    const response = await fetch(`${VITE_BASE_URL}/units`, { headers });
 
     const data: UnitListResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Network error: ${error.message}`);
+    console.error("Error in fetchAllUnits:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch all units: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching all units");
     }
   }
 };
 
-export const useUnits = (unitGroupId: string): UseQueryResult<Unit[], ApiError> => {
-  return useQuery<Unit[], ApiError>({
-    queryKey: ["units", unitGroupId],
-    queryFn: () => fetchUnits(unitGroupId),
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
-  });
+const fetchUnitsByUnitGroup = async (unitGroupId: string): Promise<Unit[]> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/unit-groups/${unitGroupId}/units`,
+      { headers }
+    );
+
+    const data: UnitListResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in fetchUnitsByUnitGroup:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch units for unit group: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while fetching units for unit group");
+    }
+  }
 };
 
 const fetchUnit = async (id: string): Promise<Unit> => {
@@ -66,44 +46,37 @@ const fetchUnit = async (id: string): Promise<Unit> => {
       headers,
     });
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: UnitResponse = await response.json();
-
-    if (data.status !== "Success") {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Network error: ${error.message}`);
+    console.error("Error in fetchUnit:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch unit: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching the unit");
     }
   }
 };
 
-export const useUnit = (id: string): UseQueryResult<Unit, ApiError> => {
-  return useQuery<Unit, ApiError>({
+export const useUnits = (): UseQueryResult<Unit[], Error> => {
+  return useQuery<Unit[], Error>({
+    queryKey: ["units"],
+    queryFn: fetchUnits,
+  });
+};
+
+export const useUnitsByUnitGroup = (unitGroupId: string): UseQueryResult<Unit[], Error> => {
+  return useQuery<Unit[], Error>({
+    queryKey: ["units", unitGroupId],
+    queryFn: () => fetchUnitsByUnitGroup(unitGroupId),
+    enabled: !!unitGroupId,
+  });
+};
+
+export const useUnit = (id: string): UseQueryResult<Unit, Error> => {
+  return useQuery<Unit, Error>({
     queryKey: ["unit", id],
     queryFn: () => fetchUnit(id),
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
+    enabled: !!id,
   });
 };
