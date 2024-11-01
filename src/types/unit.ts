@@ -6,7 +6,7 @@ export type Unit = {
   name: string;
   conversionFactor: number;
   unitGroup: UnitGroup;
-  default: boolean;
+  isDefault: boolean;
 };
 
 export type UnitListResponse = ApiResponse<Unit[]>;
