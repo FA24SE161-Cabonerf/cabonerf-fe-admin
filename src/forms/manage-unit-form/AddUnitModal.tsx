@@ -1,97 +1,57 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Unit } from "@/types/unit";
-import { UnitGroup } from "@/types/unitGroup";
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { AlertCircle } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { UnitGroup } from '@/types/unitGroup'
 
 const formSchema = z.object({
-  unitName: z.string().min(1, "Unit name is required"),
-  conversionFactor: z.number().min(0, "Conversion factor must be non-negative"),
+  unitName: z.string().min(1, 'Unit name is required'),
+  conversionFactor: z.number().min(0, 'Conversion factor must be non-negative'),
   isDefault: z.boolean(),
-  unitGroupId: z.string().min(1, "Unit group is required"),
-});
+  unitGroupId: z.string().min(1, 'Unit group is required'),
+})
 
 type FormData = z.infer<typeof formSchema>;
 
-interface UpdateUnitModalProps {
+interface AddUnitModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (id: string, data: FormData) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
   isSubmitting: boolean;
   error: string | null;
-  unit: Unit | null;
   unitGroups: UnitGroup[];
 }
 
-const UpdateUnitModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  isSubmitting,
-  error,
-  unit,
-  unitGroups,
-}: UpdateUnitModalProps) => {
+const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGroups }: AddUnitModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      unitName: "",
+      unitName: '',
       conversionFactor: 1,
       isDefault: false,
-      unitGroupId: "",
+      unitGroupId: '',
     },
-  });
+  })
 
-  useEffect(() => {
-    if (unit) {
-      form.reset({
-        unitName: unit.name,
-        conversionFactor: unit.conversionFactor,
-        isDefault: unit.isDefault,
-        unitGroupId: unit.unitGroup.id,
-      });
-    }
-  }, [unit, form]);
-
-  const handleSubmit = async (values: FormData) => {
-    if (unit) {
-      await onSubmit(unit.id, values);
-    }
-  };
+  const handleSubmit = (values: FormData) => {
+    onSubmit(values)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] h-[520px]">
         <DialogHeader>
-          <DialogTitle>Update Unit</DialogTitle>
+          <DialogTitle>Add New Unit</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="unitName"
@@ -114,7 +74,6 @@ const UpdateUnitModal = ({
                   <FormControl>
                     <Input 
                       type="number" 
-                      placeholder="Enter conversion factor" 
                       {...field} 
                       onChange={(e) => field.onChange(parseFloat(e.target.value))}
                     />
@@ -174,15 +133,15 @@ const UpdateUnitModal = ({
               </Alert>
             )}
             <DialogFooter>
-              <Button className="mt-6" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Updating..." : "Update Unit"}
+              <Button className='mt-6' type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Adding...' : 'Add Unit'}
               </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default UpdateUnitModal;
+export default AddUnitModal
