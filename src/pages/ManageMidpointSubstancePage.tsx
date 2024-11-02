@@ -7,7 +7,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import MidpointSubstanceTable from "@/components/manageMidpointSubstance/MidpointSubstanceTable";
 import { useMidpointSubstances } from "@/api/manageMidpointSubstance";
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import Pagination from "@/components/pagination/Pagination";
 
 const ManageMidpointSubstancePage = () => {
@@ -72,9 +71,7 @@ const ManageMidpointSubstancePage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -87,7 +84,10 @@ const ManageMidpointSubstancePage = () => {
       ) : (
         <div>
           <ScrollArea className="h-[calc(100vh-250px)]">
-            <MidpointSubstanceTable substances={filteredSubstances} />
+          <MidpointSubstanceTable 
+              substances={filteredSubstances} 
+              isLoading={isLoading}
+            />
           </ScrollArea>
           <Pagination
             page={page}

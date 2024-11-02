@@ -12,11 +12,9 @@ import {
 import { AlertCircle, Plus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useNavigate, useLocation } from "react-router-dom"
-
 import { ImpactMethod } from "@/types/impactMethod"
 import { useImpactMethods, useImpactMethod } from "@/api/manageImpactMethod"
 import { useImpactCategoriesByMethod } from "@/api/manageImpactCategory"
-import SkeletonTable from "@/components/sketeton/SkeletonTable"
 import ImpactCategoryTable from "@/components/manageImpactCategory/ImpactCategoryTable"
 
 const ManageImpactCategoryPage = () => {
@@ -76,22 +74,6 @@ const ManageImpactCategoryPage = () => {
 
   const isLoading = isLoadingImpactMethods || isLoadingSelectedMethod || isLoadingCategories
 
-  if (isLoading) return <SkeletonTable />
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error instanceof Error
-            ? error.message
-            : "An unknown error occurred"}
-        </AlertDescription>
-      </Alert>
-    )
-  }
-
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
@@ -130,13 +112,26 @@ const ManageImpactCategoryPage = () => {
           <p>Perspective: {selectedMethod.perspective.name}</p>
         </div>
       )}
-      <ScrollArea className="h-[calc(100vh-300px)]">
-        <ImpactCategoryTable
-          categories={filteredCategories}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </ScrollArea>
+       {error ? (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {error instanceof Error
+              ? error.message
+              : "An unknown error occurred"}
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <ScrollArea className="h-[calc(100vh-300px)]">
+          <ImpactCategoryTable
+            categories={filteredCategories}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            isLoading={isLoading}
+          />
+        </ScrollArea>
+      )}
     </div>
   )
 }

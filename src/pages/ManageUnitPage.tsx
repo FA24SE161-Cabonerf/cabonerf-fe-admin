@@ -26,7 +26,6 @@ import UnitTable from "@/components/manageUnit/UnitTable";
 import { Unit } from "@/types/unit";
 import { UnitGroup } from "@/types/unitGroup";
 import { useToast } from "@/hooks/use-toast";
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import AddUnitModal from "@/forms/manage-unit-form/AddUnitModal";
 import UpdateUnitModal from "@/forms/manage-unit-form/UpdateUnitModal";
 import DeleteUnitModal from "@/forms/manage-unit-form/DeleteUnitModal ";
@@ -228,9 +227,7 @@ const ManageUnitPage = () => {
           </SelectContent>
         </Select>
       </div>
-      {isLoading || isLoadingUnitGroups ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -246,6 +243,7 @@ const ManageUnitPage = () => {
             units={filteredUnits}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading || isLoadingUnitGroups}
           />
         </ScrollArea>
       )}

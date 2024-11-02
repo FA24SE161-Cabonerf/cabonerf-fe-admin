@@ -5,23 +5,24 @@ import * as z from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ReloadIcon } from "@radix-ui/react-icons"
+import { ReloadIcon, EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useAuth } from '@/contexts/auth/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
 })
 
 export type LoginFormValues = z.infer<typeof loginSchema>
 
-const LoginForm = () => {
+export default function LoginForm() {
   const { handleLogin } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate(); 
 
   const form = useForm<LoginFormValues>({
@@ -48,9 +49,13 @@ const LoginForm = () => {
     loginMutation.mutate(data);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-8 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md p-6">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
           <CardDescription className="text-center">
@@ -70,7 +75,7 @@ const LoginForm = () => {
                       <Input 
                         placeholder="m@example.com" 
                         {...field} 
-                        className="w-full px-3 py-2 border rounded-md"
+                        className="w-full h-10"
                       />
                     </FormControl>
                     <FormMessage />
@@ -84,11 +89,27 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="password" 
-                        {...field} 
-                        className="w-full px-3 py-2 border rounded-md"
-                      />
+                      <div className="relative">
+                        <Input 
+                          type={showPassword ? "text" : "password"}
+                          {...field} 
+                          className="w-full h-10 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+                        >
+                          {showPassword ? (
+                            <EyeOpenIcon className="h-5 w-5" aria-hidden="true" />
+                          ) : (
+                            <EyeClosedIcon className="h-5 w-5" aria-hidden="true" />
+                          )}
+                          <span className="sr-only">
+                            {showPassword ? "Hide password" : "Show password"}
+                          </span>
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -96,7 +117,7 @@ const LoginForm = () => {
               />
               <Button 
                 type="submit" 
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+                className="w-full h-10"
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? (
@@ -111,17 +132,13 @@ const LoginForm = () => {
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          {loginError && (
-            <Alert variant="destructive" className="mt-4 w-full">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{loginError}</AlertDescription>
-            </Alert>
-          )}
-        </CardFooter>
+        {loginError && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{loginError}</AlertDescription>
+          </Alert>
+        )}
       </Card>
     </div>
   )
 }
-
-export default LoginForm;

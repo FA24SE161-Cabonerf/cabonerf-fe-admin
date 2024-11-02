@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { useToast } from "@/hooks/use-toast";
-
 import { Perspective } from "@/types/perspective";
 import PerspectiveTable from "@/components/managePerspective/PerspectiveTable ";
 import AddPerspectiveModal from "@/forms/manage-perspective/AddPerspectiveModal ";
 import UpdatePerspectiveModal from "@/forms/manage-perspective/UpdatePerspectiveModal ";
 import DeletePerspectiveModal from "@/forms/manage-perspective/DeletePerspectiveModal ";
-import { useCreatePerspective, useDeletePerspective, usePerspectives, useUpdatePerspective } from "@/api/managePerspective";
+import {
+  useCreatePerspective,
+  useDeletePerspective,
+  usePerspectives,
+  useUpdatePerspective,
+} from "@/api/managePerspective";
 
 const ManagePerspectivePage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ const ManagePerspectivePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedPerspective, setSelectedPerspective] = useState<Perspective | null>(null);
+  const [selectedPerspective, setSelectedPerspective] =
+    useState<Perspective | null>(null);
   const [addError, setAddError] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -53,7 +55,9 @@ const ManagePerspectivePage = () => {
     ? perspectives.filter(
         (perspective) =>
           perspective.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          perspective.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          perspective.description
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
           perspective.abbr.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : [];
@@ -62,7 +66,11 @@ const ManagePerspectivePage = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleAddPerspective = async (data: { name: string; description: string; abbr: string }) => {
+  const handleAddPerspective = async (data: {
+    name: string;
+    description: string;
+    abbr: string;
+  }) => {
     try {
       await createPerspectiveMutation.mutateAsync(data);
       refetch();
@@ -164,9 +172,7 @@ const ManagePerspectivePage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -182,6 +188,7 @@ const ManagePerspectivePage = () => {
             perspectives={filteredPerspectives}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}

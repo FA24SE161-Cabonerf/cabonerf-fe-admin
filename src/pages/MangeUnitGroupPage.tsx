@@ -13,7 +13,6 @@ import {
   useDeleteUnitGroup,
 } from "@/api/manageUnitGroup";
 import UnitGroupTable from "@/components/manageUnitGroup/UnitGroupTable";
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import AddUnitGroupModal from "@/forms/manage-unit-group-form/AddUnitGroupModal";
 import UpdateUnitGroupModal from "@/forms/manage-unit-group-form/UpdateUnitGroupModal";
 import { UnitGroup } from "@/types/unitGroup";
@@ -174,16 +173,12 @@ const ManageUnitGroupPage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "An unknown error occurred"}
+            {error instanceof Error ? error.message : "An unknown error occurred"}
           </AlertDescription>
         </Alert>
       ) : (
@@ -192,6 +187,7 @@ const ManageUnitGroupPage = () => {
             unitGroups={filteredUnitGroups}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}

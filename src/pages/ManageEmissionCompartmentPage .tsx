@@ -1,14 +1,11 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { useToast } from "@/hooks/use-toast";
 import EmissionCompartmentTable from "@/components/manageEmissionCompartment/EmissionCompartmentTable ";
 import { useEmissionCompartments } from "@/api/manageEmissionCompartment";
@@ -81,9 +78,7 @@ const ManageEmissionCompartmentPage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -101,6 +96,7 @@ const ManageEmissionCompartmentPage = () => {
             emissionCompartments={filteredCompartments}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}
