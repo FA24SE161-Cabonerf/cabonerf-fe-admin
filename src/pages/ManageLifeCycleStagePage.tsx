@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -8,8 +7,6 @@ import { AlertCircle, Plus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useLifeCycleStages } from '@/api/manageLifeCycleStage'
 import LifeCycleStagesTable from '@/components/manageLifeCycleStage/LifeCycleStageTable'
-import SkeletonTable from '@/components/sketeton/SkeletonTable'
-
 import { LifeCycleStage } from '@/types/lifeCycleStage'
 import { AddNewStageModal } from '@/forms/manage-life-cycle-stage-form/AddNewStageModal'
 
@@ -75,9 +72,7 @@ const ManageLifeCycleStagePage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -91,6 +86,7 @@ const ManageLifeCycleStagePage = () => {
             stages={filteredStages}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}

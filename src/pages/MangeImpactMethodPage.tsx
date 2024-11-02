@@ -12,10 +12,7 @@ import {
   useUpdateImpactMethod,
   useDeleteImpactMethod,
 } from "@/api/manageImpactMethod";
-
 import ImpactMethodsTable from "@/components/manageImpactMethod/impactMethodTable";
-
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { useToast } from "@/hooks/use-toast";
 import { ImpactMethod } from "@/types/impactMethod";
 import { usePerspectives } from "@/api/managePerspective";
@@ -179,16 +176,12 @@ const ManageImpactMethodPage = () => {
           className="max-w-sm"
         />
       </div>
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+      {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred"}
+            {error instanceof Error ? error.message : "An unexpected error occurred"}
           </AlertDescription>
         </Alert>
       ) : (
@@ -197,6 +190,7 @@ const ManageImpactMethodPage = () => {
             methods={filteredMethods}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}

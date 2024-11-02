@@ -1,11 +1,10 @@
-// user.ts
 export type UserRole = {
-  id: number;
+  id: string;
   name: string;
 };
 
 export type UserSubscription = {
-  id: number;
+  id: string;
   subscriptionName: string;
   description: string;
   projectLimit: number;
@@ -16,17 +15,27 @@ export type UserSubscription = {
 };
 
 export type UserStatus = {
-  id: number;
+  id: string;  // Changed from number to string
   statusName: string;
   description: string;
 };
 
 export type User = {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   profilePictureUrl: string | null;
   role: UserRole;
   subscription: UserSubscription;
   userStatus: UserStatus;
+};
+
+export type LoginResponse = {
+  status: string;
+  message: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
+    user: User;
+  };
 };

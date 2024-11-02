@@ -74,7 +74,7 @@ const AddImpactMethodModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" aria-description="Add New Impact Method">
         <DialogHeader>
           <DialogTitle>Add New Impact Method</DialogTitle>
         </DialogHeader>

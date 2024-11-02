@@ -4,12 +4,12 @@ type Props = {
 
 const LoginLayout = ({ children }: Props) => {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       {/* Left Section */}
-      <div className="flex-1 bg-white text-white flex items-center justify-center p-10">
-        <div>
-          <h1 className="text-4xl font-bold mb-4 text-black ">Welcome to Our Platform</h1>
-          <p className="text-lg text-black">
+      <div className="flex-1 bg-white text-white flex items-center justify-center p-6 lg:p-10">
+        <div className="max-w-md">
+          <h1 className="text-3xl lg:text-4xl font-bold mb-4 text-black">Welcome to Our Platform</h1>
+          <p className="text-base lg:text-lg text-black">
             Discover the amazing features we offer to manage your account
             securely and effortlessly.
           </p>
@@ -17,7 +17,7 @@ const LoginLayout = ({ children }: Props) => {
       </div>
 
       {/* Right Section (Login/Register) */}
-      <div className="container mx-auto flex-1 py-10 bg-gray-100">
+      <div className="flex-1 bg-gray-100 flex items-center justify-center p-6 lg:p-10">
         {children}
       </div>
     </div>

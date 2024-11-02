@@ -5,9 +5,7 @@ import { Plus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-
 import { useMidpointImpactCategories } from "@/api/manageMidpointImpactCategory";
-import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import MidpointImpactCategoryTable from "@/components/manageMidpointImpactCategory/MidpointImpactCategoryTable";
 
 export default function ManageMidpointImpactCategoryPage() {
@@ -46,24 +44,21 @@ export default function ManageMidpointImpactCategoryPage() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4"
       />
-      {isLoading ? (
-        <SkeletonTable />
-      ) : error ? (
+       {error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "An unknown error occurred"}
+            {error instanceof Error ? error.message : "An unknown error occurred"}
           </AlertDescription>
         </Alert>
       ) : (
         <ScrollArea className="h-[calc(100vh-250px)]">
           <MidpointImpactCategoryTable
-            categories={filteredCategories || []}
+            categories={filteredCategories}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            isLoading={isLoading}
           />
         </ScrollArea>
       )}
