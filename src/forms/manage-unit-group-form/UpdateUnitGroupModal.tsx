@@ -22,10 +22,13 @@ import {
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { UnitGroup } from "@/types/unitGroup";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const formSchema = z.object({
   unitGroupName: z.string().min(1, "Unit group name is required"),
-  unitGroupType: z.string().min(1, "Unit group type is required"),
+  unitGroupType: z.enum(['Impact', 'Normal'], {
+    required_error: 'Please select a unit group type',
+  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -51,7 +54,7 @@ const UpdateUnitGroupModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       unitGroupName: unitGroup?.name || "",
-      unitGroupType: unitGroup?.unitGroupType || "",
+      unitGroupType: unitGroup?.unitGroupType as "Impact" | "Normal" || undefined,
     },
   });
 
@@ -59,7 +62,7 @@ const UpdateUnitGroupModal = ({
     if (unitGroup) {
       form.reset({
         unitGroupName: unitGroup.name,
-        unitGroupType: unitGroup.unitGroupType,
+        unitGroupType: unitGroup.unitGroupType as "Impact" | "Normal",
       });
     }
   }, [unitGroup, form]);
@@ -72,7 +75,7 @@ const UpdateUnitGroupModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] h-[420px]">
         <DialogHeader>
           <DialogTitle>Update Unit Group</DialogTitle>
         </DialogHeader>
@@ -100,9 +103,17 @@ const UpdateUnitGroupModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter unit group type" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a unit group type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Impact">Impact</SelectItem>
+                      <SelectItem value="Normal">Normal</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -115,7 +126,7 @@ const UpdateUnitGroupModal = ({
               </Alert>
             )}
             <DialogFooter>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button className="mt-6" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Updating..." : "Update Unit Group"}
               </Button>
             </DialogFooter>

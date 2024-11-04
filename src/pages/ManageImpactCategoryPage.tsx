@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,7 +31,7 @@ import AddImpactCategoryModal from "@/forms/manage-impact-category/AddImpactCate
 import UpdateImpactCategoryModal from "@/forms/manage-impact-category/UpdateImpactCategoryModal"
 import DeleteImpactCategoryModal from "@/forms/manage-impact-category/DeleteImpactCategoryModal"
 
-const ManageImpactCategoryPage = () => {
+const ManageImpactCategoryPage: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { toast } = useToast()
@@ -84,21 +84,26 @@ const ManageImpactCategoryPage = () => {
     navigate(`?${params.toString()}`, { replace: true })
   }, [impactMethodId, searchTerm, navigate])
 
-  const filteredCategories = ((impactMethodId ? impactCategories : allImpactCategories) || [])
-    .filter(category => 
+  const filteredCategories = useMemo(() => {
+    const categories = impactMethodId ? (impactCategories || []) : (allImpactCategories || [])
+    return categories.filter(category => 
       category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       category.indicator.toLowerCase().includes(searchTerm.toLowerCase())
     )
+  }, [impactMethodId, impactCategories, allImpactCategories, searchTerm])
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
-  }
+  }, [])
 
-  const handleAddImpactCategory = async (data: CreateImpactCategoryRequest) => {
+  const handleAddImpactCategory = useCallback(async (data: CreateImpactCategoryRequest) => {
     try {
       await createImpactCategoryMutation.mutateAsync(data)
-      refetchCategories()
-      refetchAllCategories()
+      if (impactMethodId) {
+        refetchCategories()
+      } else {
+        refetchAllCategories()
+      }
       setIsAddModalOpen(false)
       setAddError(null)
       toast({
@@ -113,13 +118,16 @@ const ManageImpactCategoryPage = () => {
         setAddError("An unknown error occurred")
       }
     }
-  }
+  }, [createImpactCategoryMutation, impactMethodId, refetchCategories, refetchAllCategories, toast])
 
-  const handleUpdateImpactCategory = async (id: string, data: CreateImpactCategoryRequest) => {
+  const handleUpdateImpactCategory = useCallback(async (id: string, data: CreateImpactCategoryRequest) => {
     try {
       await updateImpactCategoryMutation.mutateAsync({ id, ...data })
-      refetchCategories()
-      refetchAllCategories()
+      if (impactMethodId) {
+        refetchCategories()
+      } else {
+        refetchAllCategories()
+      }
       setIsUpdateModalOpen(false)
       setUpdateError(null)
       toast({
@@ -134,13 +142,16 @@ const ManageImpactCategoryPage = () => {
         setUpdateError("An unknown error occurred")
       }
     }
-  }
+  }, [updateImpactCategoryMutation, impactMethodId, refetchCategories, refetchAllCategories, toast])
 
-  const handleDeleteImpactCategory = async (id: string) => {
+  const handleDeleteImpactCategory = useCallback(async (id: string) => {
     try {
       await deleteImpactCategoryMutation.mutateAsync(id)
-      refetchCategories()
-      refetchAllCategories()
+      if (impactMethodId) {
+        refetchCategories()
+      } else {
+        refetchAllCategories()
+      }
       setIsDeleteModalOpen(false)
       setSelectedImpactCategory(null)
       setDeleteError(null)
@@ -156,31 +167,33 @@ const ManageImpactCategoryPage = () => {
         setDeleteError("An unknown error occurred")
       }
     }
-  }
+  }, [deleteImpactCategoryMutation, impactMethodId, refetchCategories, refetchAllCategories, toast])
 
-  const handleEdit = (id: string) => {
+  const handleEdit = useCallback((id: string) => {
     const impactCategory = filteredCategories.find((ic) => ic.id === id)
     if (impactCategory) {
       setSelectedImpactCategory(impactCategory)
       setIsUpdateModalOpen(true)
     }
-  }
+  }, [filteredCategories])
 
-  const handleDelete = (id: string) => {
+  const handleDelete = useCallback((id: string) => {
     const impactCategory = filteredCategories.find((ic) => ic.id === id)
     if (impactCategory) {
       setSelectedImpactCategory(impactCategory)
       setIsDeleteModalOpen(true)
     }
-  }
+  }, [filteredCategories])
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = useCallback(() => {
     if (selectedImpactCategory) {
       handleDeleteImpactCategory(selectedImpactCategory.id)
     }
-  }
+  }, [selectedImpactCategory, handleDeleteImpactCategory])
 
   const isLoading = isLoadingImpactMethods || isLoadingSelectedMethod || isLoadingCategories || isLoadingAllCategories || isLoadingMidpointCategories || isLoadingEmissionCompartments
+
+  const error = errorCategories || errorAllCategories
 
   return (
     <div className="container mx-auto p-4">
@@ -223,28 +236,23 @@ const ManageImpactCategoryPage = () => {
           <p>Perspective: {selectedMethod.perspective.name}</p>
         </div>
       )}
-      {(errorCategories || errorAllCategories) ? (
+      {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {errorCategories instanceof Error
-              ? errorCategories.message
-              : errorAllCategories instanceof Error
-              ? errorAllCategories.message
-              : "An unknown error occurred"}
+            {error instanceof Error ? error.message : "An unknown error occurred"}
           </AlertDescription>
         </Alert>
-      ) : (
-        <ScrollArea className="h-[calc(100vh-300px)]">
-          <ImpactCategoryTable
-            categories={filteredCategories}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            isLoading={isLoading}
-          />
-        </ScrollArea>
       )}
+      <ScrollArea className="h-[calc(100vh-300px)]">
+        <ImpactCategoryTable
+          categories={filteredCategories}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          isLoading={isLoading}
+        />
+      </ScrollArea>
       <AddImpactCategoryModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -282,4 +290,4 @@ const ManageImpactCategoryPage = () => {
   )
 }
 
-export default ManageImpactCategoryPage
+export default React.memo(ManageImpactCategoryPage)
