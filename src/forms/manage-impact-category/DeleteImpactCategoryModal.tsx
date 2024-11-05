@@ -22,7 +22,7 @@ const DeleteImpactCategoryModal = ({
 }: DeleteImpactCategoryModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" aria-description="Delete Impact Category">
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
         </DialogHeader>

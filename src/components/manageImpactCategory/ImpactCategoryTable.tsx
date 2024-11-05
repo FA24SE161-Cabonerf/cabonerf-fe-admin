@@ -16,6 +16,7 @@ interface ImpactCategoriesTableProps {
   categories: ImpactCategory[] | undefined;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onViewDetails: (id: string) => void;
   isLoading: boolean;
 }
 
@@ -23,6 +24,7 @@ const ImpactCategoryTable = ({
   categories,
   onEdit,
   onDelete,
+  onViewDetails,
   isLoading,
 }: ImpactCategoriesTableProps) => {
   return (
@@ -43,7 +45,11 @@ const ImpactCategoryTable = ({
         <TableBody>
           {categories && categories.length > 0 ? (
             categories.map((category) => (
-              <TableRow key={category.id}>
+              <TableRow 
+                key={category.id} 
+                onClick={() => onViewDetails(category.id)}
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+              >
                 <TableCell className="font-medium">
                   {category.name || "N/A"}
                 </TableCell>
@@ -58,11 +64,14 @@ const ImpactCategoryTable = ({
                 </TableCell>
                 <TableCell>{category.emissionCompartment?.name || "N/A"}</TableCell>
                 <TableCell>
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end space-x-2" onClick={(e) => e.stopPropagation()}>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onEdit(category.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(category.id);
+                      }}
                       className="h-8 w-8 p-0"
                     >
                       <span className="sr-only">Edit</span>
@@ -71,7 +80,10 @@ const ImpactCategoryTable = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onDelete(category.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(category.id);
+                      }}
                       className="h-8 w-8 p-0"
                     >
                       <span className="sr-only">Delete</span>
