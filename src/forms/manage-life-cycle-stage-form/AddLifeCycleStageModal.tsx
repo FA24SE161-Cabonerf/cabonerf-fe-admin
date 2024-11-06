@@ -10,14 +10,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Perspective name is required'),
-  description: z.string().nullable().optional(),
-  abbr: z.string().nullable().optional(),
+  name: z.string().min(1, 'Life cycle stage name is required'),
+  description: z.string().min(1, 'Description is required'),
+  iconUrl: z.string().url('Please enter a valid URL for the icon'),
 })
 
 type FormData = z.infer<typeof formSchema>;
 
-interface AddPerspectiveModalProps {
+interface AddLifeCycleStageModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: FormData) => Promise<void>;
@@ -25,13 +25,13 @@ interface AddPerspectiveModalProps {
   error: string | null;
 }
 
-const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddPerspectiveModalProps) => {
+const AddLifeCycleStageModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddLifeCycleStageModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      description: null,
-      abbr: null,
+      description: '',
+      iconUrl: '',
     },
   })
 
@@ -43,7 +43,7 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Perspective</DialogTitle>
+          <DialogTitle>Add New Life Cycle Stage</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -54,7 +54,7 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter perspective name" {...field} />
+                    <Input placeholder="Enter life cycle stage name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -65,14 +65,9 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter perspective description" 
-                      {...field} 
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
-                    />
+                    <Textarea placeholder="Enter description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,17 +75,12 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
             />
             <FormField
               control={form.control}
-              name="abbr"
+              name="iconUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Abbreviation (Optional)</FormLabel>
+                  <FormLabel>Icon URL</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Enter abbreviation" 
-                      {...field} 
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
-                    />
+                    <Input type="url" placeholder="Enter icon URL" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,8 +94,8 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
               </Alert>
             )}
             <DialogFooter>
-              <Button className='mt-6' type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Perspective'}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Adding...' : 'Add Life Cycle Stage'}
               </Button>
             </DialogFooter>
           </form>
@@ -115,4 +105,4 @@ const AddPerspectiveModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }:
   )
 }
 
-export default AddPerspectiveModal
+export default AddLifeCycleStageModal
