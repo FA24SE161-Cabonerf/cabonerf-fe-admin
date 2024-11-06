@@ -4,6 +4,7 @@ export type LifeCycleStage = {
   id: string;
   name: string;
   description: string;
+  iconUrl: string
 }
 
 

@@ -21,64 +21,64 @@ import {
 } from "@/components/ui/form";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Perspective } from "@/types/perspective";
 import { Textarea } from "@/components/ui/textarea";
+import { LifeCycleStage } from "@/types/lifeCycleStage";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Perspective name is required"),
-  description: z.string().nullable().optional(),
-  abbr: z.string().nullable().optional(),
+  name: z.string().min(1, "Life cycle stage name is required"),
+  description: z.string().min(1, "Description is required"),
+  iconUrl: z.string().url("Invalid URL for icon"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-interface UpdatePerspectiveModalProps {
+interface UpdateLifeCycleStageModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (id: string, data: FormData) => void;
   isSubmitting: boolean;
   error: string | null;
-  perspective: Perspective | null;
+  lifeCycleStage: LifeCycleStage | null;
 }
 
-const UpdatePerspectiveModal = ({
+const UpdateLifeCycleStageModal = ({
   isOpen,
   onClose,
   onSubmit,
   isSubmitting,
   error,
-  perspective,
-}: UpdatePerspectiveModalProps) => {
+  lifeCycleStage,
+}: UpdateLifeCycleStageModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: perspective?.name || "",
-      description: perspective?.description || null,
-      abbr: perspective?.abbr || null,
+      name: lifeCycleStage?.name || "",
+      description: lifeCycleStage?.description || "",
+      iconUrl: lifeCycleStage?.iconUrl || "",
     },
   });
 
   useEffect(() => {
-    if (perspective) {
+    if (lifeCycleStage) {
       form.reset({
-        name: perspective.name,
-        description: perspective.description,
-        abbr: perspective.abbr,
+        name: lifeCycleStage.name,
+        description: lifeCycleStage.description,
+        iconUrl: lifeCycleStage.iconUrl,
       });
     }
-  }, [perspective, form]);
+  }, [lifeCycleStage, form]);
 
   const handleSubmit = (values: FormData) => {
-    if (perspective) {
-      onSubmit(perspective.id, values);
+    if (lifeCycleStage) {
+      onSubmit(lifeCycleStage.id, values);
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] h-[520px]">
         <DialogHeader>
-          <DialogTitle>Update Perspective</DialogTitle>
+          <DialogTitle>Update Life Cycle Stage</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -92,7 +92,7 @@ const UpdatePerspectiveModal = ({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter perspective name" {...field} />
+                    <Input placeholder="Enter life cycle stage name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,14 +103,9 @@ const UpdatePerspectiveModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter perspective description" 
-                      {...field} 
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
-                    />
+                    <Textarea placeholder="Enter description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,17 +113,12 @@ const UpdatePerspectiveModal = ({
             />
             <FormField
               control={form.control}
-              name="abbr"
+              name="iconUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Abbreviation (Optional)</FormLabel>
+                  <FormLabel>Icon URL</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Enter abbreviation" 
-                      {...field} 
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
-                    />
+                    <Input placeholder="Enter icon URL" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,8 +132,8 @@ const UpdatePerspectiveModal = ({
               </Alert>
             )}
             <DialogFooter>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Updating..." : "Update Perspective"}
+              <Button className="mt-6" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Updating..." : "Update Life Cycle Stage"}
               </Button>
             </DialogFooter>
           </form>
@@ -153,4 +143,4 @@ const UpdatePerspectiveModal = ({
   );
 };
 
-export default UpdatePerspectiveModal;
+export default UpdateLifeCycleStageModal;
