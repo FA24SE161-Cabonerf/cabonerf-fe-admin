@@ -4,71 +4,52 @@ import {
   MidpointSubstance,
   MidpointSubstanceListResponse,
 } from "@/types/midpointSubstance";
-
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { handleApiResponse } from "./apiUtility";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
-
 const fetchMidpointSubstances = async (
   page: number,
-  pageSize: number
+  pageSize: number,
+  compartmentId?: string,
+  keyword?: string
 ): Promise<PaginatedResponse<MidpointSubstance>> => {
   try {
+    const params = new URLSearchParams({
+      currentPage: page.toString(),
+      pageSize: pageSize.toString(),
+    });
+    if (compartmentId) params.append("compartmentId", compartmentId);
+    if (keyword) params.append("keyword", keyword);
+
     const response = await fetch(
-      `${VITE_BASE_URL}/impacts/admin/midpoint-factors?currentPage=${page}&pageSize=${pageSize}`,
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors?${params.toString()}`,
       {
         headers,
       }
     );
 
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
     const data: MidpointSubstanceListResponse = await response.json();
-
-    if (data.status !== "Success" || !data.data) {
-      throw new ApiError(response.status, data.message || "Unknown API error");
-    }
-
-    return data.data;
+    return handleApiResponse(response, data);
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else if (error instanceof Error) {
-      throw new ApiError(500, `Unexpected error: ${error.message}`);
+    console.error("Error in fetchMidpointSubstances:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch midpoint substances: ${error.message}`);
     } else {
-      throw new ApiError(500, "An unknown error occurred");
+      throw new Error("An unexpected error occurred while fetching midpoint substances");
     }
   }
 };
 
 export const useMidpointSubstances = (
   page: number,
-  pageSize: number
-): UseQueryResult<PaginatedResponse<MidpointSubstance>, ApiError> => {
-  return useQuery<PaginatedResponse<MidpointSubstance>, ApiError>({
-    queryKey: ["midpointSubstances", page, pageSize],
-    queryFn: () => fetchMidpointSubstances(page, pageSize),
-    retry: (failureCount, error) => {
-      if (
-        error instanceof ApiError &&
-        error.status >= 400 &&
-        error.status < 500
-      ) {
-        return false;
-      }
-      return failureCount < 3;
-    },
+  pageSize: number,
+  compartmentId?: string,
+  keyword?: string
+): UseQueryResult<PaginatedResponse<MidpointSubstance>, Error> => {
+  return useQuery<PaginatedResponse<MidpointSubstance>, Error>({
+    queryKey: ["midpointSubstances", page, pageSize, compartmentId, keyword],
+    queryFn: () => fetchMidpointSubstances(page, pageSize, compartmentId, keyword),
   });
 };

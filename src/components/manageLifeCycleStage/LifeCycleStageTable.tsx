@@ -12,6 +12,14 @@ interface LifeCycleStagesTableProps {
 }
 
 const LifeCycleStagesTable = ({ stages, onEdit, onDelete, isLoading }: LifeCycleStagesTableProps) => {
+  const renderIcon = (iconUrl: string) => {
+    if (iconUrl.startsWith('<svg')) {
+      return <span dangerouslySetInnerHTML={{ __html: iconUrl }} />;
+    } else {
+      return <img src={iconUrl} alt="Icon" className="w-5 h-5 object-contain" />;
+    }
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -28,7 +36,14 @@ const LifeCycleStagesTable = ({ stages, onEdit, onDelete, isLoading }: LifeCycle
           {stages && stages.length > 0 ? (
             stages.map((stage: LifeCycleStage) => (
               <TableRow key={stage.id}>
-                <TableCell className="font-medium">{stage.name}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 flex items-center justify-center mr-3">
+                      {renderIcon(stage.iconUrl)}
+                    </div>
+                    <span>{stage.name}</span>
+                  </div>
+                </TableCell>
                 <TableCell>{stage.description}</TableCell>
                 <TableCell>
                   <Button variant="ghost" size="icon" onClick={() => onEdit(stage.id)}>

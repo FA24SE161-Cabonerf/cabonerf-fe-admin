@@ -68,8 +68,8 @@ const ManagePerspectivePage = () => {
 
   const handleAddPerspective = async (data: {
     name: string;
-    description: string;
-    abbr: string;
+    description?: string | null;
+    abbr?: string | null;
   }) => {
     try {
       await createPerspectiveMutation.mutateAsync(data);
@@ -92,7 +92,7 @@ const ManagePerspectivePage = () => {
 
   const handleUpdatePerspective = async (
     id: string,
-    data: { name: string; description: string; abbr: string }
+    data: { name: string; description?: string | null; abbr?: string | null }
   ) => {
     try {
       await updatePerspectiveMutation.mutateAsync({ id, ...data });
@@ -112,6 +112,7 @@ const ManagePerspectivePage = () => {
       }
     }
   };
+
 
   const handleDeletePerspective = async (id: string) => {
     try {

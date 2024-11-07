@@ -10,13 +10,29 @@ import {
   UngroupIcon,
   Users,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type AdminSidebarProps = {
   isSidebarOpen: boolean;
 };
 
 const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
+  const location = useLocation();
+
+  const navItems = [
+    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/manage-user", icon: Users, label: "Manage Users" },
+    { to: "/midpoint-substance", icon: FileText, label: "Manage midpoint substance" },
+    { to: "/impact-category", icon: ChartBarStackedIcon, label: "Manage impact category" },
+    { to: "/midpoint-impact-category", icon: ChartBarStackedIcon, label: "Manage midpoint impact category" },
+    { to: "/impact-method", icon: Settings, label: "Manage impact method" },
+    { to: "/unit-group", icon: BoxIcon, label: "Manage unit group" },
+    { to: "/unit", icon: UngroupIcon, label: "Manage unit" },
+    { to: "/life-cycle-stage", icon: RecycleIcon, label: "Manage Life Cycle Stage" },
+    { to: "/emission-compartment", icon: LeafyGreenIcon, label: "Manage Emission Compartment" },
+    { to: "/perspective", icon: TelescopeIcon, label: "Manage Perspective" },
+  ];
+
   return (
     <aside
       className={`fixed left-0 top-0 z-40 h-screen w-64 transform transition-transform duration-300 ease-in-out ${
@@ -32,105 +48,21 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
           Admin Dashboard
         </Link>
         <ul className="space-y-2 font-medium">
-          <li>
-            <Link
-              to="/"
-              className="flex items-center rounded-lg p-2 text-primary hover:bg-muted"
-            >
-              <LayoutDashboard className="h-5 w-5" />
-              <span className="ml-3">Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/manage-user"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <Users className="h-5 w-5" />
-              <span className="ml-3">Manage Users</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/midpoint-substance"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <FileText className="h-5 w-5" />
-              <span className="ml-3">Manage midpoint substance</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/impact-category"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <ChartBarStackedIcon className="h-5 w-5" />
-              <span className="ml-3">Manage impact category</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/midpoint-impact-category"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <ChartBarStackedIcon className="h-5 w-5" />
-              <span className="ml-3">Manage midpoint impact category</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/impact-method"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="ml-3">Manage impact method</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/unit-group"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <BoxIcon className="h-5 w-5" />
-              <span className="ml-3">Manage unit group</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/unit"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <UngroupIcon className="h-5 w-5" />
-              <span className="ml-3">Manage unit</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/life-cycle-stage"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <RecycleIcon className="h-5 w-5" />
-              <span className="ml-3">Manage Life Cycle Stage</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/emission-compartment"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <LeafyGreenIcon className="h-5 w-5" />
-              <span className="ml-3">Manage Emission Compartment</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/perspective"
-              className="flex items-center rounded-lg p-2 text-muted-foreground hover:bg-muted"
-            >
-              <TelescopeIcon className="h-5 w-5" />
-              <span className="ml-3">Manage Perspective</span>
-            </Link>
-          </li>
+          {navItems.map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className={`flex items-center rounded-lg p-2 ${
+                  location.pathname === item.to
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="ml-3">{item.label}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </aside>
