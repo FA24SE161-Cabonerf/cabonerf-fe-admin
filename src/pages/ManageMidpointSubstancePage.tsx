@@ -8,6 +8,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MidpointSubstanceTable from "@/components/manageMidpointSubstance/MidpointSubstanceTable";
 import { useMidpointSubstances } from "@/api/manageMidpointSubstance";
 import Pagination from "@/components/pagination/Pagination";
+import { useEmissionCompartments } from "@/api/manageEmissionCompartment";
+import CompartmentSelect from "@/components/manageMidpointSubstance/CompartmentSelect";
+
 
 const ManageMidpointSubstancePage = () => {
   const navigate = useNavigate();
@@ -19,32 +22,36 @@ const ManageMidpointSubstancePage = () => {
   const [pageSize, setPageSize] = useState(
     parseInt(searchParams.get("pageSize") || "10")
   );
-  const [searchTerm, setSearchTerm] = useState(
-    searchParams.get("search") || ""
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
+  const [compartmentId, setCompartmentId] = useState(
+    searchParams.get("compartmentId") || "all"
   );
 
   const {
     data: midpointSubstancesData,
-    isLoading,
-    error,
-  } = useMidpointSubstances(page, pageSize);
+    isLoading: isLoadingSubstances,
+    error: substancesError,
+  } = useMidpointSubstances(
+    page,
+    pageSize,
+    compartmentId === "all" ? undefined : compartmentId,
+    keyword
+  );
+
+  const {
+    data: emissionCompartments,
+    isLoading: isLoadingCompartments,
+    error: compartmentsError,
+  } = useEmissionCompartments();
 
   useEffect(() => {
     const params = new URLSearchParams();
     params.set("page", page.toString());
     params.set("pageSize", pageSize.toString());
-    if (searchTerm) params.set("search", searchTerm);
+    if (keyword) params.set("keyword", keyword);
+    if (compartmentId !== "all") params.set("compartmentId", compartmentId);
     navigate(`?${params.toString()}`, { replace: true });
-  }, [page, pageSize, searchTerm, navigate]);
-
-  const filteredSubstances =
-    midpointSubstancesData?.listResult.filter(
-      (substance) =>
-        substance.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        substance.casNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        substance.compartmentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        substance.molecularFormula.toLowerCase().includes(searchTerm.toLowerCase()) 
-    ) || [];
+  }, [page, pageSize, keyword, compartmentId, navigate]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -52,23 +59,41 @@ const ManageMidpointSubstancePage = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); // Reset to first page when changing page size
+    setPage(1); 
   };
+
+  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    setPage(1); 
+  };
+
+  const handleCompartmentChange = (value: string) => {
+    setCompartmentId(value);
+    setPage(1); 
+  };
+
+  const error = substancesError || compartmentsError;
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Midpoint Substances Management</h1>
         <Button>
-          <ImportIcon className="mr-2 h-4 w-4" /> Import midpoint Substance
+          <ImportIcon className="mr-2 h-4 w-4" /> Import Midpoint Substance
         </Button>
       </div>
       <div className="flex justify-between items-center mb-4">
         <Input
           placeholder="Search substances..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          value={keyword}
+          onChange={handleKeywordChange}
+          className="max-w-sm mr-2"
+        />
+        <CompartmentSelect
+          value={compartmentId}
+          onChange={handleCompartmentChange}
+          emissionCompartments={emissionCompartments}
+          isLoading={isLoadingCompartments}
         />
       </div>
       {error ? (
@@ -84,9 +109,9 @@ const ManageMidpointSubstancePage = () => {
       ) : (
         <div>
           <ScrollArea className="h-[calc(100vh-250px)]">
-          <MidpointSubstanceTable 
-              substances={filteredSubstances} 
-              isLoading={isLoading}
+            <MidpointSubstanceTable
+              substances={midpointSubstancesData?.listResult || []}
+              isLoading={isLoadingSubstances || isLoadingCompartments}
             />
           </ScrollArea>
           <Pagination

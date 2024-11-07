@@ -35,8 +35,8 @@ const fetchPerspectives = async (): Promise<Perspective[]> => {
 
 const createPerspective = async (newPerspective: {
   name: string;
-  description: string;
-  abbr: string;
+  description?: string | null;
+  abbr?: string | null;
 }): Promise<Perspective> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/perspectives`, {
@@ -64,8 +64,8 @@ const updatePerspective = async (
   id: string,
   updatedPerspective: {
     name: string;
-    description: string;
-    abbr: string;
+    description?: string | null;
+    abbr?: string | null;
   }
 ): Promise<Perspective> => {
   try {
@@ -112,12 +112,12 @@ const deletePerspective = async (id: string): Promise<void> => {
 export const useCreatePerspective = (): UseMutationResult<
   Perspective,
   Error,
-  { name: string; description: string; abbr: string }
+  { name: string; description?: string | null; abbr?: string | null }
 > => {
   return useMutation<
     Perspective,
     Error,
-    { name: string; description: string; abbr: string }
+    { name: string; description?: string | null; abbr?: string | null }
   >({
     mutationFn: createPerspective,
   });
@@ -126,12 +126,12 @@ export const useCreatePerspective = (): UseMutationResult<
 export const useUpdatePerspective = (): UseMutationResult<
   Perspective,
   Error,
-  { id: string; name: string; description: string; abbr: string }
+  { id: string; name: string; description?: string | null; abbr?: string | null }
 > => {
   return useMutation<
     Perspective,
     Error,
-    { id: string; name: string; description: string; abbr: string }
+    { id: string; name: string; description?: string | null; abbr?: string | null }
   >({
     mutationFn: ({ id, ...data }) => updatePerspective(id, data),
   });

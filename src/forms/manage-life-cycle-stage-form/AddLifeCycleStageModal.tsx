@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
+import { useEffect } from 'react'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Life cycle stage name is required'),
@@ -38,6 +39,16 @@ const AddLifeCycleStageModal = ({ isOpen, onClose, onSubmit, isSubmitting, error
   const handleSubmit = (values: FormData) => {
     onSubmit(values)
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: '',
+        description: '',
+        iconUrl: '',
+      })
+    }
+  }, [isOpen, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

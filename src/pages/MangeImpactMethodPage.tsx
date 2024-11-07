@@ -70,9 +70,9 @@ const ManageImpactMethodPage = () => {
 
   const handleAddImpactMethod = async (data: {
     name: string;
-    description: string;
+    description?: string | null;
     version: string;
-    reference: string;
+    reference?: string | null;
     perspectiveId: string;
   }) => {
     try {
@@ -98,9 +98,9 @@ const ManageImpactMethodPage = () => {
     id: string,
     data: {
       name: string;
-      description: string;
+      description?: string | null;
       version: string;
-      reference: string;
+      reference?: string | null;
       perspectiveId: string;
     }
   ) => {
@@ -181,7 +181,9 @@ const ManageImpactMethodPage = () => {
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error instanceof Error ? error.message : "An unexpected error occurred"}
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
           </AlertDescription>
         </Alert>
       ) : (
