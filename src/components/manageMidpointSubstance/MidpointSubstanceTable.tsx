@@ -1,24 +1,41 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { MidpointSubstance } from '@/types/midpointSubstance'
-import SkeletonTable from "@/components/sketeton/SkeletonTable"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MidpointSubstance } from "@/types/midpointSubstance";
+import SkeletonTable from "@/components/sketeton/SkeletonTable";
+import { Button } from "../ui/button";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface MidpointSubstancesTableProps {
-  substances: MidpointSubstance[] | undefined
-  isLoading: boolean
+  substances: MidpointSubstance[] | undefined;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  isLoading: boolean;
 }
 
-const MidpointSubstancesTable = ({ substances, isLoading }: MidpointSubstancesTableProps) => {
+const MidpointSubstancesTable = ({
+  substances,
+  onEdit,
+  onDelete,
+  isLoading,
+}: MidpointSubstancesTableProps) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>CAS Number</TableHead>
+          <TableHead>Name</TableHead>      
           <TableHead>Compartment</TableHead>
+          <TableHead>CAS</TableHead>
           <TableHead>Molecular Formula</TableHead>
           <TableHead>Individualist</TableHead>
           <TableHead>Hierarchist</TableHead>
           <TableHead>Egalitarian</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       {isLoading ? (
@@ -28,13 +45,31 @@ const MidpointSubstancesTable = ({ substances, isLoading }: MidpointSubstancesTa
           {substances && substances.length > 0 ? (
             substances.map((substance) => (
               <TableRow key={substance.id}>
-                <TableCell className="font-medium">{substance.name}</TableCell>
-                <TableCell>{substance.casNumber}</TableCell>
+                <TableCell className="font-medium">{substance.name}</TableCell>            
                 <TableCell>{substance.compartmentName}</TableCell>
+                <TableCell>{substance.casNumber}</TableCell>
                 <TableCell>{substance.molecularFormula}</TableCell>
                 <TableCell>{substance.individualist}</TableCell>
                 <TableCell>{substance.hierarchist}</TableCell>
                 <TableCell>{substance.egalitarian}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onEdit(substance.id)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onDelete(substance.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete</span>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           ) : (
@@ -47,7 +82,7 @@ const MidpointSubstancesTable = ({ substances, isLoading }: MidpointSubstancesTa
         </TableBody>
       )}
     </Table>
-  )
-}
+  );
+};
 
-export default MidpointSubstancesTable
+export default MidpointSubstancesTable;

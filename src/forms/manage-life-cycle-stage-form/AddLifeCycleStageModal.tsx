@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 const formSchema = z.object({
   name: z.string().min(1, 'Life cycle stage name is required'),
   description: z.string().min(1, 'Description is required'),
-  iconUrl: z.string().url('Please enter a valid URL for the icon'),
+  iconUrl: z.string().min(1, 'Icon Url is required'),
 })
 
 type FormData = z.infer<typeof formSchema>;
@@ -91,7 +91,7 @@ const AddLifeCycleStageModal = ({ isOpen, onClose, onSubmit, isSubmitting, error
                 <FormItem>
                   <FormLabel>Icon URL</FormLabel>
                   <FormControl>
-                    <Input type="url" placeholder="Enter icon URL" {...field} />
+                    <Input placeholder="Enter icon URL" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

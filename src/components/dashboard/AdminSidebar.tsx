@@ -21,16 +21,16 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/manage-user", icon: Users, label: "Manage Users" },
+    { to: "/manage-user", icon: Users, label: "Manage users" },
     { to: "/midpoint-substance", icon: FileText, label: "Manage midpoint substance" },
     { to: "/impact-category", icon: ChartBarStackedIcon, label: "Manage impact category" },
     { to: "/midpoint-impact-category", icon: ChartBarStackedIcon, label: "Manage midpoint impact category" },
     { to: "/impact-method", icon: Settings, label: "Manage impact method" },
     { to: "/unit-group", icon: BoxIcon, label: "Manage unit group" },
     { to: "/unit", icon: UngroupIcon, label: "Manage unit" },
-    { to: "/life-cycle-stage", icon: RecycleIcon, label: "Manage Life Cycle Stage" },
-    { to: "/emission-compartment", icon: LeafyGreenIcon, label: "Manage Emission Compartment" },
-    { to: "/perspective", icon: TelescopeIcon, label: "Manage Perspective" },
+    { to: "/life-cycle-stage", icon: RecycleIcon, label: "Manage life cycle stage" },
+    { to: "/emission-compartment", icon: LeafyGreenIcon, label: "Manage emission compartment" },
+    { to: "/perspective", icon: TelescopeIcon, label: "Manage perspective" },
   ];
 
   return (

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -29,7 +30,9 @@ interface AddUnitModalProps {
   unitGroups: UnitGroup[];
 }
 
-const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGroups }: AddUnitModalProps) => {
+export default function AddUnitModal({ isOpen, onClose, onSubmit, isSubmitting, error, unitGroups }: AddUnitModalProps) {
+  const [isDefaultChecked, setIsDefaultChecked] = useState(false);
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,6 +46,14 @@ const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGrou
   const handleSubmit = (values: FormData) => {
     onSubmit(values)
   }
+
+  const handleIsDefaultChange = (checked: boolean | string) => {
+    const isChecked = checked === true || checked === "true";
+    setIsDefaultChecked(isChecked);
+    if (isChecked) {
+      form.setValue("conversionFactor", 1);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -65,6 +76,28 @@ const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGrou
                 </FormItem>
               )}
             />
+                  <FormField
+              control={form.control}
+              name="isDefault"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        handleIsDefaultChange(checked);
+                      }}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Is Default
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="conversionFactor"
@@ -76,31 +109,14 @@ const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGrou
                       type="number" 
                       {...field} 
                       onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                      disabled={isDefaultChecked}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="isDefault"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Is Default
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
+      
             <FormField
               control={form.control}
               name="unitGroupId"
@@ -143,5 +159,3 @@ const AddUnitModal = ({ isOpen, onClose, onSubmit, isSubmitting, error, unitGrou
     </Dialog>
   )
 }
-
-export default AddUnitModal
