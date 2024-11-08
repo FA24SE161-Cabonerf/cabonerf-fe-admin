@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,7 +22,13 @@ import {
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Unit } from "@/types/unit";
 import { UnitGroup } from "@/types/unitGroup";
 
@@ -45,7 +51,7 @@ interface UpdateUnitModalProps {
   unitGroups: UnitGroup[];
 }
 
-const UpdateUnitModal = ({
+export default function UpdateUnitModal({
   isOpen,
   onClose,
   onSubmit,
@@ -53,7 +59,9 @@ const UpdateUnitModal = ({
   error,
   unit,
   unitGroups,
-}: UpdateUnitModalProps) => {
+}: UpdateUnitModalProps) {
+  const [isDefaultChecked, setIsDefaultChecked] = useState(false);
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,12 +80,21 @@ const UpdateUnitModal = ({
         isDefault: unit.isDefault,
         unitGroupId: unit.unitGroup.id,
       });
+      setIsDefaultChecked(unit.isDefault);
     }
   }, [unit, form]);
 
   const handleSubmit = async (values: FormData) => {
     if (unit) {
       await onSubmit(unit.id, values);
+    }
+  };
+
+  const handleIsDefaultChange = (checked: boolean | string) => {
+    const isChecked = checked === true || checked === "true";
+    setIsDefaultChecked(isChecked);
+    if (isChecked) {
+      form.setValue("conversionFactor", 1);
     }
   };
 
@@ -107,48 +124,56 @@ const UpdateUnitModal = ({
             />
             <FormField
               control={form.control}
-              name="conversionFactor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Conversion Factor</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter conversion factor" 
-                      {...field} 
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="isDefault"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        handleIsDefaultChange(checked);
+                      }}
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Is Default
-                    </FormLabel>
+                    <FormLabel>Is Default</FormLabel>
                   </div>
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
+              name="conversionFactor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Conversion Factor</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter conversion factor"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
+                      disabled={isDefaultChecked}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="unitGroupId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Unit Group</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a unit group" />
@@ -183,6 +208,4 @@ const UpdateUnitModal = ({
       </DialogContent>
     </Dialog>
   );
-};
-
-export default UpdateUnitModal;
+}

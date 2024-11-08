@@ -27,7 +27,7 @@ import { LifeCycleStage } from "@/types/lifeCycleStage";
 const formSchema = z.object({
   name: z.string().min(1, "Life cycle stage name is required"),
   description: z.string().min(1, "Description is required"),
-  iconUrl: z.string().url("Invalid URL for icon"),
+  iconUrl: z.string().min(1, 'Icon Url is required'),
 });
 
 type FormData = z.infer<typeof formSchema>;
