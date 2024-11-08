@@ -99,10 +99,6 @@ const ManageMidpointSubstancePage = () => {
     setPage(1);
   };
 
-  const handleEdit = async (id: string) => {
-    console.log(`Edit midpoint substance with id: ${id}`);
-    await refetch();
-  };
 
   const handleDelete = (id: string) => {
     const substance = midpointSubstancesData?.listResult.find(
@@ -221,7 +217,6 @@ const ManageMidpointSubstancePage = () => {
               substances={midpointSubstancesData?.listResult || []}
               isLoading={isLoading}
               onDelete={handleDelete}
-              onEdit={handleEdit}
             />
           </ScrollArea>
           <Pagination
