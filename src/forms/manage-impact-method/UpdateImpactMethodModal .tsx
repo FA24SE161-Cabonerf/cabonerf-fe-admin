@@ -34,7 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().nullable().optional(),
+  description: z.string().min(1, "Description is required"),
   version: z.string().min(1, "Version is required"),
   reference: z.string().nullable().optional(),
   perspectiveId: z.string().min(1, "Perspective is required"),
@@ -65,7 +65,7 @@ const UpdateImpactMethodModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: impactMethod?.name || "",
-      description: impactMethod?.description || null,
+      description: impactMethod?.description || "",
       version: impactMethod?.version || "",
       reference: impactMethod?.reference || null,
       perspectiveId: impactMethod?.perspective.id || "",
@@ -119,13 +119,11 @@ const UpdateImpactMethodModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter impact method description"
                       {...field}
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
                   <FormMessage />

@@ -44,7 +44,7 @@ const fetchImpactMethod = async (id: string): Promise<ImpactMethod> => {
 
 const createImpactMethod = async (newMethod: {
   name: string;
-  description?: string | null;
+  description: string;
   version: string;
   reference?: string | null;
   perspectiveId: string;
@@ -75,7 +75,7 @@ const updateImpactMethod = async (
   id: string,
   updatedMethod: {
     name: string;
-    description?: string | null;
+    description: string;
     version: string;
     reference?: string | null;
     perspectiveId: string;
@@ -142,7 +142,7 @@ export const useCreateImpactMethod = (): UseMutationResult<
   Error,
   {
     name: string;
-    description?: string | null;
+    description: string;
     version: string;
     reference?: string | null;
     perspectiveId: string;
@@ -153,7 +153,7 @@ export const useCreateImpactMethod = (): UseMutationResult<
     Error,
     {
       name: string;
-      description?: string | null;
+      description: string;
       version: string;
       reference?: string | null;
       perspectiveId: string;
@@ -169,7 +169,7 @@ export const useUpdateImpactMethod = (): UseMutationResult<
   {
     id: string;
     name: string;
-    description?: string | null;
+    description: string;
     version: string;
     reference?: string | null;
     perspectiveId: string;
@@ -181,7 +181,7 @@ export const useUpdateImpactMethod = (): UseMutationResult<
     {
       id: string;
       name: string;
-      description?: string | null;
+      description: string;
       version: string;
       reference?: string | null;
       perspectiveId: string;

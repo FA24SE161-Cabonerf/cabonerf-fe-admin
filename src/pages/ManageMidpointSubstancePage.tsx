@@ -46,7 +46,7 @@ const ManageMidpointSubstancePage = () => {
 
   const {
     data: midpointSubstancesData,
-    isLoading: isLoadingSubstances,
+    isLoading,
     error: substancesError,
     refetch,
   } = useMidpointSubstances(
@@ -62,11 +62,11 @@ const ManageMidpointSubstancePage = () => {
     error: compartmentsError,
   } = useEmissionCompartments();
 
-  const { data: impactMethods, isLoading: isLoadingMethods } =
+  const { data: impactMethods } =
     useImpactMethods();
-  const { data: impactCategories, isLoading: isLoadingCategories } =
+  const { data: impactCategories} =
     useImpactCategories();
-    const { data: units, isLoading: isLoadingUnits } = useUnits();
+    const { data: units } = useUnits();
 
   const createMidpointSubstanceMutation = useCreateMidpointSubstance();
   const deleteMidpointSubstanceMutation = useDeleteMidpointSubstance();
@@ -165,13 +165,6 @@ const ManageMidpointSubstancePage = () => {
   };
 
   const error = substancesError || compartmentsError;
-
-  const isLoading =
-    isLoadingSubstances ||
-    isLoadingCompartments ||
-    isLoadingMethods ||
-    isLoadingCategories ||
-    isLoadingUnits;;
 
   return (
     <div className="container mx-auto p-4">

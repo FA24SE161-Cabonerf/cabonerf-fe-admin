@@ -34,12 +34,12 @@ const ManageEmissionCompartmentPage = () => {
   }, [searchTerm, navigate, location.search]);
 
   const filteredCompartments = emissionCompartments
-    ? emissionCompartments.filter(
-        (compartment) =>
-          compartment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          compartment.description.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  ? emissionCompartments.filter(
+      (compartment) =>
+        compartment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (compartment.description && compartment.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+  : [];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
