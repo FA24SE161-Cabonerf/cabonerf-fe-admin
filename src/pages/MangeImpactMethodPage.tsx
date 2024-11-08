@@ -70,7 +70,7 @@ const ManageImpactMethodPage = () => {
 
   const handleAddImpactMethod = async (data: {
     name: string;
-    description?: string | null;
+    description: string;
     version: string;
     reference?: string | null;
     perspectiveId: string;
@@ -98,7 +98,7 @@ const ManageImpactMethodPage = () => {
     id: string,
     data: {
       name: string;
-      description?: string | null;
+      description: string;
       version: string;
       reference?: string | null;
       perspectiveId: string;

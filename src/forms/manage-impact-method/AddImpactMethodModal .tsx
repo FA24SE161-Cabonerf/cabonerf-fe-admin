@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().nullable().optional(),
+  description: z.string().min(1, "Description is required"),
   version: z.string().min(1, "Version is required"),
   reference: z.string().nullable().optional(),
   perspectiveId: z.string().min(1, "Perspective is required"),
@@ -61,7 +61,7 @@ const AddImpactMethodModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      description: null,
+      description: "",
       version: "",
       reference: null,
       perspectiveId: "",
@@ -74,7 +74,10 @@ const AddImpactMethodModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]" aria-description="Add New Impact Method">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        aria-description="Add New Impact Method"
+      >
         <DialogHeader>
           <DialogTitle>Add New Impact Method</DialogTitle>
         </DialogHeader>
@@ -101,13 +104,11 @@ const AddImpactMethodModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter impact method description"
                       {...field}
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -134,10 +135,10 @@ const AddImpactMethodModal = ({
                 <FormItem>
                   <FormLabel>Reference (Optional)</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Enter reference" 
-                      {...field} 
-                      value={field.value || ''}
+                    <Input
+                      placeholder="Enter reference"
+                      {...field}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
