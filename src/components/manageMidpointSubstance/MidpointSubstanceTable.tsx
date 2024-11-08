@@ -9,18 +9,16 @@ import {
 import { MidpointSubstance } from "@/types/midpointSubstance";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { Button } from "../ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 interface MidpointSubstancesTableProps {
   substances: MidpointSubstance[] | undefined;
-  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   isLoading: boolean;
 }
 
 const MidpointSubstancesTable = ({
   substances,
-  onEdit,
   onDelete,
   isLoading,
 }: MidpointSubstancesTableProps) => {
@@ -30,7 +28,7 @@ const MidpointSubstancesTable = ({
         <TableRow>
           <TableHead>Name</TableHead>      
           <TableHead>Compartment</TableHead>
-          <TableHead>CAS</TableHead>
+          <TableHead>CAS number</TableHead>
           <TableHead>Molecular Formula</TableHead>
           <TableHead>Individualist</TableHead>
           <TableHead>Hierarchist</TableHead>
@@ -39,7 +37,7 @@ const MidpointSubstancesTable = ({
         </TableRow>
       </TableHeader>
       {isLoading ? (
-        <SkeletonTable columns={7} rows={10} />
+        <SkeletonTable columns={8} rows={10} />
       ) : (
         <TableBody>
           {substances && substances.length > 0 ? (
@@ -53,14 +51,6 @@ const MidpointSubstancesTable = ({
                 <TableCell>{substance.hierarchist}</TableCell>
                 <TableCell>{substance.egalitarian}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onEdit(substance.id)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"

@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ReloadIcon, EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useAuth } from '@/contexts/auth/AuthContext'
@@ -134,7 +134,6 @@ export default function LoginForm() {
         </CardContent>
         {loginError && (
           <Alert variant="destructive" className="mt-4">
-            <AlertTitle>Error</AlertTitle>
             <AlertDescription>{loginError}</AlertDescription>
           </Alert>
         )}
