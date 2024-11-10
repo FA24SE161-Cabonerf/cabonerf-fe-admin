@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Link } from "react-router-dom"
 
-type AdminHeaderProps = {
+type ManagerHeaderProps = {
   toggleSidebar: () => void
   userEmail: string | undefined
   userRole?: string
@@ -14,14 +14,14 @@ type AdminHeaderProps = {
   onUpdateProfile: () => void
 }
 
-const AdminHeader = ({
+const ManagerHeader = ({
   toggleSidebar,
   userEmail,
   userRole,
   userAvatar,
   onLogout,
   onUpdateProfile
-}: AdminHeaderProps) => {
+}: ManagerHeaderProps) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   
   useEffect(() => {
@@ -80,4 +80,4 @@ const AdminHeader = ({
   )
 }
 
-export default AdminHeader
+export default ManagerHeader
