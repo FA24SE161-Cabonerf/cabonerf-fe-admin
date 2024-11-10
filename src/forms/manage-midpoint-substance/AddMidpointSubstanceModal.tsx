@@ -114,15 +114,15 @@ export default function AddMidpointSubstanceModal({
 
   const handleEmissionSubstanceSelect = (substance: EmissionSubstance) => {
     setSelectedEmissionSubstance(substance);
-    form.setValue("name", substance.emissionSubstance.name);
-    form.setValue("chemicalName", substance.emissionSubstance.chemicalName || null);
+    form.setValue("name", substance.substance.name);
+    form.setValue("chemicalName", substance.substance.chemicalName || null);
     form.setValue(
       "molecularFormula",
-      substance.emissionSubstance.molecularFormula || null
+      substance.substance.molecularFormula || null
     );
     form.setValue(
       "alternativeFormula",
-      substance.emissionSubstance.alternativeFormula || null
+      substance.substance.alternativeFormula || null
     );
     form.setValue("emissionCompartmentId", substance.emissionCompartment.id);
     form.setValue("unitId", substance.unit.id);
@@ -153,7 +153,7 @@ export default function AddMidpointSubstanceModal({
                     <div className="flex items-center justify-between bg-blue-100 dark:bg-primary/20 p-2 rounded-md mb-4">
                       <span>
                         Selected:{" "}
-                        {selectedEmissionSubstance.emissionSubstance.name}
+                        {selectedEmissionSubstance.substance.name}
                       </span>
                       <Button
                         type="button"

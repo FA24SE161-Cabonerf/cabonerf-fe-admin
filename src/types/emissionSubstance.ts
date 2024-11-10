@@ -4,7 +4,7 @@ import { Unit } from "./unit";
 
 export type EmissionSubstance = {
   id: string;
-  emissionSubstance: {
+  substance: {
     id: string;
     name: string;
     chemicalName: string;
