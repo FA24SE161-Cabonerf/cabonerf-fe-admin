@@ -23,7 +23,7 @@ const EmissionSubstancesTable = ({ onSelect }: EmissionSubstancesTableProps) => 
   }, [keyword, refetch]);
 
   if (isError) return <p>Error loading emission substances</p>;
-
+  console.log(emissionSubstancesData)
   return (
     <div className="space-y-4">
       <Input
@@ -45,16 +45,17 @@ const EmissionSubstancesTable = ({ onSelect }: EmissionSubstancesTableProps) => 
               </TableRow>
             </TableHeader>
             <TableBody>
+         
               {emissionSubstancesData.data.map((substance) => (
                 <TableRow
                   key={substance.id}
                   onClick={() => onSelect(substance)}
                   className="cursor-pointer "
                 >
-                  <TableCell className="font-medium">{substance.emissionSubstance?.name || 'N/A'}</TableCell>
-                  <TableCell>{substance.emissionSubstance?.chemicalName || 'N/A'}</TableCell>
-                  <TableCell>{substance.emissionCompartment?.name || 'N/A'}</TableCell>
-                  <TableCell>{substance.unit?.name || 'N/A'}</TableCell>
+                  <TableCell className="font-medium">{substance.substance?.name || '-'}</TableCell>
+                  <TableCell>{substance.substance?.chemicalName || '-'}</TableCell>
+                  <TableCell>{substance.emissionCompartment?.name || '-'}</TableCell>
+                  <TableCell>{substance.unit?.name || '-'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

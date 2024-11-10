@@ -79,15 +79,13 @@ const ManageEmissionCompartmentPage = () => {
         />
       </div>
       {error ? (
-        <Alert variant="destructive" className="mb-4">
+          <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
-            {error.status === 404
-              ? "Emission compartments not found."
-              : error.status >= 500
-              ? "Server error. Please try again later."
-              : error.message}
+            {error instanceof Error
+              ? error.message
+              : "An unknown error occurred"}
           </AlertDescription>
         </Alert>
       ) : (
