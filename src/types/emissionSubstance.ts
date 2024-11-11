@@ -10,6 +10,7 @@ export type EmissionSubstance = {
     chemicalName: string;
     molecularFormula: string;
     alternativeFormula: string;
+    cas: string;
   };
   emissionCompartment: EmissionCompartment;
   unit: Unit

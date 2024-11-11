@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,44 +28,42 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { UnitGroup } from "@/types/unitGroup";
+import { Textarea } from "@/components/ui/textarea";
+import { Unit } from "@/types/unit";
 
 const formSchema = z.object({
-  unitName: z.string().min(1, "Unit name is required"),
-  conversionFactor: z.number().min(0, "Conversion factor must be non-negative"),
-  isDefault: z.boolean(),
-  unitGroupId: z.string().min(1, "Unit group is required"),
+  name: z.string().min(1, "Category name is required"),
+  description: z.string().nullable().optional(),
+  abbr: z.string().min(1, "Abbreviation is required"),
+  unitId: z.string().min(1, "Unit is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-interface AddUnitModalProps {
+interface AddMidpointImpactCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: FormData) => Promise<void>;
   isSubmitting: boolean;
   error: string | null;
-  unitGroups: UnitGroup[];
+  units: Unit[];
 }
 
-export default function AddUnitModal({
+const AddMidpointImpactCategoryModal = ({
   isOpen,
   onClose,
   onSubmit,
   isSubmitting,
   error,
-  unitGroups,
-}: AddUnitModalProps) {
-  const [isDefaultChecked, setIsDefaultChecked] = useState(false);
-
+  units,
+}: AddMidpointImpactCategoryModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      unitName: "",
-      conversionFactor: 1,
-      isDefault: false,
-      unitGroupId: "",
+      name: "",
+      description: null,
+      abbr: "",
+      unitId: "",
     },
   });
 
@@ -73,19 +71,12 @@ export default function AddUnitModal({
     onSubmit(values);
   };
 
-  const handleIsDefaultChange = (checked: boolean | string) => {
-    const isChecked = checked === true || checked === "true";
-    setIsDefaultChecked(isChecked);
-    if (isChecked) {
-      form.setValue("conversionFactor", 1);
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] h-[520px]">
+      <DialogDescription></DialogDescription>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Unit</DialogTitle>
+          <DialogTitle>Add New Midpoint Impact Category</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -94,12 +85,12 @@ export default function AddUnitModal({
           >
             <FormField
               control={form.control}
-              name="unitName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter unit name" {...field} />
+                    <Input placeholder="Enter category name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,64 +98,57 @@ export default function AddUnitModal({
             />
             <FormField
               control={form.control}
-              name="isDefault"
+              name="description"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormItem>
+                  <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        field.onChange(checked);
-                        handleIsDefaultChange(checked);
-                      }}
+                    <Textarea
+                      placeholder="Enter category description"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Is Default</FormLabel>
-                  </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="conversionFactor"
+              name="abbr"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Conversion Factor</FormLabel>
+                  <FormLabel>Abbreviation</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
+                      placeholder="Enter category abbreviation"
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                      disabled={isDefaultChecked}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="unitGroupId"
+              name="unitId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Unit Group</FormLabel>
+                  <FormLabel>Unit</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a unit group" />
+                        <SelectValue placeholder="Select a unit" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {unitGroups.map((group) => (
-                        <SelectItem key={group.id} value={group.id}>
-                          {group.name}
+                      {units.map((unit) => (
+                        <SelectItem key={unit.id} value={unit.id}>
+                          {unit.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -181,8 +165,8 @@ export default function AddUnitModal({
               </Alert>
             )}
             <DialogFooter>
-              <Button className="mt-6" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Adding..." : "Add Unit"}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Adding..." : "Add Category"}
               </Button>
             </DialogFooter>
           </form>
@@ -190,4 +174,6 @@ export default function AddUnitModal({
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default AddMidpointImpactCategoryModal;

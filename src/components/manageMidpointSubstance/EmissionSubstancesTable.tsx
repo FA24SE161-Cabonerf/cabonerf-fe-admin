@@ -23,7 +23,6 @@ const EmissionSubstancesTable = ({ onSelect }: EmissionSubstancesTableProps) => 
   }, [keyword, refetch]);
 
   if (isError) return <p>Error loading emission substances</p>;
-  console.log(emissionSubstancesData)
   return (
     <div className="space-y-4">
       <Input

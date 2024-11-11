@@ -124,6 +124,10 @@ export default function AddMidpointSubstanceModal({
       "alternativeFormula",
       substance.substance.alternativeFormula || null
     );
+    form.setValue(
+      "cas",
+      substance.substance.cas || null
+    );
     form.setValue("emissionCompartmentId", substance.emissionCompartment.id);
     form.setValue("unitId", substance.unit.id);
   };
@@ -188,7 +192,7 @@ export default function AddMidpointSubstanceModal({
                       name="chemicalName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Chemical Name</FormLabel>
+                          <FormLabel>Chemical Name (Optional)</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter chemical name"
@@ -209,7 +213,7 @@ export default function AddMidpointSubstanceModal({
                       name="molecularFormula"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Molecular Formula</FormLabel>
+                          <FormLabel>Molecular Formula (Optional)</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter molecular formula"
@@ -230,7 +234,7 @@ export default function AddMidpointSubstanceModal({
                       name="alternativeFormula"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Alternative Formula</FormLabel>
+                          <FormLabel>Alternative Formula (Optional)</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter alternative formula"
@@ -251,7 +255,7 @@ export default function AddMidpointSubstanceModal({
                       name="cas"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>CAS Number</FormLabel>
+                          <FormLabel>CAS Number (Optional)</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter CAS number"
@@ -260,6 +264,7 @@ export default function AddMidpointSubstanceModal({
                               onChange={(e) =>
                                 field.onChange(e.target.value || null)
                               }
+                              disabled={!!selectedEmissionSubstance}
                             />
                           </FormControl>
                           <FormMessage />
