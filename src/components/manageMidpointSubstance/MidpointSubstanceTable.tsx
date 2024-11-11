@@ -26,10 +26,10 @@ const MidpointSubstancesTable = ({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>      
+          <TableHead>Name</TableHead>       
           <TableHead>Compartment</TableHead>
           <TableHead>CAS number</TableHead>
-          <TableHead>Molecular Formula</TableHead>
+          <TableHead>Molecular formula</TableHead>    
           <TableHead>Individualist</TableHead>
           <TableHead>Hierarchist</TableHead>
           <TableHead>Egalitarian</TableHead>
@@ -43,10 +43,10 @@ const MidpointSubstancesTable = ({
           {substances && substances.length > 0 ? (
             substances.map((substance) => (
               <TableRow key={substance.id}>
-                <TableCell className="font-medium">{substance.name}</TableCell>            
+                <TableCell className="font-medium">{substance.name}</TableCell>                  
                 <TableCell>{substance.compartmentName}</TableCell>
                 <TableCell>{substance.casNumber}</TableCell>
-                <TableCell>{substance.molecularFormula}</TableCell>
+                <TableCell>{substance.molecularFormula}</TableCell>             
                 <TableCell>{substance.individualist}</TableCell>
                 <TableCell>{substance.hierarchist}</TableCell>
                 <TableCell>{substance.egalitarian}</TableCell>
