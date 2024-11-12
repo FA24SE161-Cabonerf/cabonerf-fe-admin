@@ -1,5 +1,5 @@
 import { headers } from "@/constants/headers";
-import { ImpactMethod, ImpactMethodListResponse, ImpactMethodResponse } from "@/types/impactMethod";
+import { ImpactMethod, ImpactMethodListResponse, ImpactMethodName, ImpactMethodNameListResponse, ImpactMethodResponse } from "@/types/impactMethod";
 import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
 import { ApiResponse } from "@/types/apiResponse";
@@ -120,6 +120,31 @@ const deleteImpactMethod = async (id: string): Promise<void> => {
       throw new Error("An unexpected error occurred while deleting the impact method");
     }
   }
+};
+
+const fetchImpactMethodNames = async (): Promise<ImpactMethodName[]> => {
+  try {
+    const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/name`, {
+      headers
+    });
+
+    const data: ImpactMethodNameListResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in fetchImpactMethodNames:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch impact method names: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while fetching impact method names");
+    }
+  }
+};
+
+export const useImpactMethodNames = (): UseQueryResult<ImpactMethodName[], Error> => {
+  return useQuery<ImpactMethodName[], Error>({
+    queryKey: ["impactMethodNames"],
+    queryFn: fetchImpactMethodNames,
+  });
 };
 
 export const useImpactMethods = (): UseQueryResult<ImpactMethod[], Error> => {

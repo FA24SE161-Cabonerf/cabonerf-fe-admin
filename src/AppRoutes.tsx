@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import {  Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import LoginLayout from "./layouts/LoginLayout";
 
@@ -17,6 +17,7 @@ import ManageMidpointSubstancePage from "./pages/ManageMidpointSubstancePage";
 import ManageEmissionCompartmentPage from "./pages/ManageEmissionCompartmentPage ";
 import ManagePerspectivePage from "./pages/ManagePerspectivePage ";
 import ManageMidpointImpactCategoryPage from "./pages/ManageMidpointImpactCategoryPage";
+import ManagerDashboardLayout from "./layouts/ManagerDashboardLayout";
 
 const AppRoutes = () => {
   return (
@@ -71,7 +72,7 @@ const AppRoutes = () => {
             </AdminDashboardLayout>
           }
         />
-         <Route
+        <Route
           path="/midpoint-impact-category"
           element={
             <AdminDashboardLayout>
@@ -125,6 +126,32 @@ const AppRoutes = () => {
             <AdminDashboardLayout>
               <ManagePerspectivePage />
             </AdminDashboardLayout>
+          }
+        />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={["Manager"]} />}>
+        <Route
+          path="/manager"
+          element={
+            <ManagerDashboardLayout>
+              <AdminDashboardPage />
+            </ManagerDashboardLayout>
+          }
+        />
+        <Route
+          path="/update-manager-profile"
+          element={
+            <ManagerDashboardLayout>
+              <UpdateProfilePage />
+            </ManagerDashboardLayout>
+          }
+        />
+        <Route
+          path="/manage-organization"
+          element={
+            <ManagerDashboardLayout>
+              <ManageUserPage />
+            </ManagerDashboardLayout>
           }
         />
       </Route>

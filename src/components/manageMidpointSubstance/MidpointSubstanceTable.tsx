@@ -9,17 +9,20 @@ import {
 import { MidpointSubstance } from "@/types/midpointSubstance";
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { Button } from "../ui/button";
-import { Trash2 } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 interface MidpointSubstancesTableProps {
   substances: MidpointSubstance[] | undefined;
   onDelete: (id: string) => void;
+  onExport: () => void;
   isLoading: boolean;
 }
 
 const MidpointSubstancesTable = ({
   substances,
   onDelete,
+  onExport,
   isLoading,
 }: MidpointSubstancesTableProps) => {
   return (
@@ -33,7 +36,28 @@ const MidpointSubstancesTable = ({
           <TableHead>Individualist</TableHead>
           <TableHead>Hierarchist</TableHead>
           <TableHead>Egalitarian</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead>
+            <div className="flex items-center justify-between">
+              <span>Actions</span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={onExport}
+                      aria-label="Export midpoint substances"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p>Export</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </TableHead>
         </TableRow>
       </TableHeader>
       {isLoading ? (
@@ -64,7 +88,7 @@ const MidpointSubstancesTable = ({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center">
+              <TableCell colSpan={8} className="text-center">
                 No midpoint substances found.
               </TableCell>
             </TableRow>

@@ -67,7 +67,7 @@ const ManagerHeader = ({
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onUpdateProfile}>
               <User className="mr-2 h-4 w-4" />
-              <Link to="/update-profile">Update Profile</Link>
+              <Link to="/update-manager-profile">Update Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" />

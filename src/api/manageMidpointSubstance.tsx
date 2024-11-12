@@ -1,5 +1,5 @@
 import { headers } from "@/constants/headers";
-import { PaginatedResponse } from "@/types/apiResponse";
+import { ApiResponse, PaginatedResponse } from "@/types/apiResponse";
 import {
   MidpointSubstance,
   MidpointSubstanceListResponse,
@@ -132,6 +132,153 @@ const deleteMidpointSubstance = async (id: string): Promise<void> => {
       throw new Error("An unexpected error occurred while deleting the midpoint substance");
     }
   }
+};
+
+const downloadMidpointFactorTemplate = async (): Promise<Blob> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/factor-template`,
+      {
+        headers,
+        method: 'GET',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.blob();
+  } catch (error) {
+    console.error("Error in downloadMidpointFactorTemplate:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to download midpoint factor template: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while downloading the midpoint factor template");
+    }
+  }
+};
+
+interface ExportMidpointFactorsParams {
+  methodId: string;
+  impactCategoryId: string;
+}
+
+const exportMidpointFactors = async (params: ExportMidpointFactorsParams): Promise<Blob> => {
+  try {
+    const queryParams = new URLSearchParams({
+      methodId: params.methodId,
+      impactCategoryId: params.impactCategoryId,
+    });
+
+    const response = await fetch(
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/export?${queryParams.toString()}`,
+      {
+        headers,
+        method: 'GET',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.blob();
+  } catch (error) {
+    console.error("Error in exportMidpointFactors:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to export midpoint factors: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while exporting midpoint factors");
+    }
+  }
+};
+
+type ImportMidpointFactorsResponseData = {
+  importData: MidpointSubstance[];
+  filePath: string | null;
+};
+
+type ImportMidpointFactorsResponse = ApiResponse<ImportMidpointFactorsResponseData>;
+
+const importMidpointFactors = async (methodName: string, file: File): Promise<ImportMidpointFactorsResponseData> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/import?methodName=${encodeURIComponent(methodName)}`,
+      {
+        method: 'POST',
+        headers: {
+          ...headers,
+        },
+        body: formData,
+      }
+    );
+
+    const data: ImportMidpointFactorsResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in importMidpointFactors:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to import midpoint factors: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while importing midpoint factors");
+    }
+  }
+};
+
+
+const downloadErrorLog = async (fileName: string): Promise<Blob> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/download?fileName=${encodeURIComponent(fileName)}`,
+      {
+        headers,
+        method: 'GET',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.blob();
+  } catch (error) {
+    console.error("Error in downloadErrorLog:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to download error log: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while downloading the error log");
+    }
+  }
+};
+
+export const useImportMidpointFactors = (): UseMutationResult<ImportMidpointFactorsResponseData, Error, { methodName: string, file: File }> => {
+  return useMutation<ImportMidpointFactorsResponseData, Error, { methodName: string, file: File }>({
+    mutationFn: ({ methodName, file }) => importMidpointFactors(methodName, file),
+  });
+};
+
+export const useDownloadErrorLog = (): UseMutationResult<Blob, Error, string> => {
+  return useMutation<Blob, Error, string>({
+    mutationFn: downloadErrorLog,
+  });
+};
+
+export const useExportMidpointFactors = (): UseMutationResult<Blob, Error, ExportMidpointFactorsParams> => {
+  return useMutation<Blob, Error, ExportMidpointFactorsParams>({
+    mutationFn: exportMidpointFactors,
+  });
+};
+
+export const useDownloadMidpointFactorTemplate = (): UseQueryResult<Blob, Error> => {
+  return useQuery<Blob, Error>({
+    queryKey: ["midpointFactorTemplate"],
+    queryFn: downloadMidpointFactorTemplate,
+    enabled: false, // This query will not run automatically
+  });
 };
 
 export const useCreateMidpointSubstance = (): UseMutationResult<
