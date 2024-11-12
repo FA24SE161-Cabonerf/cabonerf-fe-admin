@@ -15,3 +15,4 @@ export type MidpointSubstance = {
 
 export type MidpointSubstanceListResponse = ApiResponse<PaginatedResponse<MidpointSubstance>>;
 export type MidpointSubstanceResponse = ApiResponse<MidpointSubstance>;
+

@@ -1,52 +1,61 @@
 import { User } from '@/types/user'
 import { useAuth } from './AuthContext'
-import { Navigate, Outlet, useNavigate } from "react-router-dom"
+import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { AlertMessage } from '@/components/alertMessage/AlertMessage'
 
-
 type ProtectedRouteProps = {
-  allowedRoles?: User['role']["name"][];
+  allowedRoles: User['role']["name"][];
 }
 
 export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   const { currentUser } = useAuth()
   const [showAlert, setShowAlert] = useState(false)
-  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    if (currentUser && allowedRoles && !allowedRoles.includes(currentUser.role.name)) {
+    if (currentUser && !allowedRoles.includes(currentUser.role.name)) {
       setShowAlert(true)
       const timer = setTimeout(() => {
         setShowAlert(false)
-        navigate('/login', { replace: true })
-      }, 5000) // Redirect to login after 5 seconds
+      }, 5000)
 
       return () => clearTimeout(timer)
     }
-  }, [currentUser, allowedRoles, navigate])
+  }, [currentUser, allowedRoles])
 
   if (currentUser === undefined) {
     return <div>Loading...</div>
   }
 
   if (currentUser === null) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  if (allowedRoles && !allowedRoles.includes(currentUser.role.name)) {
+  if (!allowedRoles.includes(currentUser.role.name)) {
     return (
       <div className="container mx-auto p-4">
         {showAlert && (
           <AlertMessage 
             title="Access Denied" 
-            message="You don't have permission to access this page. Redirecting to login page in 5 seconds..." 
+            message="You don't have permission to access this page." 
           />
         )}
-        <div>Redirecting...</div>
+        <Navigate to={getDefaultRoute(currentUser.role.name)} replace />
       </div>
     )
   }
 
   return <Outlet />
+}
+
+function getDefaultRoute(role: string): string {
+  switch (role) {
+    case "System Admin":
+      return "/"
+    case "Manager":
+      return "/manager"
+    default:
+      return "/login"
+  }
 }

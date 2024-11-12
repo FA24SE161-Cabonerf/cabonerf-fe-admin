@@ -1,6 +1,4 @@
 import {
-  ChartBarStackedIcon,
-  FileText,
   LayoutDashboard,
   Users,
 } from "lucide-react";
@@ -14,13 +12,9 @@ const ManagerSidebar = ({ isSidebarOpen }: ManagerSidebarProps) => {
   const location = useLocation();
 
   const navItems = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/manage-user", icon: Users, label: "Manage users" },
-    { to: "/midpoint-substance", icon: FileText, label: "Manage midpoint substance" },
-    { to: "/impact-category", icon: ChartBarStackedIcon, label: "Manage impact category" },
-    { to: "/midpoint-impact-category", icon: ChartBarStackedIcon, label: "Manage midpoint impact category" },
+    { to: "/manager", icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/manage-organization", icon: Users, label: "Manage organization" },
   ];
-
   return (
     <aside
       className={`fixed left-0 top-0 z-40 h-screen w-64 transform transition-transform duration-300 ease-in-out ${
