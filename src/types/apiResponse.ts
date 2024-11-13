@@ -9,10 +9,3 @@ export type PaginatedResponse<T> = {
   totalPage: number;
   listResult: T[];
 };
-
-export type PaginatedResponseEmission<T> = {
-  pageCurrent: number;
-  pageSize: number;
-  totalPage: number;
-  list: T[];
-};
