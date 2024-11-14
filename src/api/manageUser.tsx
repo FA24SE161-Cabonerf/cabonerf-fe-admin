@@ -1,7 +1,7 @@
 import { headers } from "@/constants/headers";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
-import { UserListResponse, UserPaginatedResponse } from "@/types/userListType";
+import { User, UserListResponse, UserPaginatedResponse, UserResponse } from "@/types/userListType";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -34,6 +34,28 @@ const fetchUsers = async (
   }
 };
 
+const banUnbanUser = async (userId: string): Promise<User> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/users/admin/ban-unban-user/${userId}`,
+      {
+        method: 'POST',
+        headers,
+      }
+    );
+
+    const data: UserResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in banUnbanUser:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to ban/unban user: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while banning/unbanning user");
+    }
+  }
+};
+
 export const useUsers = (
   pageCurrent: number,
   pageSize: number,
@@ -42,5 +64,11 @@ export const useUsers = (
   return useQuery<UserPaginatedResponse, Error>({
     queryKey: ["users", pageCurrent, pageSize, keyword],
     queryFn: () => fetchUsers(pageCurrent, pageSize, keyword),
+  });
+};
+
+export const useBanUnbanUser = (): UseMutationResult<User, Error, string> => {
+  return useMutation<User, Error, string>({
+    mutationFn: banUnbanUser,
   });
 };
