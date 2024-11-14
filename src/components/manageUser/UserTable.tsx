@@ -7,21 +7,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil } from 'lucide-react';
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { User } from "@/types/userListType";
+import { Switch } from "@/components/ui/switch";
 
 interface UserTableProps {
   users: User[] | undefined;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onToggleStatus: (id: string, newStatus: boolean) => void;
   isLoading: boolean;
 }
 
 const UserTable = ({
   users,
   onEdit,
-  onDelete,
+  onToggleStatus,
   isLoading,
 }: UserTableProps) => {
   const renderIcon = (iconUrl: string | null) => {
@@ -34,6 +35,7 @@ const UserTable = ({
       return <img src={iconUrl} alt="Icon" className="w-5 h-5 object-contain" />;
     }
   };
+
   return (
     <Table>
       <TableHeader>
@@ -66,26 +68,25 @@ const UserTable = ({
                 <TableCell>{user.bio || '-'}</TableCell>
                 <TableCell>{user.status ? "Active" : "Inactive"}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onEdit(user.id)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onDelete(user.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onEdit(user.id)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Switch
+                      checked={user.status}
+                      onCheckedChange={(checked) => onToggleStatus(user.id, checked)}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="text-center">
+              <TableCell colSpan={6} className="text-center">
                 No users found
               </TableCell>
             </TableRow>
