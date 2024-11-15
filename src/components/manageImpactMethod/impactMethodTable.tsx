@@ -46,8 +46,8 @@ const ImpactMethodsTable = ({
                 <TableCell className="font-medium">{method.name}</TableCell>
                 <TableCell>{method.version}</TableCell>
                 <TableCell>{`${method.perspective.name} (${method.perspective.abbr})`}</TableCell>
-                <TableCell>{`${method.description}` || "N/A"}</TableCell>
-                <TableCell>{method.reference || "N/A"}</TableCell>
+                <TableCell>{`${method.description}` || "-"}</TableCell>
+                <TableCell>{method.reference || "-"}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

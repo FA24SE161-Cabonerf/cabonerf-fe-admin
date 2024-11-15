@@ -18,6 +18,7 @@ import ManageEmissionCompartmentPage from "./pages/ManageEmissionCompartmentPage
 import ManagePerspectivePage from "./pages/ManagePerspectivePage ";
 import ManageMidpointImpactCategoryPage from "./pages/ManageMidpointImpactCategoryPage";
 import ManagerDashboardLayout from "./layouts/ManagerDashboardLayout";
+import ManageOrganizationPage from "./pages/ManageOrganizationPage";
 
 const AppRoutes = () => {
   return (
@@ -150,7 +151,7 @@ const AppRoutes = () => {
           path="/manage-organization"
           element={
             <ManagerDashboardLayout>
-              <ManageUserPage />
+              <ManageOrganizationPage />
             </ManagerDashboardLayout>
           }
         />

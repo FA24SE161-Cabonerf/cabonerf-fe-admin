@@ -41,7 +41,7 @@ const EmissionCompartmentTable = ({
             emissionCompartments.map((compartment) => (
               <TableRow key={compartment.id}>
                 <TableCell className="font-medium">{compartment.name}</TableCell>
-                <TableCell>{compartment.description}</TableCell>
+                <TableCell>{compartment.description || "-"}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
