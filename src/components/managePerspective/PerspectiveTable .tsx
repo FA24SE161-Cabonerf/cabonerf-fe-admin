@@ -42,10 +42,10 @@ const PerspectiveTable = ({
             perspectives.map((perspective) => (
               <TableRow key={perspective.id}>
                 <TableCell className="font-medium">
-                  {perspective.name || "N/A"}
+                  {perspective.name || "-"}
                 </TableCell>
-                <TableCell>{perspective.description || "N/A"}</TableCell>
-                <TableCell>{perspective.abbr || "N/A"}</TableCell>
+                <TableCell>{perspective.description || "-"}</TableCell>
+                <TableCell>{perspective.abbr || "-"}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
