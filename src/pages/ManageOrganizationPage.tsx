@@ -5,23 +5,20 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, Plus } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useUsers, useBanUnbanUser } from "@/api/manageUser";
-import Pagination from "@/components/pagination/Pagination";
-import { useToast } from "@/hooks/use-toast";
+import { useOrganizations } from "@/api/manageOrganization";
 import OrganizationTable from "@/components/manageOrganization/OrganizationTable";
+import Pagination from "@/components/pagination/Pagination";
 
 const ManageOrganizationPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
 
   const searchParams = new URLSearchParams(location.search);
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
 
-  const { data: userResponse, isLoading, error, refetch } = useUsers(page, pageSize, searchTerm);
-  const banUnbanMutation = useBanUnbanUser();
+  const { data: organizationResponse, isLoading, error } = useOrganizations(page, pageSize, searchTerm);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -40,30 +37,6 @@ const ManageOrganizationPage = () => {
     setPage(1); // Reset to first page when search term changes
   };
 
-  const handleEdit = (id: string) => {
-    // Implement edit functionality
-    console.log(`Edit user with id: ${id}`);
-  };
-
-  const handleToggleStatus = async (id: string, newStatus: boolean) => {
-    try {
-      await banUnbanMutation.mutateAsync(id);
-      refetch(); // Refetch the users list to update the UI
-      toast({
-        title: "Success",
-        description: `User ${newStatus ? "unbanned" : "banned"} successfully`,
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("Failed to ban/unban user:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update user status",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
@@ -76,14 +49,14 @@ const ManageOrganizationPage = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">User Management</h1>
-        <Button onClick={() => console.log("Add new user")}>
-          <Plus className="mr-2 h-4 w-4" /> Add New User
+        <h1 className="text-2xl font-bold">Organizations Management</h1>
+        <Button onClick={() => console.log("Add new organization")}>
+          <Plus className="mr-2 h-4 w-4" /> Add New Organization
         </Button>
       </div>
       <div className="mb-4">
         <Input
-          placeholder="Search users..."
+          placeholder="Search organizations..."
           value={searchTerm}
           onChange={handleSearchChange}
           className="max-w-sm"
@@ -98,20 +71,20 @@ const ManageOrganizationPage = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <ScrollArea className="h-[calc(100vh-250px)]">
+        <ScrollArea className="h-[calc(100vh-200px)]">
           <OrganizationTable
-            users={userResponse?.users}
-            onEdit={handleEdit}
-            onToggleStatus={handleToggleStatus}
+            organizations={organizationResponse?.list}
+            onEdit={(id) => console.log(`Edit organization with id: ${id}`)}
+            onDelete={(id) => console.log(`Delete organization with id: ${id}`)}
             isLoading={isLoading}
           />
         </ScrollArea>
       )}
-      {userResponse && (
+      {organizationResponse && (
         <Pagination
           page={page}
           pageSize={pageSize}
-          totalPages={userResponse.totalPage}
+          totalPages={organizationResponse.totalPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />

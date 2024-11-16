@@ -1,6 +1,6 @@
 import {
+  Building2Icon,
   LayoutDashboard,
-  Users,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const ManagerSidebar = ({ isSidebarOpen }: ManagerSidebarProps) => {
 
   const navItems = [
     { to: "/manager", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/manage-organization", icon: Users, label: "Manage organization" },
+    { to: "/manage-organization", icon: Building2Icon, label: "Manage organization" },
   ];
   return (
     <aside
