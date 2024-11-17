@@ -1,8 +1,17 @@
 import { headers } from "@/constants/headers";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
-import { OrganizationListResponse, OrganizationPaginatedResponse } from "@/types/organization";
-
+import {
+  Organization,
+  OrganizationListResponse,
+  OrganizationPaginatedResponse,
+  OrganizationResponse,
+} from "@/types/organization";
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -30,10 +39,123 @@ const fetchOrganizations = async (
     if (error instanceof Error) {
       throw new Error(`Failed to fetch organizations: ${error.message}`);
     } else {
-      throw new Error("An unexpected error occurred while fetching organizations");
+      throw new Error(
+        "An unexpected error occurred while fetching organizations"
+      );
     }
   }
 };
+const createOrganization = async (newOrganization: {
+  name: string;
+  email: string;
+  contractFile?: File | null;
+}): Promise<Organization> => {
+  try {
+    const { name, email, contractFile } = newOrganization;
+    const formData = new FormData();
+    if (contractFile) {
+      formData.append('contractFile', contractFile);
+    }
+
+    const response = await fetch(
+      `${VITE_BASE_URL}/organizations/manager?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`,
+      {
+        method: 'POST',
+        headers: { ...headers },
+        body: formData,
+      }
+    );
+
+    const data: OrganizationResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in createOrganization:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to create organization: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while creating the organization");
+    }
+  }
+};
+
+
+const updateOrganization = async (
+  organizationId: string,
+  name: string
+): Promise<Organization> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/organizations/manager/${organizationId}`,
+      {
+        method: "PUT",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      }
+    );
+
+    const data: OrganizationResponse = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in updateOrganization:", error);
+    throw new Error("Failed to update organization");
+  }
+};
+const deleteOrganization = async (organizationId: string): Promise<void> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/organizations/manager/${organizationId}`,
+      {
+        method: "DELETE",
+        headers,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete organization");
+    }
+  } catch (error) {
+    console.error("Error in deleteOrganization:", error);
+    throw new Error("Failed to delete organization");
+  }
+};
+
+export const useDeleteOrganization = (): UseMutationResult<
+  void,
+  Error,
+  string,
+  unknown
+> => {
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => deleteOrganization(id),
+  });
+};
+
+export const useUpdateOrganization = (): UseMutationResult<
+  Organization,
+  Error,
+  { id: string; name: string },
+  unknown
+> => {
+  return useMutation<Organization, Error, { id: string; name: string }>({
+    mutationFn: ({ id, name }) => updateOrganization(id, name),
+  });
+};
+
+export const useCreateOrganization = (): UseMutationResult<
+  Organization,
+  Error,
+  { name: string; email: string; contractFile?: File | null },
+  unknown
+> => {
+  return useMutation<
+    Organization,
+    Error,
+    { name: string; email: string; contractFile?: File | null }
+  >({
+    mutationFn: createOrganization,
+  });
+};
+
 
 export const useOrganizations = (
   pageCurrent: number,
