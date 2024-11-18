@@ -41,7 +41,7 @@ const OrganizationTable = ({
             organizations.map((organization) => (
               <TableRow key={organization.id}>
                 <TableCell className="font-medium">{organization.name}</TableCell>
-                <TableCell>{organization.contract || 'N/A'}</TableCell>
+                <TableCell>{organization.contract || '-'}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

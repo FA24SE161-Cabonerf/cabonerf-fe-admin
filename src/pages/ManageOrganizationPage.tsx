@@ -157,14 +157,14 @@ const ManageOrganizationPage = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); // Reset to first page when page size changes
+    setPage(1); 
   };
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Organizations Management</h1>
-        <Button onClick={() => console.log("Add new organization")}>
+        <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Add New Organization
         </Button>
       </div>
