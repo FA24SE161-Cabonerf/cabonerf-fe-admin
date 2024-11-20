@@ -37,18 +37,18 @@ const ManageUserPage = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page when search term changes
+    setPage(1); 
   };
 
   const handleEdit = (id: string) => {
-    // Implement edit functionality
+   
     console.log(`Edit user with id: ${id}`);
   };
 
   const handleToggleStatus = async (id: string, newStatus: boolean) => {
     try {
       await banUnbanMutation.mutateAsync(id);
-      refetch(); // Refetch the users list to update the UI
+      refetch(); 
       toast({
         title: "Success",
         description: `User ${newStatus ? "unbanned" : "banned"} successfully`,
