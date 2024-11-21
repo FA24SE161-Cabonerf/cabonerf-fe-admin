@@ -16,7 +16,6 @@ const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
   };
 
   const handleUpdateProfile = () => {
-    // Implement update profile logic here
     console.log("Updating profile...");
   };
   return (

@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "@/api/auth"; // Ensure this is correctly set
+import { login } from "@/api/auth"; 
 import { LoginFormValues } from "@/forms/login-form/LoginForm";
 import { User } from "@/types/user";
 
@@ -102,7 +102,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   );
 }
 
-// Hook to use AuthContext
+
 export function useAuth() {
   const context = useContext(AuthContext);
 
