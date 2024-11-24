@@ -12,7 +12,6 @@ const ManagerSidebar = ({ isSidebarOpen }: ManagerSidebarProps) => {
   const location = useLocation();
 
   const navItems = [
-    { to: "/manager", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/manage-organization", icon: Building2Icon, label: "Manage organization" },
   ];
   return (

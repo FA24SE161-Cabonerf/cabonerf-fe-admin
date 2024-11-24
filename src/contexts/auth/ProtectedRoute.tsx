@@ -54,7 +54,7 @@ function getDefaultRoute(role: string): string {
     case "System Admin":
       return "/"
     case "Manager":
-      return "/manager"
+      return "/manage-organization"
     default:
       return "/login"
   }
