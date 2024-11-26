@@ -1,9 +1,10 @@
 import { ApiResponse } from "./apiResponse";
+import { Contract } from "./contract";
 
 export type Organization = {
   id: string;
   name: string;
-  contract: string | null;
+  contract: Contract | null;
 }
 
 export type OrganizationPaginatedResponse = {

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, FileText } from 'lucide-react';
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { Organization } from "@/types/organization";
 
@@ -41,7 +41,21 @@ const OrganizationTable = ({
             organizations.map((organization) => (
               <TableRow key={organization.id}>
                 <TableCell className="font-medium">{organization.name}</TableCell>
-                <TableCell>{organization.contract || '-'}</TableCell>
+                <TableCell>
+                  {organization.contract && organization.contract.url ? (
+                    <a
+                      href={organization.contract.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-blue-600 hover:underline"
+                    >
+                      <FileText className="h-4 w-4 mr-1" />
+                      View Contract
+                    </a>
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
