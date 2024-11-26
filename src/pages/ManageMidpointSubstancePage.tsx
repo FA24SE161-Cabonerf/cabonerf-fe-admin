@@ -32,6 +32,7 @@ import ImportDownloadDropdown from "@/components/manageMidpointSubstance/ImportD
 import ExportModal from "@/forms/manage-midpoint-substance/ExportModal";
 import ImportMethodModal from "@/forms/manage-midpoint-substance/ImportMethodModal";
 import ErrorLogModal from "@/forms/manage-midpoint-substance/ErrorLogModal";
+import { ImportSuccessModal } from "@/components/manageMidpointSubstance/ImportSuccessModal";
 
 const ManageMidpointSubstancePage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,8 @@ const ManageMidpointSubstancePage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isImportSuccessModalOpen, setIsImportSuccessModalOpen] = useState(false)
+  const [importedData, setImportedData] = useState<MidpointSubstance[]>([])
   const [isErrorLogModalOpen, setIsErrorLogModalOpen] = useState(false);
   const [errorLogFile, setErrorLogFile] = useState<string | null>(null);
   const [selectedSubstance, setSelectedSubstance] =
@@ -235,6 +238,8 @@ const ManageMidpointSubstancePage = () => {
         file,
       });
       if (result.importData.length > 0) {
+        setImportedData(result.importData)
+        setIsImportSuccessModalOpen(true)
         toast({
           title: "Success",
           description: `Successfully imported ${result.importData.length} midpoint substances`,
@@ -389,6 +394,11 @@ const ManageMidpointSubstancePage = () => {
         onClose={() => setIsErrorLogModalOpen(false)}
         onDownload={handleDownloadErrorLog}
         fileName={errorLogFile || ""}
+      />
+        <ImportSuccessModal
+        isOpen={isImportSuccessModalOpen}
+        onClose={() => setIsImportSuccessModalOpen(false)}
+        importedData={importedData}
       />
     </div>
   );
