@@ -11,21 +11,29 @@ interface ImportMethodModalProps {
   onClose: () => void;
   onImport: (methodName: string, file: File) => void;
   impactMethodNames: ImpactMethodName[];
+  isImporting: boolean;
 }
 
-export default function ImportMethodModal({ isOpen, onClose, onImport, impactMethodNames }: ImportMethodModalProps) {
+export default function ImportMethodModal({ isOpen, onClose, onImport, impactMethodNames, isImporting }: ImportMethodModalProps) {
   const [selectedMethodName, setSelectedMethodName] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
 
   const handleImport = () => {
     if (selectedMethodName && file) {
       onImport(selectedMethodName, file);
+    }
+  };
+
+  const handleClose = () => {
+    if (!isImporting) {
+      setSelectedMethodName('');
+      setFile(null);
       onClose();
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Import Midpoint Substances</DialogTitle>
@@ -57,12 +65,14 @@ export default function ImportMethodModal({ isOpen, onClose, onImport, impactMet
               type="file"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               className="col-span-3"
+              disabled={isImporting}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleImport} disabled={!selectedMethodName || !file}>
-            Import
+        <Button variant="outline" onClick={handleClose} disabled={isImporting}>Cancel</Button>
+          <Button onClick={handleImport} disabled={!selectedMethodName || !file || isImporting}>
+            {isImporting ? 'Importing...' : 'Import'}
           </Button>
         </DialogFooter>
       </DialogContent>

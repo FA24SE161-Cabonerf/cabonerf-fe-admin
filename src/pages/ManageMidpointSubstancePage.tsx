@@ -388,6 +388,7 @@ const ManageMidpointSubstancePage = () => {
         onClose={() => setIsImportModalOpen(false)}
         onImport={handleImportConfirm}
         impactMethodNames={impactMethodNames || []}
+        isImporting={importMidpointFactorsMutation.isPending}
       />
       <ErrorLogModal
         isOpen={isErrorLogModalOpen}
