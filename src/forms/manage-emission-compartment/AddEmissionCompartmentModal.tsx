@@ -1,18 +1,31 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { AlertCircle } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Textarea } from "@/components/ui/textarea"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Emission compartment name is required'),
-  description: z.string().nullable().optional(),
-})
+  name: z.string().min(1, "Emission compartment name is required"),
+  description: z.string().min(1, "Desciption is required"),
+});
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -24,18 +37,24 @@ interface AddEmissionCompartmentModalProps {
   error: string | null;
 }
 
-const AddEmissionCompartmentModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddEmissionCompartmentModalProps) => {
+const AddEmissionCompartmentModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isSubmitting,
+  error,
+}: AddEmissionCompartmentModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      description: null,
+      name: "",
+      description: "",
     },
-  })
+  });
 
   const handleSubmit = (values: FormData) => {
-    onSubmit(values)
-  }
+    onSubmit(values);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -44,7 +63,10 @@ const AddEmissionCompartmentModal = ({ isOpen, onClose, onSubmit, isSubmitting, 
           <DialogTitle>Add New Emission Compartment</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -52,7 +74,10 @@ const AddEmissionCompartmentModal = ({ isOpen, onClose, onSubmit, isSubmitting, 
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter emission compartment name" {...field} />
+                    <Input
+                      placeholder="Enter emission compartment name"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -63,13 +88,13 @@ const AddEmissionCompartmentModal = ({ isOpen, onClose, onSubmit, isSubmitting, 
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter emission compartment description" 
-                      {...field} 
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
+                    <Textarea
+                      placeholder="Enter emission compartment description"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -84,15 +109,15 @@ const AddEmissionCompartmentModal = ({ isOpen, onClose, onSubmit, isSubmitting, 
               </Alert>
             )}
             <DialogFooter>
-              <Button className='mt-6' type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Emission Compartment'}
+              <Button className="mt-6" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Adding..." : "Add Emission Compartment"}
               </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddEmissionCompartmentModal
+export default AddEmissionCompartmentModal;

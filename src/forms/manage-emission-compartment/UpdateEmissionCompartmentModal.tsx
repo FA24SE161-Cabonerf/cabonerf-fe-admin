@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, "Emission compartment name is required"),
-  description: z.string().nullable().optional(),
+  description: z.string().min(1, "Description is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -52,7 +52,7 @@ const UpdateEmissionCompartmentModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: emissionCompartment?.name || "",
-      description: emissionCompartment?.description || null,
+      description: emissionCompartment?.description || "",
     },
   });
 
@@ -60,7 +60,7 @@ const UpdateEmissionCompartmentModal = ({
     if (emissionCompartment) {
       form.reset({
         name: emissionCompartment.name,
-        description: emissionCompartment.description,
+        description: emissionCompartment.description || "",
       });
     }
   }, [emissionCompartment, form]);
@@ -100,13 +100,13 @@ const UpdateEmissionCompartmentModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Enter emission compartment description" 
                       {...field} 
                       value={field.value || ''}
-                      onChange={(e) => field.onChange(e.target.value || null)}
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />

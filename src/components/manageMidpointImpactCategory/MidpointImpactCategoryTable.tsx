@@ -29,6 +29,7 @@ export default function MidpointImpactCategoryTable({
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Abbreviation</TableHead>
           <TableHead>Unit</TableHead>
           <TableHead>Unit Group</TableHead>
@@ -42,10 +43,11 @@ export default function MidpointImpactCategoryTable({
           {categories && categories.length > 0 ? (
             categories.map((category) => (
               <TableRow key={category.id}>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>{category.abbr}</TableCell>
-                <TableCell>{category.unit.name}</TableCell>
-                <TableCell>{category.unit.unitGroup.name}</TableCell>
+                <TableCell>{category.name || "-"}</TableCell>
+                <TableCell>{category.description || "-"}</TableCell>
+                <TableCell>{category.abbr || "-"}</TableCell>
+                <TableCell>{category.unit.name || "-"}</TableCell>
+                <TableCell>{category.unit.unitGroup.name || "-"}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

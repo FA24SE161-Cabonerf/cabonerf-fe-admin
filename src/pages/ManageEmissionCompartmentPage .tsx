@@ -66,7 +66,7 @@ const ManageEmissionCompartmentPage = () => {
 
   const handleAddEmissionCompartment = async (data: {
     name: string;
-    description?: string | null;
+    description: string ;
   }) => {
     try {
       await createEmissionCompartmentMutation.mutateAsync(data);
@@ -89,7 +89,7 @@ const ManageEmissionCompartmentPage = () => {
 
   const handleUpdateEmissionCompartment = async (
     id: string,
-    data: { name: string; description?: string | null }
+    data: { name: string; description: string }
   ) => {
     try {
       await updateEmissionCompartmentMutation.mutateAsync({ id, ...data });
