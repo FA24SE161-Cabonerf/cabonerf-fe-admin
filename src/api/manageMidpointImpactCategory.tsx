@@ -53,7 +53,7 @@ const fetchMidpointImpactCategory = async (id: string): Promise<MidpointImpactCa
 
 const createMidpointImpactCategory = async (newCategory: {
   name: string;
-  description?: string | null;
+  description: string;
   abbr: string;
   unitId: string;
 }): Promise<MidpointImpactCategory> => {
@@ -83,7 +83,7 @@ const updateMidpointImpactCategory = async (
   id: string,
   updatedCategory: {
     name: string;
-    description?: string | null;
+    description: string;
     abbr: string;
     unitId: string;
   }
@@ -132,12 +132,12 @@ const deleteMidpointImpactCategory = async (id: string): Promise<void> => {
 export const useCreateMidpointImpactCategory = (): UseMutationResult<
   MidpointImpactCategory,
   Error,
-  { name: string; description?: string | null; abbr: string; unitId: string }
+  { name: string; description: string; abbr: string; unitId: string }
 > => {
   return useMutation<
     MidpointImpactCategory,
     Error,
-    { name: string; description?: string | null; abbr: string; unitId: string }
+    { name: string; description: string; abbr: string; unitId: string }
   >({
     mutationFn: createMidpointImpactCategory,
   });
@@ -146,12 +146,12 @@ export const useCreateMidpointImpactCategory = (): UseMutationResult<
 export const useUpdateMidpointImpactCategory = (): UseMutationResult<
   MidpointImpactCategory,
   Error,
-  { id: string; name: string; description?: string | null; abbr: string; unitId: string }
+  { id: string; name: string; description: string; abbr: string; unitId: string }
 > => {
   return useMutation<
     MidpointImpactCategory,
     Error,
-    { id: string; name: string; description?: string | null; abbr: string; unitId: string }
+    { id: string; name: string; description: string; abbr: string; unitId: string }
   >({
     mutationFn: ({ id, ...data }) => updateMidpointImpactCategory(id, data),
   });

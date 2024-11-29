@@ -33,7 +33,7 @@ import { Unit } from "@/types/unit";
 
 const formSchema = z.object({
   name: z.string().min(1, "Category name is required"),
-  description: z.string().nullable().optional(),
+  description: z.string().min(1, "description is required"),
   abbr: z.string().min(1, "Abbreviation is required"),
   unitId: z.string().min(1, "Unit is required"),
 });
@@ -61,7 +61,7 @@ const AddMidpointImpactCategoryModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      description: null,
+      description: "",
       abbr: "",
       unitId: "",
     },
@@ -101,13 +101,13 @@ const AddMidpointImpactCategoryModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter category description"
                       {...field}
                       value={field.value || ""}
-                      onChange={(e) => field.onChange(e.target.value || null)}
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />

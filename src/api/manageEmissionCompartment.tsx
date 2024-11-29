@@ -36,7 +36,7 @@ const fetchEmissionCompartments = async (): Promise<EmissionCompartment[]> => {
 };
 const createEmissionCompartment = async (newEmissionCompartment: {
   name: string;
-  description?: string | null;
+  description: string;
 }): Promise<EmissionCompartment> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/emissions/emission-compartments`, {
@@ -64,7 +64,7 @@ const updateEmissionCompartment = async (
   id: string,
   updatedEmissionCompartment: {
     name: string;
-    description?: string | null;
+    description: string;
   }
 ): Promise<EmissionCompartment> => {
   try {
@@ -111,12 +111,12 @@ const deleteEmissionCompartment = async (id: string): Promise<void> => {
 export const useCreateEmissionCompartment = (): UseMutationResult<
   EmissionCompartment,
   Error,
-  { name: string; description?: string | null }
+  { name: string; description: string }
 > => {
   return useMutation<
     EmissionCompartment,
     Error,
-    { name: string; description?: string | null }
+    { name: string; description: string }
   >({
     mutationFn: createEmissionCompartment,
   });
@@ -125,12 +125,12 @@ export const useCreateEmissionCompartment = (): UseMutationResult<
 export const useUpdateEmissionCompartment = (): UseMutationResult<
   EmissionCompartment,
   Error,
-  { id: string; name: string; description?: string | null }
+  { id: string; name: string; description: string }
 > => {
   return useMutation<
     EmissionCompartment,
     Error,
-    { id: string; name: string; description?: string | null }
+    { id: string; name: string; description: string }
   >({
     mutationFn: ({ id, ...data }) => updateEmissionCompartment(id, data),
   });

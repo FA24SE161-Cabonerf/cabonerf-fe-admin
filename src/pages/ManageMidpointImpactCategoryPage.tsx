@@ -71,7 +71,7 @@ export default function ManageMidpointImpactCategoryPage() {
 
   const handleAddCategory = async (data: {
     name: string;
-    description?: string | null;
+    description: string;
     abbr: string;
     unitId: string;
   }) => {
@@ -98,7 +98,7 @@ export default function ManageMidpointImpactCategoryPage() {
     id: string,
     data: {
       name: string;
-      description?: string | null;
+      description: string;
       abbr: string;
       unitId: string;
     }
