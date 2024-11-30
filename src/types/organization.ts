@@ -4,7 +4,8 @@ import { Contract } from "./contract";
 export type Organization = {
   id: string;
   name: string;
-  contract: Contract | null;
+  contract: Contract;
+  logo: string;
 }
 
 export type OrganizationPaginatedResponse = {

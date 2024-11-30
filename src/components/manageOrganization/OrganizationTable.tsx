@@ -40,7 +40,18 @@ const OrganizationTable = ({
           {organizations && organizations.length > 0 ? (
             organizations.map((organization) => (
               <TableRow key={organization.id}>
-                <TableCell className="font-medium">{organization.name}</TableCell>
+               <TableCell className="font-medium">
+                  <div className="flex items-center space-x-3">
+                    {organization.logo && (
+                      <img 
+                        src={organization.logo} 
+                        alt={`${organization.name} logo`} 
+                        style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                      />
+                    )}
+                    <span>{organization.name}</span>
+                  </div>
+                </TableCell>
                 <TableCell>
                   {organization.contract && organization.contract.url ? (
                     <a
