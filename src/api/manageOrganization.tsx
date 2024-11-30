@@ -48,19 +48,20 @@ const fetchOrganizations = async (
 const createOrganization = async (newOrganization: {
   name: string;
   email: string;
-  contractFile?: File | null;
+  contractFile: File;
+  logo: File;
 }): Promise<Organization> => {
   try {
-    const { name, email, contractFile } = newOrganization;
+    const { name, email, contractFile, logo } = newOrganization;
     const formData = new FormData();
-    if (contractFile) {
-      formData.append('contractFile', contractFile);
-    }
-
+    formData.append("contractFile", contractFile);
+    formData.append("logo", logo);
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`,
+      `${VITE_BASE_URL}/organizations/manager?name=${encodeURIComponent(
+        name
+      )}&email=${encodeURIComponent(email)}`,
       {
-        method: 'POST',
+        method: "POST",
         headers: { ...headers },
         body: formData,
       }
@@ -73,11 +74,12 @@ const createOrganization = async (newOrganization: {
     if (error instanceof Error) {
       throw new Error(`Failed to create organization: ${error.message}`);
     } else {
-      throw new Error("An unexpected error occurred while creating the organization");
+      throw new Error(
+        "An unexpected error occurred while creating the organization"
+      );
     }
   }
 };
-
 
 const updateOrganization = async (
   organizationId: string,
@@ -144,18 +146,27 @@ export const useUpdateOrganization = (): UseMutationResult<
 export const useCreateOrganization = (): UseMutationResult<
   Organization,
   Error,
-  { name: string; email: string; contractFile?: File | null },
+  {
+    name: string;
+    email: string;
+    contractFile: File;
+    logo: File;
+  },
   unknown
 > => {
   return useMutation<
     Organization,
     Error,
-    { name: string; email: string; contractFile?: File | null }
+    {
+      name: string;
+      email: string;
+      contractFile: File;
+      logo: File;
+    }
   >({
     mutationFn: createOrganization,
   });
 };
-
 
 export const useOrganizations = (
   pageCurrent: number,

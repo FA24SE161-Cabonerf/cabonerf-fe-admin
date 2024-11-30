@@ -66,7 +66,8 @@ const ManageOrganizationPage = () => {
   const handleAddOrganization = async (data: {
     name: string;
     email: string;
-    contractFile?: File | null;
+    contractFile: File;
+    logo: File;
   }) => {
     try {
       await createOrganizationMutation.mutateAsync(data);

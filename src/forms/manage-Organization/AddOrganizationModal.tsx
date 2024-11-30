@@ -1,18 +1,33 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { AlertCircle } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useEffect } from "react";
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Organization name is required'),
-  email: z.string().email('Invalid email address'),
-  contractFile: z.instanceof(File).nullable().optional(),
-})
+  name: z.string().min(1, "Organization name is required"),
+  email: z.string().email("Invalid email address"),
+  contractFile: z.instanceof(File, { message: "Contract file is required" }),
+  logo: z.instanceof(File, { message: 'Logo is required' }),
+});
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -24,19 +39,37 @@ interface AddOrganizationModalProps {
   error: string | null;
 }
 
-const AddOrganizationModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }: AddOrganizationModalProps) => {
+const AddOrganizationModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isSubmitting,
+  error,
+}: AddOrganizationModalProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      contractFile: null,
+      name: "",
+      email: "",
+      contractFile: undefined,
+      logo: undefined,
     },
-  })
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: '',
+        email: '',
+        contractFile: undefined,
+        logo: undefined,
+      })
+    }
+  }, [isOpen, form])
 
   const handleSubmit = (values: FormData) => {
-    onSubmit(values)
-  }
+    onSubmit(values);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -45,7 +78,10 @@ const AddOrganizationModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }
           <DialogTitle>Add New Organization</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -66,7 +102,11 @@ const AddOrganizationModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter organization email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Enter organization email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -77,10 +117,30 @@ const AddOrganizationModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }
               name="contractFile"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Contract File (Optional)</FormLabel>
+                  <FormLabel>Contract File</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      onChange={(e) => {
+                        const file = e.target.files ? e.target.files[0] : null;
+                        field.onChange(file);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          <FormField
+              control={form.control}
+              name="logo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo</FormLabel>
                   <FormControl>
                     <Input 
                       type="file" 
+                      accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files ? e.target.files[0] : null;
                         field.onChange(file);
@@ -100,14 +160,14 @@ const AddOrganizationModal = ({ isOpen, onClose, onSubmit, isSubmitting, error }
             )}
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Organization'}
+                {isSubmitting ? "Adding..." : "Add Organization"}
               </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddOrganizationModal
+export default AddOrganizationModal;
