@@ -14,8 +14,8 @@ export type UserSubscription = {
   canCreateOrganization: boolean;
 };
 
-export type UserStatus = {
-  id: string;  // Changed from number to string
+export type userVerifyStatus = {
+  id: string; // Changed from number to string
   statusName: string;
   description: string;
 };
@@ -23,11 +23,13 @@ export type UserStatus = {
 export type User = {
   id: string;
   fullName: string;
+  phone: string;
   email: string;
-  profilePictureUrl: string | null;
+  profilePictureUrl: string;
+  bio: string;
   role: UserRole;
   subscription: UserSubscription;
-  userStatus: UserStatus;
+  userVerifyStatus: userVerifyStatus;
 };
 
 export type LoginResponse = {

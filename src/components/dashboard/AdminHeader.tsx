@@ -1,18 +1,23 @@
-import { LogOut, Menu, Moon, Sun, User } from "lucide-react"
-import { Button } from "../ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { useState, useEffect } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Link } from "react-router-dom"
+import { LogOut, Menu, Moon, Sun, User } from "lucide-react";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Link } from "react-router-dom";
 
 type AdminHeaderProps = {
-  toggleSidebar: () => void
-  userEmail: string | undefined
-  userRole?: string
-  userAvatar?: string
-  onLogout: () => void
-  onUpdateProfile: () => void
-}
+  toggleSidebar: () => void;
+  userEmail: string | undefined;
+  userRole?: string;
+  userAvatar?: string;
+  onLogout: () => void;
+};
 
 const AdminHeader = ({
   toggleSidebar,
@@ -20,17 +25,16 @@ const AdminHeader = ({
   userRole,
   userAvatar,
   onLogout,
-  onUpdateProfile
 }: AdminHeaderProps) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-  
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme])
-  
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')
-  }
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
 
   return (
     <header className="mb-4 flex items-center justify-between p-4 bg-background border-b">
@@ -49,13 +53,15 @@ const AdminHeader = ({
           )}
           <span className="sr-only">Toggle theme</span>
         </Button>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={userAvatar} alt={userEmail} />
-                <AvatarFallback>{userEmail?.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {userEmail?.charAt(0).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
@@ -65,10 +71,12 @@ const AdminHeader = ({
               <div className="text-xs text-muted-foreground">{userRole}</div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onUpdateProfile}>
+            <Link to="/update-profile">
+            <DropdownMenuItem className="cursor-pointer">
               <User className="mr-2 h-4 w-4" />
-              <Link to="/update-profile">Update Profile</Link>
+             Update Profile
             </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
@@ -77,7 +85,7 @@ const AdminHeader = ({
         </DropdownMenu>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default AdminHeader
+export default AdminHeader;

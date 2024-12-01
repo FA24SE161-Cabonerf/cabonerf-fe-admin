@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/api/manageUserProfile";
 import AdminHeader from "@/components/dashboard/AdminHeader";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 import { useAuth } from "@/contexts/auth/AuthContext";
@@ -10,14 +11,12 @@ type AdminDashboardLayoutProps = {
 const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { handleLogout, currentUser } = useAuth();
+  const { data: userData} = useCurrentUser(currentUser?.id);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleUpdateProfile = () => {
-    console.log("Updating profile...");
-  };
   return (
     <div className="min-h-screen bg-background text-foreground">
       <AdminSidebar isSidebarOpen={isSidebarOpen} />
@@ -30,9 +29,9 @@ const AdminDashboardLayout = ({ children }: AdminDashboardLayoutProps) => {
           toggleSidebar={toggleSidebar}
           userEmail={currentUser?.email}
           userRole={currentUser?.role.name}
-          userAvatar="/path/to/avatar.jpg"
+          userAvatar={userData?.profilePictureUrl || "/path/to/avatar.jpg"}
           onLogout={handleLogout}
-          onUpdateProfile={handleUpdateProfile}
+         
         />
         {children}
       </div>
