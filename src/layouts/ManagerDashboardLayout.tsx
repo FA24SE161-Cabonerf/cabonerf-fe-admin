@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/api/manageUserProfile";
 import ManagerHeader from "@/components/managerDashboard/ManagerHeader";
 import ManagerSidebar from "@/components/managerDashboard/ManagerSideBar";
 import { useAuth } from "@/contexts/auth/AuthContext";
@@ -10,14 +11,11 @@ type ManagerDashboardLayoutProps = {
 const ManagerDashboardLayout = ({ children }: ManagerDashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { handleLogout, currentUser } = useAuth();
+  const { data: userData} = useCurrentUser(currentUser?.id);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleUpdateProfile = () => {
-    // Implement update profile logic here
-    console.log("Updating profile...");
-  };
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ManagerSidebar isSidebarOpen={isSidebarOpen} />
@@ -30,9 +28,8 @@ const ManagerDashboardLayout = ({ children }: ManagerDashboardLayoutProps) => {
           toggleSidebar={toggleSidebar}
           userEmail={currentUser?.email}
           userRole={currentUser?.role.name}
-          userAvatar="/path/to/avatar.jpg"
+          userAvatar={userData?.profilePictureUrl || "/path/to/avatar.jpg"}
           onLogout={handleLogout}
-          onUpdateProfile={handleUpdateProfile}
         />
         {children}
       </div>
