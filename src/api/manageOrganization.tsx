@@ -15,6 +15,27 @@ import {
 
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
+const fetchOrganization = async (id: string): Promise<Organization> => {
+  try {
+    const response = await fetch(
+      `${VITE_BASE_URL}/organizations/${id}`,
+      { headers }
+    );
+
+    const data = await response.json();
+    return handleApiResponse(response, data);
+  } catch (error) {
+    console.error("Error in fetchOrganization:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch organization: ${error.message}`);
+    } else {
+      throw new Error(
+        "An unexpected error occurred while fetching the organization"
+      );
+    }
+  }
+};
+
 const fetchOrganizations = async (
   pageCurrent: number,
   pageSize: number,
@@ -48,18 +69,33 @@ const fetchOrganizations = async (
 const createOrganization = async (newOrganization: {
   name: string;
   email: string;
+  description: string;
+  taxCode: string;
+  industryCodeIds: string[];
   contractFile: File;
   logo: File;
 }): Promise<Organization> => {
   try {
-    const { name, email, contractFile, logo } = newOrganization;
+    const { name, email, description, taxCode, industryCodeIds, contractFile, logo } = newOrganization;
     const formData = new FormData();
     formData.append("contractFile", contractFile);
     formData.append("logo", logo);
+
+    // Create URL parameters
+    const params = new URLSearchParams({
+      name: name,
+      email: email,
+      description: description,
+      taxCode: taxCode,
+    });
+
+    // Append each industry code ID separately
+    industryCodeIds.forEach((id) => {
+      params.append("industryCodeIds", id);
+    });
+
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager?name=${encodeURIComponent(
-        name
-      )}&email=${encodeURIComponent(email)}`,
+      `${VITE_BASE_URL}/organizations/manager?${params.toString()}`,
       {
         method: "POST",
         headers: { ...headers },
@@ -149,6 +185,9 @@ export const useCreateOrganization = (): UseMutationResult<
   {
     name: string;
     email: string;
+    description: string;
+    taxCode: string;
+    industryCodeIds: string[];
     contractFile: File;
     logo: File;
   },
@@ -160,6 +199,9 @@ export const useCreateOrganization = (): UseMutationResult<
     {
       name: string;
       email: string;
+      description: string;
+      taxCode: string;
+      industryCodeIds: string[];
       contractFile: File;
       logo: File;
     }
@@ -167,6 +209,16 @@ export const useCreateOrganization = (): UseMutationResult<
     mutationFn: createOrganization,
   });
 };
+export const useOrganization = (
+  id: string
+): UseQueryResult<Organization, Error> => {
+  return useQuery<Organization, Error>({
+    queryKey: ["organization", id],
+    queryFn: () => fetchOrganization(id),
+  });
+};
+
+
 
 export const useOrganizations = (
   pageCurrent: number,

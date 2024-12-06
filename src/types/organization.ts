@@ -1,9 +1,13 @@
 import { ApiResponse } from "./apiResponse";
 import { Contract } from "./contract";
+import { IndustryCode } from "./industryCode";
 
 export type Organization = {
   id: string;
   name: string;
+  description: string;
+  taxCode: string;
+  industryCodes : IndustryCode[];
   contract: Contract;
   logo: string;
 }

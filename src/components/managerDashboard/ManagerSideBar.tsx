@@ -13,6 +13,7 @@ const ManagerSidebar = ({ isSidebarOpen }: ManagerSidebarProps) => {
 
   const navItems = [
     { to: "/manage-organization", icon: Building2Icon, label: "Manage organization" },
+    { to: "/manage-industry-code", icon: Building2Icon, label: "Manage industry code" },
   ];
   return (
     <aside
