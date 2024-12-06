@@ -3,25 +3,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  useCreateOrganization,
-  useDeleteOrganization,
-  useOrganizations,
-  useUpdateOrganization,
-} from "@/api/manageOrganization";
-import OrganizationTable from "@/components/manageOrganization/OrganizationTable";
 import Pagination from "@/components/pagination/Pagination";
-import AddOrganizationModal from "@/forms/manage-Organization/AddOrganizationModal";
-import UpdateOrganizationModal from "@/forms/manage-Organization/UpdateOrganizationModal";
-import DeleteOrganizationModal from "@/forms/manage-Organization/DeleteOrganizationModal";
+import AddIndustryCodeModal from "@/forms/manage-industry-code/AddIndustryCodeModal";
+import UpdateIndustryCodeModal from "@/forms/manage-industry-code/UpdateIndustryCodeModal";
+import DeleteIndustryCodeModal from "@/forms/manage-industry-code/DeleteIndustryCodeModal";
 import { useToast } from "@/hooks/use-toast";
-import { Organization } from "@/types/organization";
-import { useSearchIndustryCode } from "@/api/manageIndustryCode";
 import { IndustryCode } from "@/types/industryCode";
+import IndustryCodeTable from "@/components/manageIndustryCode/IndustryCodeTable";
+import { useCreateIndustryCode, useDeleteIndustryCode, useIndustryCodes, useUpdateIndustryCode } from "@/api/manageIndustryCode";
 
-const ManageOrganizationPage = () => {
+const ManageIndustryCodePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -34,22 +27,21 @@ const ManageOrganizationPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<Organization | null>(null);
+  const [selectedIndustryCode, setSelectedIndustryCode] =
+    useState<IndustryCode | null>(null);
   const [addError, setAddError] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const {
-    data: organizationResponse,
+    data: industryCodeResponse,
     isLoading,
     error,
     refetch,
-  } = useOrganizations(page, pageSize, searchTerm);
+  } = useIndustryCodes(page, pageSize, searchTerm);
+  const createIndustryCodeMutation = useCreateIndustryCode();
+  const updateIndustryCodeMutation = useUpdateIndustryCode();
+  const deleteIndustryCodeMutation = useDeleteIndustryCode();
 
-  const createOrganizationMutation = useCreateOrganization();
-  const updateOrganizationMutation = useUpdateOrganization();
-  const deleteOrganizationMutation = useDeleteOrganization();
-  const { refetch: searchIndustryCodes } = useSearchIndustryCode("");
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (searchTerm) {
@@ -64,26 +56,18 @@ const ManageOrganizationPage = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page when search term changes
+    setPage(1); 
   };
 
-  const handleAddOrganization = async (data: {
-    name: string;
-    email: string;
-    description: string;
-    taxCode: string;
-    industryCodeIds: string[];
-    contractFile: File;
-    logo: File;
-  }) => {
+  const handleAddIndustryCode = async (data: { code: string; name: string }) => {
     try {
-      await createOrganizationMutation.mutateAsync(data);
+      await createIndustryCodeMutation.mutateAsync(data);
       refetch();
       setIsAddModalOpen(false);
       setAddError(null);
       toast({
         title: "Success",
-        description: "Organization created successfully",
+        description: "Industry code created successfully",
         variant: "default",
       });
     } catch (error) {
@@ -95,18 +79,18 @@ const ManageOrganizationPage = () => {
     }
   };
 
-  const handleUpdateOrganization = async (
+  const handleUpdateIndustryCode = async (
     id: string,
-    data: { name: string }
+    data: { code: string; name: string }
   ) => {
     try {
-      await updateOrganizationMutation.mutateAsync({ id, ...data });
+      await updateIndustryCodeMutation.mutateAsync({ id, ...data });
       refetch();
       setIsUpdateModalOpen(false);
       setUpdateError(null);
       toast({
         title: "Success",
-        description: "Organization updated successfully",
+        description: "Industry code updated successfully",
         variant: "default",
       });
     } catch (error) {
@@ -118,16 +102,16 @@ const ManageOrganizationPage = () => {
     }
   };
 
-  const handleDeleteOrganization = async (id: string) => {
+  const handleDeleteIndustryCode = async (id: string) => {
     try {
-      await deleteOrganizationMutation.mutateAsync(id);
+      await deleteIndustryCodeMutation.mutateAsync(id);
       refetch();
       setIsDeleteModalOpen(false);
-      setSelectedOrganization(null);
+      setSelectedIndustryCode(null);
       setDeleteError(null);
       toast({
         title: "Success",
-        description: "Organization deleted successfully",
+        description: "Industry code deleted successfully",
         variant: "default",
       });
     } catch (error) {
@@ -139,43 +123,22 @@ const ManageOrganizationPage = () => {
     }
   };
 
-  const handleSearchIndustryCodes = async (keyword: string): Promise<IndustryCode[]> => {
-    try {
-      const result = await searchIndustryCodes();
-      if (result.data) {
-        return result.data.filter(code => 
-          code.name.toLowerCase().includes(keyword.toLowerCase()) || 
-          code.code.toLowerCase().includes(keyword.toLowerCase())
-        );
-      }
-      return [];
-    } catch (error) {
-      console.error("Error searching industry codes:", error);
-      toast({
-        title: "Error",
-        description: "Failed to search industry codes",
-        variant: "destructive",
-      });
-      return [];
-    }
-  };
-  
   const handleEdit = (id: string) => {
-    const organization = organizationResponse?.list.find(
-      (org) => org.id === id
+    const industryCode = industryCodeResponse?.industryCodes.find(
+      (code) => code.id === id
     );
-    if (organization) {
-      setSelectedOrganization(organization);
+    if (industryCode) {
+      setSelectedIndustryCode(industryCode);
       setIsUpdateModalOpen(true);
     }
   };
 
   const handleDelete = (id: string) => {
-    const organization = organizationResponse?.list.find(
-      (org) => org.id === id
+    const industryCode = industryCodeResponse?.industryCodes.find(
+      (code) => code.id === id
     );
-    if (organization) {
-      setSelectedOrganization(organization);
+    if (industryCode) {
+      setSelectedIndustryCode(industryCode);
       setIsDeleteModalOpen(true);
     }
   };
@@ -192,14 +155,14 @@ const ManageOrganizationPage = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Organizations Management</h1>
+        <h1 className="text-2xl font-bold">Industry Codes Management</h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Organization
+          <Plus className="mr-2 h-4 w-4" /> Add New Industry Code
         </Button>
       </div>
       <div className="mb-4">
         <Input
-          placeholder="Search organizations..."
+          placeholder="Search industry codes..."
           value={searchTerm}
           onChange={handleSearchChange}
           className="max-w-sm"
@@ -217,58 +180,58 @@ const ManageOrganizationPage = () => {
         </Alert>
       ) : (
         <ScrollArea className="h-[calc(100vh-200px)]">
-          <OrganizationTable
-            organizations={organizationResponse?.list}
+          <IndustryCodeTable
+            industryCodes={industryCodeResponse?.industryCodes}
             onEdit={handleEdit}
             onDelete={handleDelete}
             isLoading={isLoading}
           />
         </ScrollArea>
       )}
-      {organizationResponse && (
+      {industryCodeResponse && (
         <Pagination
           page={page}
           pageSize={pageSize}
-          totalPages={organizationResponse.totalPage}
+          totalPages={industryCodeResponse.totalPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-      <AddOrganizationModal
+      <AddIndustryCodeModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddOrganization}
-        isSubmitting={createOrganizationMutation.isPending}
+        onSubmit={handleAddIndustryCode}
+        isSubmitting={createIndustryCodeMutation.isPending}
         error={addError}
-        onSearchIndustryCodes={handleSearchIndustryCodes}
       />
-      <UpdateOrganizationModal
+      <UpdateIndustryCodeModal
         isOpen={isUpdateModalOpen}
         onClose={() => {
           setIsUpdateModalOpen(false);
-          setSelectedOrganization(null);
+          setSelectedIndustryCode(null);
         }}
-        onSubmit={handleUpdateOrganization}
-        isSubmitting={updateOrganizationMutation.isPending}
+        onSubmit={handleUpdateIndustryCode}
+        isSubmitting={updateIndustryCodeMutation.isPending}
         error={updateError}
-        organization={selectedOrganization}
+        industryCode={selectedIndustryCode}
       />
-      <DeleteOrganizationModal
+      <DeleteIndustryCodeModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
           setIsDeleteModalOpen(false);
-          setSelectedOrganization(null);
+          setSelectedIndustryCode(null);
         }}
         onConfirm={() =>
-          selectedOrganization &&
-          handleDeleteOrganization(selectedOrganization.id)
+          selectedIndustryCode &&
+          handleDeleteIndustryCode(selectedIndustryCode.id)
         }
-        isDeleting={deleteOrganizationMutation.isPending}
+        isDeleting={deleteIndustryCodeMutation.isPending}
         error={deleteError}
-        organizationName={selectedOrganization?.name || ""}
+        industryCodeName={selectedIndustryCode?.name || ""}
       />
     </div>
   );
 };
 
-export default ManageOrganizationPage;
+export default ManageIndustryCodePage;
+

@@ -7,9 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, FileText } from 'lucide-react';
+import { Pencil, Trash2, FileText, Info } from 'lucide-react';
 import SkeletonTable from "@/components/sketeton/SkeletonTable";
 import { Organization } from "@/types/organization";
+import { useNavigate } from "react-router-dom";
+
 
 interface OrganizationTableProps {
   organizations: Organization[] | undefined;
@@ -24,6 +26,7 @@ const OrganizationTable = ({
   onDelete,
   isLoading,
 }: OrganizationTableProps) => {
+  const navigate = useNavigate();
   return (
     <Table>
       <TableHeader>
@@ -68,6 +71,13 @@ const OrganizationTable = ({
                   )}
                 </TableCell>
                 <TableCell>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate(`/organizations/${organization.id}`)}
+                  >
+                    <Info className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"

@@ -19,6 +19,8 @@ import ManagePerspectivePage from "./pages/ManagePerspectivePage ";
 import ManageMidpointImpactCategoryPage from "./pages/ManageMidpointImpactCategoryPage";
 import ManagerDashboardLayout from "./layouts/ManagerDashboardLayout";
 import ManageOrganizationPage from "./pages/ManageOrganizationPage";
+import ManageIndustryCodePage from "./pages/ManageIndustryCodePage";
+import OrganizationDetailsPage from "./components/manageOrganization/OrganizationDetailsPage";
 
 const AppRoutes = () => {
   return (
@@ -152,6 +154,22 @@ const AppRoutes = () => {
           element={
             <ManagerDashboardLayout>
               <ManageOrganizationPage />
+            </ManagerDashboardLayout>
+          }
+        />
+        <Route
+          path="/manage-industry-code"
+          element={
+            <ManagerDashboardLayout>
+              <ManageIndustryCodePage />
+            </ManagerDashboardLayout>
+          }
+        />
+           <Route
+          path="/organizations/:id"
+          element={
+            <ManagerDashboardLayout>
+              <OrganizationDetailsPage />
             </ManagerDashboardLayout>
           }
         />

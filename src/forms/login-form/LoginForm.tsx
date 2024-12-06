@@ -72,8 +72,7 @@ export default function LoginForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="m@example.com" 
+                      <Input                    
                         {...field} 
                         className="w-full h-10"
                       />
