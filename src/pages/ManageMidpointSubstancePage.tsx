@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, Plus } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import MidpointSubstanceTable from "@/components/manageMidpointSubstance/MidpointSubstanceTable";
 import {
@@ -328,7 +328,6 @@ const ManageMidpointSubstancePage = () => {
       {error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
           <AlertDescription>
             {error instanceof Error
               ? error.message
