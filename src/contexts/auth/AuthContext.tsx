@@ -32,20 +32,20 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     return null;
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
+  const [isLoading, setIsLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string | null>(null);
 
   // Handle login mutation
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginFormValues) => {
-      setIsLoading(true); // Set loading to true on login attempt
-      const response = await login(credentials); // Perform login API call
+      setIsLoading(true); 
+      const response = await login(credentials); 
       return response;
     },
     onSuccess: (response) => {
-      const { access_token, user } = response; // Extract access token and user
+      const { access_token, user } = response; 
       setAuthToken(access_token);
-      setCurrentUser(user); // Set current user data
+      setCurrentUser(user);
 
       // Store authToken and user in localStorage
       if (typeof window !== "undefined") {
@@ -53,13 +53,13 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user as JSON
       }
 
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false); 
       setError(null);
     },
     onError: (error: unknown) => {
       console.error("Login error:", error);
-      handleLogout(); // Logout on login failure
-      setIsLoading(false); // Reset loading state
+      handleLogout(); 
+      setIsLoading(false); 
       setError((error as Error).message || "An error occurred");
     },
   });
@@ -70,7 +70,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   const handleLogout = () => {
     setAuthToken(null);
-    setCurrentUser(null); // Clear current user on logout
+    setCurrentUser(null); 
 
     // Remove authToken and user from localStorage
     if (typeof window !== "undefined") {
@@ -81,7 +81,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (authToken && !currentUser) {
-      // Optionally: Fetch the current user from the API using the token
+    
       // fetchCurrentUser(authToken);
     }
   }, [authToken, currentUser]);
