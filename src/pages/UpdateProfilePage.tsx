@@ -3,11 +3,12 @@ import UpdateProfileForm from "@/forms/update-profile-form/UpdateProfileForm"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth/AuthContext"
-import { useCurrentUser, useUpdateProfile } from "@/api/manageUserProfile"
+import { useCurrentUser, useUpdateProfile, useUpdateUserAvatar } from "@/api/manageUserProfile"
 
 const UpdateProfilePage = () => {
   const { currentUser } = useAuth();
   const updateProfileMutation = useUpdateProfile()
+  const updateAvatarMutation = useUpdateUserAvatar()
   const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
 
@@ -68,12 +69,42 @@ const UpdateProfilePage = () => {
     }
   }
 
+  const handleAvatarUpload = async (file: File): Promise<string> => {
+    try {
+      await updateAvatarMutation.mutateAsync({ image: file, userId: userData.id });
+      toast({
+        title: "Success",
+        description: "Avatar uploaded successfully",
+        variant: "default",
+      });
+      const updatedUser = await refetchUser();
+      if (updatedUser.data?.profilePictureUrl) {
+        return updatedUser.data.profilePictureUrl;
+      } else {
+        throw new Error("Failed to get updated profile picture URL");
+      }
+    } catch (error) {
+      console.error("Failed to upload avatar:", error);
+      let errorMessage = "Failed to upload avatar. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <UpdateProfileForm 
         currentUser={userData}
         onSubmit={handleUpdateProfile}
-        isSubmitting={updateProfileMutation.isPending}
+        onAvatarUpload={handleAvatarUpload}
+        isSubmitting={updateProfileMutation.isPending || updateAvatarMutation.isPending}
         error={error}
         refetchUser={refetchUser}
       />
