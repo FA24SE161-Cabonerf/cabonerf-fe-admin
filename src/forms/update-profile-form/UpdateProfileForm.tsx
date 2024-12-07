@@ -27,12 +27,13 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 interface UpdateProfileFormProps {
   currentUser: User;
   onSubmit: (data: ProfileFormValues) => Promise<void>;
+  onAvatarUpload: (file: File) => Promise<string>;
   isSubmitting: boolean;
   error: string | null;
   refetchUser: (options?: RefetchOptions) => Promise<QueryObserverResult<User, Error>>;
 }
 
-const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSubmit, isSubmitting, error, refetchUser }) => {
+const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSubmit, onAvatarUpload, isSubmitting, error, refetchUser }) => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(currentUser.profilePictureUrl)
 
   const form = useForm<ProfileFormValues>({
@@ -65,6 +66,19 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
     form.setValue('profilePictureUrl', url);
   };
 
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const newAvatarUrl = await onAvatarUpload(file);
+        handleAvatarUrlChange(newAvatarUrl);
+      } catch (error) {
+        console.error("Failed to upload avatar:", error);
+        // You might want to show an error message to the user here
+      }
+    }
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -79,6 +93,12 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
                 <AvatarImage src={avatarPreview || "/placeholder.svg?height=96&width=96"} alt="Profile picture" />
                 <AvatarFallback>{currentUser.fullName.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
+              <Input
+                type="file"
+                onChange={handleFileChange}
+                accept="image/*"
+                className="mt-2"
+              />
               <FormField
                 control={form.control}
                 name="profilePictureUrl"

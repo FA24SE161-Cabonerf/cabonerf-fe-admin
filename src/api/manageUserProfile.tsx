@@ -59,6 +59,32 @@ const updateProfile = async (data: UpdateProfileData, userId: string): Promise<v
   }
 };
 
+const updateUserAvatar = async (image: File, userId: string): Promise<void> => {
+  try {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const response = await fetch(`${VITE_BASE_URL}/users/avatar`, {
+      method: 'PUT',
+      headers: {
+        ...headers,
+        'x-user-id': userId,
+      },
+      body: formData,
+    });
+
+    const responseData: ApiResponse<void> = await response.json();
+    return handleApiResponse(response, responseData);
+  } catch (error) {
+    console.error("Error in updateUserAvatar:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to update user avatar: ${error.message}`);
+    } else {
+      throw new Error("An unexpected error occurred while updating user avatar");
+    }
+  }
+};
+
 export const useCurrentUser = (userId: string | undefined): UseQueryResult<User, Error> => {
   return useQuery<User, Error>({
     queryKey: ['currentUser', userId],
@@ -75,5 +101,11 @@ export const useCurrentUser = (userId: string | undefined): UseQueryResult<User,
 export const useUpdateProfile = (): UseMutationResult<void, Error, { data: UpdateProfileData; userId: string }> => {
   return useMutation<void, Error, { data: UpdateProfileData; userId: string }>({
     mutationFn: ({ data, userId }) => updateProfile(data, userId),
+  });
+};
+
+export const useUpdateUserAvatar = (): UseMutationResult<void, Error, { image: File; userId: string }> => {
+  return useMutation<void, Error, { image: File; userId: string }>({
+    mutationFn: ({ image, userId }) => updateUserAvatar(image, userId),
   });
 };
