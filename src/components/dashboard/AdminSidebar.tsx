@@ -2,6 +2,7 @@ import {
   BoxIcon,
   ChartBarStackedIcon,
   ChartColumnStackedIcon,
+  DatabaseIcon,
   FileText,
   LayoutDashboard,
   LeafyGreenIcon,
@@ -32,6 +33,7 @@ const AdminSidebar = ({ isSidebarOpen }: AdminSidebarProps) => {
     { to: "/life-cycle-stage", icon: RecycleIcon, label: "Manage life cycle stage" },
     { to: "/emission-compartment", icon: LeafyGreenIcon, label: "Manage emission compartment" },
     { to: "/perspective", icon: TelescopeIcon, label: "Manage perspective" },
+    { to: "/dataset", icon: DatabaseIcon, label: "Manage dataset" },
   ];
 
   return (

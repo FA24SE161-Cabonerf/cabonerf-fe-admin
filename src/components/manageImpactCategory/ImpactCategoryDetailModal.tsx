@@ -57,10 +57,16 @@ export function ImpactCategoryDetailModal({ isOpen, onClose, impactCategory }: I
               </div>
               <div>
                 <h3 className="text-lg font-semibold mb-2">Emission Compartment</h3>
-                <p>{impactCategory.emissionCompartment.name}</p>
-                {impactCategory.emissionCompartment.description && (
-                  <p className="text-sm text-gray-500 mt-1">{impactCategory.emissionCompartment.description}</p>
-                )}
+                {impactCategory.emissionCompartment ? (
+    <>
+      <p>{impactCategory.emissionCompartment.name}</p>
+      {impactCategory.emissionCompartment.description && (
+        <p className="text-sm text-gray-500 mt-1">{impactCategory.emissionCompartment.description}</p>
+      )}
+    </>
+  ) : (
+    <p>No emission compartment specified</p>
+  )}
               </div>
             </div>
             <div>

@@ -54,6 +54,8 @@ const ManageImpactCategoryPage: React.FC = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedImpactCategory, setSelectedImpactCategory] =
     useState<ImpactCategory | null>(null);
+    const [selectedImpactCategoryDetail, setSelectedImpactCategoryDetail] =
+    useState<ImpactCategory | null>(null);
   const [addError, setAddError] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -242,7 +244,7 @@ const ManageImpactCategoryPage: React.FC = () => {
     (id: string) => {
       const impactCategory = filteredCategories.find((ic) => ic.id === id);
       if (impactCategory) {
-        setSelectedImpactCategory(impactCategory);
+        setSelectedImpactCategoryDetail(impactCategory);
         setIsDetailModalOpen(true);
       }
     },
@@ -332,7 +334,7 @@ const ManageImpactCategoryPage: React.FC = () => {
           setIsDetailModalOpen(false);
           setSelectedImpactCategory(null);
         }}
-        impactCategory={selectedImpactCategory}
+        impactCategory={selectedImpactCategoryDetail}
       />
       <AddImpactCategoryModal
         isOpen={isAddModalOpen}
