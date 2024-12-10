@@ -21,6 +21,7 @@ import ManagerDashboardLayout from "./layouts/ManagerDashboardLayout";
 import ManageOrganizationPage from "./pages/ManageOrganizationPage";
 import ManageIndustryCodePage from "./pages/ManageIndustryCodePage";
 import OrganizationDetailsPage from "./components/manageOrganization/OrganizationDetailsPage";
+import ManageDatasetPage from "./pages/ManageDatasetPage";
 
 const AppRoutes = () => {
   return (
@@ -128,6 +129,14 @@ const AppRoutes = () => {
           element={
             <AdminDashboardLayout>
               <ManagePerspectivePage />
+            </AdminDashboardLayout>
+          }
+        />
+          <Route
+          path="/dataset"
+          element={
+            <AdminDashboardLayout>
+              <ManageDatasetPage />
             </AdminDashboardLayout>
           }
         />
