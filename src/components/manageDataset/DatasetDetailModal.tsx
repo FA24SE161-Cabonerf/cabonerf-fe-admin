@@ -67,16 +67,7 @@ const DatasetDetailModal = ({
                       {renderIcon(impact.impactCategory.iconUrl)}
                       {impact.impactCategory.name}
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      <p>
-                        <span className="font-medium">Method:</span>{" "}
-                        {impact.method.name} ({impact.method.version})
-                      </p>
-                      <p>
-                        <span className="font-medium">Perspective:</span>{" "}
-                        {impact.method.perspective.name} (
-                        {impact.method.perspective.abbr})
-                      </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                       <p>
                         <span className="font-medium">Midpoint Category:</span>{" "}
                         {impact.impactCategory.midpointImpactCategory.name} (
@@ -84,25 +75,9 @@ const DatasetDetailModal = ({
                       </p>
                       <p>
                         <span className="font-medium">Unit:</span>{" "}
+                        {impact.unitLevel}{" "}
                         {impact.impactCategory.midpointImpactCategory.unit.name}
                       </p>
-                      {impact.impactCategory.emissionCompartment && (
-                        <>
-                          <p>
-                            <span className="font-medium">
-                              Emission Compartment:
-                            </span>{" "}
-                            {impact.impactCategory.emissionCompartment.name}
-                          </p>
-                          <p>
-                            <span className="font-medium">Description:</span>{" "}
-                            {
-                              impact.impactCategory.emissionCompartment
-                                .description
-                            }
-                          </p>
-                        </>
-                      )}
                     </div>
                   </div>
                 ))}
