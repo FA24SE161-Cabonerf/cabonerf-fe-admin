@@ -19,7 +19,7 @@ const fetchIndustryCodes = async (
     if (keyword) params.append("keyword", keyword);
 
     const response = await fetch(
-      `${VITE_BASE_URL}/industry-code/manager?${params.toString()}`,
+      `${VITE_BASE_URL}/manager/industry-code?${params.toString()}`,
       { headers }
     );
 
@@ -40,7 +40,7 @@ const fetchIndustryCodes = async (
 const searchIndustryCode = async (keyword: string): Promise<IndustryCode[]> => {
   try {
     const response = await fetch(
-      `${VITE_BASE_URL}/industry-code/manager/get-create?keyword=${encodeURIComponent(keyword)}`,
+      `${VITE_BASE_URL}/manager/industry-code/get-create?keyword=${encodeURIComponent(keyword)}`,
       { headers }
     );
 
@@ -61,7 +61,7 @@ const searchIndustryCode = async (keyword: string): Promise<IndustryCode[]> => {
 
 const createIndustryCode = async (data: { code: string; name: string }): Promise<IndustryCode> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/industry-code/manager`, {
+    const response = await fetch(`${VITE_BASE_URL}/manager/industry-code`, {
       method: 'POST',
       headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -80,7 +80,7 @@ const createIndustryCode = async (data: { code: string; name: string }): Promise
 };
 const updateIndustryCode = async (id: string, data: { code: string; name: string }): Promise<IndustryCode> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/industry-code/manager/${id}`, {
+    const response = await fetch(`${VITE_BASE_URL}manager/industry-code/${id}`, {
       method: 'PUT',
       headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -100,7 +100,7 @@ const updateIndustryCode = async (id: string, data: { code: string; name: string
 
 const deleteIndustryCode = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/industry-code/manager/${id}`, {
+    const response = await fetch(`${VITE_BASE_URL}manager/industry-code/${id}`, {
       method: 'DELETE',
       headers,
     });
