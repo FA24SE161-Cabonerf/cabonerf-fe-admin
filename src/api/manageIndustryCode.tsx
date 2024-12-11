@@ -80,7 +80,7 @@ const createIndustryCode = async (data: { code: string; name: string }): Promise
 };
 const updateIndustryCode = async (id: string, data: { code: string; name: string }): Promise<IndustryCode> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}manager/industry-code/${id}`, {
+    const response = await fetch(`${VITE_BASE_URL}/manager/industry-code/${id}`, {
       method: 'PUT',
       headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -100,7 +100,7 @@ const updateIndustryCode = async (id: string, data: { code: string; name: string
 
 const deleteIndustryCode = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}manager/industry-code/${id}`, {
+    const response = await fetch(`${VITE_BASE_URL}/manager/industry-code/${id}`, {
       method: 'DELETE',
       headers,
     });
