@@ -82,8 +82,8 @@ const createOrganization = async (newOrganization: {
     formData.append("email", email);
     formData.append("description", description);
     formData.append("taxCode", taxCode);
-    industryCodeIds.forEach((id, index) => {
-      formData.append(`industryCodeIds[${index}]`, id);
+    industryCodeIds.forEach((id) => {
+      formData.append(`industryCodeIds`, id);
     });
     formData.append("contractFile", contractFile);
     formData.append("logo", logo);
@@ -98,6 +98,7 @@ const createOrganization = async (newOrganization: {
     );
 
     const data: OrganizationResponse = await response.json();
+    console.log(response.body)
     return handleApiResponse(response, data);
   } catch (error) {
     console.error("Error in createOrganization:", error);
