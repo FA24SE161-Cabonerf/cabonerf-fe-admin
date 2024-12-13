@@ -49,7 +49,7 @@ const fetchOrganizations = async (
     if (keyword) params.append("keyword", keyword);
 
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager?${params.toString()}`,
+      `${VITE_BASE_URL}/manager/organizations?${params.toString()}`,
       { headers }
     );
 
@@ -89,7 +89,7 @@ const createOrganization = async (newOrganization: {
     formData.append("logo", logo);
 
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager`,
+      `${VITE_BASE_URL}/manager/organizations`,
       {
         method: "POST",
         headers: { ...headers },
@@ -118,7 +118,7 @@ const updateOrganization = async (
 ): Promise<Organization> => {
   try {
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager/${organizationId}`,
+      `${VITE_BASE_URL}/manager/organizations/${organizationId}`,
       {
         method: "PUT",
         headers: { ...headers, "Content-Type": "application/json" },
@@ -136,7 +136,7 @@ const updateOrganization = async (
 const deleteOrganization = async (organizationId: string): Promise<void> => {
   try {
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager/${organizationId}`,
+      `${VITE_BASE_URL}/manager/organizations/${organizationId}`,
       {
         method: "DELETE",
         headers,

@@ -93,24 +93,26 @@ const AddOrganizationModal = ({
 
   useEffect(() => {
     const searchIndustryCodes = async () => {
-      if (industryCodeSearchTerm.trim()) {
-        try {
-          const results = await onSearchIndustryCodes(industryCodeSearchTerm);
-          setSearchedIndustryCodes(results);
-        } catch (error) {
-          console.error("Error searching industry codes:", error);
-        }
-      } else {
-        setSearchedIndustryCodes([]);
+      try {
+        const results = await onSearchIndustryCodes(industryCodeSearchTerm);
+        setSearchedIndustryCodes(results);
+      } catch (error) {
+        console.error("Error searching industry codes:", error);
       }
     };
 
-    const debounce = setTimeout(() => {
+    if (isOpen) {
       searchIndustryCodes();
+    }
+
+    const debounce = setTimeout(() => {
+      if (industryCodeSearchTerm.trim() !== '') {
+        searchIndustryCodes();
+      }
     }, 300);
 
     return () => clearTimeout(debounce);
-  }, [industryCodeSearchTerm, onSearchIndustryCodes]);
+  }, [industryCodeSearchTerm, onSearchIndustryCodes, isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -192,6 +194,11 @@ const AddOrganizationModal = ({
                           placeholder="Search industry codes"
                           value={industryCodeSearchTerm}
                           onChange={(e) => setIndustryCodeSearchTerm(e.target.value)}
+                          onFocus={() => {
+                            if (industryCodeSearchTerm === '') {
+                              setIndustryCodeSearchTerm(' ');
+                            }
+                          }}
                         />
                       </div>
                       <ScrollArea className="h-[200px] border rounded-md">

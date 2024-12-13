@@ -27,8 +27,7 @@ const DatasetTable = ({
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead>Boundary From</TableHead>
-          <TableHead>Boundary To</TableHead>
+          <TableHead>System boundary</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -44,8 +43,7 @@ const DatasetTable = ({
                 className="cursor-pointer"
               >
                 <TableCell className="font-medium">{dataset.name}</TableCell>
-                <TableCell>{dataset.systemBoundary.boundaryFrom}</TableCell>
-                <TableCell>{dataset.systemBoundary.boundaryTo}</TableCell>
+                <TableCell>{dataset.systemBoundary.boundaryFrom} to {dataset.systemBoundary.boundaryTo}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
