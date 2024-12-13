@@ -82,9 +82,7 @@ const createOrganization = async (newOrganization: {
     formData.append("email", email);
     formData.append("description", description);
     formData.append("taxCode", taxCode);
-    industryCodeIds.forEach((id) => {
-      formData.append(`industryCodeIds`, id);
-    });
+    formData.append('industryCodeIds', JSON.stringify(industryCodeIds));
     formData.append("contractFile", contractFile);
     formData.append("logo", logo);
 
