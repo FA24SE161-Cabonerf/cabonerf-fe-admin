@@ -39,8 +39,14 @@ const fetchIndustryCodes = async (
 
 const searchIndustryCode = async (keyword: string): Promise<IndustryCode[]> => {
   try {
+
+    const params = new URLSearchParams();
+    if (keyword && keyword.trim() !== '') {
+      params.append("keyword", keyword);
+    }
+
     const response = await fetch(
-      `${VITE_BASE_URL}/manager/industry-code/get-create?keyword=${encodeURIComponent(keyword)}`,
+    `${VITE_BASE_URL}/manager/industry-code/get-create${params.toString() ? `?${params.toString()}` : ''}`,
       { headers }
     );
 
@@ -163,7 +169,6 @@ export const useSearchIndustryCode = (
   return useQuery<IndustryCode[], Error>({
     queryKey: ["searchIndustryCode", keyword],
     queryFn: () => searchIndustryCode(keyword),
-    enabled: !!keyword,
   });
 };
 
