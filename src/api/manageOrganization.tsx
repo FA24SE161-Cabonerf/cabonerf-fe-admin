@@ -78,24 +78,18 @@ const createOrganization = async (newOrganization: {
   try {
     const { name, email, description, taxCode, industryCodeIds, contractFile, logo } = newOrganization;
     const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("description", description);
+    formData.append("taxCode", taxCode);
+    industryCodeIds.forEach((id, index) => {
+      formData.append(`industryCodeIds[${index}]`, id);
+    });
     formData.append("contractFile", contractFile);
     formData.append("logo", logo);
 
-    // Create URL parameters
-    const params = new URLSearchParams({
-      name: name,
-      email: email,
-      description: description,
-      taxCode: taxCode,
-    });
-
-    // Append each industry code ID separately
-    industryCodeIds.forEach((id) => {
-      params.append("industryCodeIds", id);
-    });
-
     const response = await fetch(
-      `${VITE_BASE_URL}/organizations/manager?${params.toString()}`,
+      `${VITE_BASE_URL}/organizations/manager`,
       {
         method: "POST",
         headers: { ...headers },
