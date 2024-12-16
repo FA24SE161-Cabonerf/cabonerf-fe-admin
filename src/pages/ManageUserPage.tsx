@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Plus } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import UserTable from "@/components/manageUser/UserTable";
 import { useUsers, useBanUnbanUser } from "@/api/manageUser";
@@ -77,9 +76,6 @@ const ManageUserPage = () => {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">User Management</h1>
-        <Button onClick={() => console.log("Add new user")}>
-          <Plus className="mr-2 h-4 w-4" /> Add New User
-        </Button>
       </div>
       <div className="mb-4">
         <Input
