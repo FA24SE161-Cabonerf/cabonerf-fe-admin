@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Search } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import UserTable from "@/components/manageUser/UserTable";
 import { useUsers, useBanUnbanUser } from "@/api/manageUser";
@@ -77,14 +77,16 @@ const ManageUserPage = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">User Management</h1>
       </div>
-      <div className="mb-4">
-        <Input
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="max-w-sm"
-        />
-      </div>
+      <div className="relative max-w-sm">
+      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+      <Input
+        type="text"
+        placeholder="Search users..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="pl-8"
+      />
+    </div>
       {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />

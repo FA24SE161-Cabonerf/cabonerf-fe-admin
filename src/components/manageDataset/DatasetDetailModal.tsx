@@ -18,6 +18,13 @@ const DatasetDetailModal = ({
   onClose,
   dataset,
 }: DatasetDetailModalProps) => {
+  const renderSystemBoundary = (from: string, to: string) => (
+    <div className="inline-flex items-center px-3 py-1 rounded-lg">
+      <span className="text-purple-600 font-medium">{from}</span>
+      <span className="mx-2 text-gray-500">to</span>
+      <span className="text-blue-600 font-medium">{to}</span>
+    </div>
+  );
   if (!dataset) return null;
   const renderIcon = (iconUrl: string) => {
     if (iconUrl.startsWith("<svg")) {
@@ -42,16 +49,11 @@ const DatasetDetailModal = ({
         <ScrollArea className="flex-grow px-6 py-4 h-full overflow-auto">
           <div className="space-y-6">
             <section>
-              <h3 className="text-lg font-semibold mb-2">System Boundary</h3>
-              <div className="space-y-1">
-                <p>
-                  <span className="font-medium">From:</span>{" "}
-                  {dataset.systemBoundary.boundaryFrom}
-                </p>
-                <p>
-                  <span className="font-medium">To:</span>{" "}
-                  {dataset.systemBoundary.boundaryTo}
-                </p>
+              <h3 className="text-lg font-semibold mb-2">System Boundary: {renderSystemBoundary(
+                    dataset.systemBoundary.boundaryFrom,
+                    dataset.systemBoundary.boundaryTo
+                  )}</h3>
+              <div className="space-y-1">       
                 <p>
                   <span className="font-medium">Description:</span>{" "}
                   {dataset.systemBoundary.description}

@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, Search } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useImpactMethods,
@@ -168,14 +168,15 @@ const ManageImpactMethodPage = () => {
           <Plus className="mr-2 h-4 w-4" /> Add New Method
         </Button>
       </div>
-      <div className="mb-4">
-        <Input
+      <div className="relative max-w-sm">
+      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+      <Input
           placeholder="Search methods..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="max-w-sm"
+          className="pl-8"
         />
-      </div>
+    </div>
       {error ? (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
