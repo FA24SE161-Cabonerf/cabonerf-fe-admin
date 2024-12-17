@@ -37,7 +37,7 @@ export default function MidpointImpactCategoryTable({
         </TableRow>
       </TableHeader>
       {isLoading ? (
-        <SkeletonTable columns={5} rows={5} />
+        <SkeletonTable columns={6} rows={5} />
       ) : (
         <TableBody>
           {categories && categories.length > 0 ? (

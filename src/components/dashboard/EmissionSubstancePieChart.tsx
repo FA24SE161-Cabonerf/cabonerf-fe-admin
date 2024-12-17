@@ -41,7 +41,7 @@ const EmissionSubstancePieChart = ({ data }: EmissionSubstancePieChartProps) => 
               label: "Count",
             },
           }}
-          className="h-[400px]"
+          className="w-[550px] h-[500px]"
         >
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

@@ -22,6 +22,15 @@ const DatasetTable = ({
   isLoading,
   onViewDetails,
 }: DatasetTableProps) => {
+
+  const renderSystemBoundary = (from: string, to: string) => (
+    <div className="inline-flex items-center px-3 py-1 bg-gray-50 rounded-lg">
+      <span className="text-purple-600 font-medium">{from}</span>
+      <span className="mx-2 text-gray-500">to</span>
+      <span className="text-blue-600 font-medium">{to}</span>
+    </div>
+  );
+
   return (
     <Table>
       <TableHeader>
@@ -43,7 +52,10 @@ const DatasetTable = ({
                 className="cursor-pointer"
               >
                 <TableCell className="font-medium">{dataset.name}</TableCell>
-                <TableCell>{dataset.systemBoundary.boundaryFrom} to {dataset.systemBoundary.boundaryTo}</TableCell>
+                <TableCell> {renderSystemBoundary(
+                    dataset.systemBoundary.boundaryFrom,
+                    dataset.systemBoundary.boundaryTo
+                  )}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

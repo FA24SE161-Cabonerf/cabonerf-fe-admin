@@ -66,7 +66,15 @@ const UserTable = ({
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.phone || '-'}</TableCell>
                 <TableCell>{user.bio || '-'}</TableCell>
-                <TableCell>{user.status ? "Active" : "Inactive"}</TableCell>
+                <TableCell>  <span
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      user.status
+                        ? "bg-slate-800 text-white"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {user.status ? "active" : "Inactive"}
+                  </span></TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
                     <Button
