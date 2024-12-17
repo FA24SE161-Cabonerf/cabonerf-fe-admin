@@ -116,7 +116,7 @@ export default function LoginForm() {
               />
               <Button 
                 type="submit" 
-                className="w-full h-10"
+                className="w-full h-11 bg-blue-700 hover:bg-blue-700 text-white font-semibold rounded-md transition duration-200 shadow-md hover:shadow-lg"
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? (

@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, Search } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useMidpointImpactCategories,
@@ -173,13 +173,16 @@ export default function ManageMidpointImpactCategoryPage() {
           <Plus className="mr-2 h-4 w-4" /> Add New Category
         </Button>
       </div>
+      <div className="relative max-w-sm">
+      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
       <Input
         type="text"
         placeholder="Search categories..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className="mb-4"
+        className="mb-4 pl-8"
       />
+      </div>
       {error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />

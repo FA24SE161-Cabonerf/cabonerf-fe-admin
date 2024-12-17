@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, Search } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import MidpointSubstanceTable from "@/components/manageMidpointSubstance/MidpointSubstanceTable";
@@ -311,12 +311,13 @@ const ManageMidpointSubstancePage = () => {
           />
         </div>
       </div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 relative">
+      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
         <Input
           placeholder="Search substances..."
           value={keyword}
           onChange={handleKeywordChange}
-          className="max-w-sm mr-2"
+          className="max-w-sm mr-2 pl-8"
         />
         <CompartmentSelect
           value={compartmentId}

@@ -24,7 +24,7 @@ const DatasetTable = ({
 }: DatasetTableProps) => {
 
   const renderSystemBoundary = (from: string, to: string) => (
-    <div className="inline-flex items-center px-3 py-1 bg-gray-50 rounded-lg">
+    <div className="inline-flex items-center px-3 py-1 rounded-lg">
       <span className="text-purple-600 font-medium">{from}</span>
       <span className="mx-2 text-gray-500">to</span>
       <span className="text-blue-600 font-medium">{to}</span>

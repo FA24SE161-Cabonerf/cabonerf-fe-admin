@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, Search } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ImpactMethod } from "@/types/impactMethod";
 import { useImpactMethods, useImpactMethod } from "@/api/manageImpactMethod";
@@ -275,12 +275,13 @@ const ManageImpactCategoryPage: React.FC = () => {
           <Plus className="mr-2 h-4 w-4" /> Add New Impact Category
         </Button>
       </div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 relative">
+      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
         <Input
           placeholder="Search impact categories..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="max-w-sm"
+          className="max-w-sm pl-8"
         />
         <Select
           value={impactMethodId || "all"}
