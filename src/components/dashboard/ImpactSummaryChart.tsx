@@ -45,9 +45,9 @@ const ImpactSummaryChart = ({ data }: ImpactSummaryChartProps) => {
               color: "hsl(var(--chart-2))",
             },
           }}
-          className="min-h-[400px]"
+          className="w-[550px] h-[500px]"
         >
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer>
             <BarChart data={sortedData} layout="vertical">
               <XAxis type="number" />
               <YAxis

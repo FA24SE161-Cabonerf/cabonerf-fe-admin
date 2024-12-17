@@ -1,10 +1,9 @@
 import { EmissionSubstanceCount, ImpactData, MonthlyUserCount } from "@/api/manageAdminDashboard";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FileText, Loader2 } from 'lucide-react';
 import MonthlyNewUsersChart from "./MonthlyNewUsersChart";
 import ImpactSummaryChart from "./ImpactSummaryChart";
 import EmissionSubstancePieChart from "./EmissionSubstancePieChart";
-
 
 interface AdminDashboardContentProps {
   userCount: number | undefined;
@@ -74,22 +73,29 @@ const AdminDashboardContent = ({
       ) : (
         monthlyNewUsers && <MonthlyNewUsersChart data={monthlyNewUsers} />
       )}
-      {isSumImpactLoading ? (
-        <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+        <div className="w-full lg:h-[700px]">
+          {isSumImpactLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            sumImpact && <ImpactSummaryChart data={sumImpact} />
+          )}
         </div>
-      ) : (
-        sumImpact && <ImpactSummaryChart data={sumImpact} />
-      )}
-     {isEmissionSubstanceLoading ? (
-        <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="w-full lg:h-[700px]">
+          {isEmissionSubstanceLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            emissionSubstanceCount && <EmissionSubstancePieChart data={emissionSubstanceCount} />
+          )}
         </div>
-      ) : (
-        emissionSubstanceCount && <EmissionSubstancePieChart data={emissionSubstanceCount} />
-      )}
+      </div>
     </div>
   )
 }
 
 export default AdminDashboardContent
+

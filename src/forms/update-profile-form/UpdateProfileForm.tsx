@@ -1,28 +1,58 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useState, useEffect } from 'react'
-import { Textarea } from "@/components/ui/textarea"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle } from 'lucide-react'
-import { RefetchOptions, QueryObserverResult } from '@tanstack/react-query'
-import { User } from '@/types/user'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useState, useEffect, useRef } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, Pencil } from "lucide-react";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { User } from "@/types/user";
 
-const MAX_LENGTH = 255
+const MAX_LENGTH = 255;
 
 const profileSchema = z.object({
-  fullName: z.string().min(2, { message: "Name must be at least 2 characters." }).max(MAX_LENGTH, { message: `Name must not exceed ${MAX_LENGTH} characters.` }),
-  phone: z.string().min(10, { message: "Phone number must be at least 10 characters." }).max(MAX_LENGTH, { message: `Phone number must not exceed ${MAX_LENGTH} characters.` }).nullable(),
-  bio: z.string().max(MAX_LENGTH, { message: `Bio must not exceed ${MAX_LENGTH} characters.` }).nullable(),
-  profilePictureUrl: z.string().url().or(z.literal('')),
-})
+  fullName: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters." })
+    .max(MAX_LENGTH, {
+      message: `Name must not exceed ${MAX_LENGTH} characters.`,
+    }),
+  phone: z
+    .string()
+    .min(10, { message: "Phone number must be at least 10 characters." })
+    .max(MAX_LENGTH, {
+      message: `Phone number must not exceed ${MAX_LENGTH} characters.`,
+    })
+    .nullable(),
+  bio: z
+    .string()
+    .max(MAX_LENGTH, {
+      message: `Bio must not exceed ${MAX_LENGTH} characters.`,
+    })
+    .nullable(),
+  profilePictureUrl: z.string().url().or(z.literal("")),
+});
 
-type ProfileFormValues = z.infer<typeof profileSchema>
+type ProfileFormValues = z.infer<typeof profileSchema>;
 
 interface UpdateProfileFormProps {
   currentUser: User;
@@ -30,12 +60,23 @@ interface UpdateProfileFormProps {
   onAvatarUpload: (file: File) => Promise<string>;
   isSubmitting: boolean;
   error: string | null;
-  refetchUser: (options?: RefetchOptions) => Promise<QueryObserverResult<User, Error>>;
+  refetchUser: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<User, Error>>;
 }
 
-const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSubmit, onAvatarUpload, isSubmitting, error, refetchUser }) => {
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(currentUser.profilePictureUrl)
-
+const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({
+  currentUser,
+  onSubmit,
+  onAvatarUpload,
+  isSubmitting,
+  error,
+  refetchUser,
+}) => {
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    currentUser.profilePictureUrl
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -44,7 +85,7 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
       bio: currentUser.bio || "",
       profilePictureUrl: currentUser.profilePictureUrl || "",
     },
-  })
+  });
 
   useEffect(() => {
     form.reset({
@@ -52,21 +93,26 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
       phone: currentUser.phone || "",
       bio: currentUser.bio || "",
       profilePictureUrl: currentUser.profilePictureUrl || "",
-    })
-    setAvatarPreview(currentUser.profilePictureUrl || "")
-  }, [currentUser, form])
+    });
+    setAvatarPreview(currentUser.profilePictureUrl || "");
+  }, [currentUser, form]);
 
   const handleSubmit = async (data: ProfileFormValues) => {
-    await onSubmit(data)
-    refetchUser()
-  }
+    await onSubmit(data);
+    refetchUser();
+  };
 
   const handleAvatarUrlChange = (url: string) => {
     setAvatarPreview(url);
-    form.setValue('profilePictureUrl', url);
+    form.setValue("profilePictureUrl", url);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
@@ -82,35 +128,50 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Update Profile</CardTitle>
+        <CardTitle>Profile</CardTitle>
         <CardDescription>Change your profile information here.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-8"
+          >
             <div className="flex flex-col items-center space-y-4">
-              <Avatar className="w-24 h-24">
-                <AvatarImage src={avatarPreview || "/placeholder.svg?height=96&width=96"} alt="Profile picture" />
-                <AvatarFallback>{currentUser.fullName.charAt(0) || 'U'}</AvatarFallback>
-              </Avatar>
+            <label htmlFor="avatar-upload" className="cursor-pointer relative group">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage
+                    src={avatarPreview || "/placeholder.svg?height=96&width=96"}
+                    alt="Profile picture"
+                  />
+                  <AvatarFallback>
+                    {currentUser.fullName.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Pencil className="w-5 h-5 text-white" />
+                </div>
+              </label>
               <Input
+                id="avatar-upload"
                 type="file"
                 onChange={handleFileChange}
                 accept="image/*"
-                className="mt-2"
+                className="hidden"
+                ref={fileInputRef}
               />
               <FormField
                 control={form.control}
                 name="profilePictureUrl"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="hidden">
                     <FormLabel>Profile Picture URL</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="url" 
-                        placeholder="https://example.com/your-image.jpg" 
+                      <Input
+                        type="url"
+                        placeholder="https://example.com/your-image.jpg"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                         onChange={(e) => {
                           field.onChange(e);
                           handleAvatarUrlChange(e.target.value);
@@ -129,7 +190,11 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
                 <FormItem>
                   <FormLabel>Full name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your full name" {...field} maxLength={MAX_LENGTH} />
+                    <Input
+                      placeholder="Your full name"
+                      {...field}
+                      maxLength={MAX_LENGTH}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +207,12 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your phone number" {...field} value={field.value || ''} maxLength={MAX_LENGTH} />
+                    <Input
+                      placeholder="Your phone number"
+                      {...field}
+                      value={field.value || ""}
+                      maxLength={MAX_LENGTH}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -155,7 +225,12 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Tell us about yourself" {...field} value={field.value || ''} maxLength={MAX_LENGTH} />
+                    <Textarea
+                      placeholder="Tell us about yourself"
+                      {...field}
+                      value={field.value || ""}
+                      maxLength={MAX_LENGTH}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -172,17 +247,16 @@ const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({ currentUser, onSu
         </Alert>
       )}
       <CardFooter className="flex flex-col items-center space-y-4">
-        <Button 
-          className="w-[350px]" 
+        <Button
+          className="w-[350px]"
           onClick={form.handleSubmit(handleSubmit)}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Updating..." : "Update Profile"}
+          {isSubmitting ? "Updating..." : "Save"}
         </Button>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export default UpdateProfileForm
-
+export default UpdateProfileForm;
