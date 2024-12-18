@@ -168,7 +168,7 @@ const ManageImpactMethodPage = () => {
           <Plus className="mr-2 h-4 w-4" /> Add New Method
         </Button>
       </div>
-      <div className="relative max-w-sm">
+      <div className="relative max-w-sm mb-4">
       <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
       <Input
           placeholder="Search methods..."

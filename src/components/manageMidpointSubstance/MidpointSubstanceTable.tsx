@@ -28,7 +28,7 @@ const MidpointSubstancesTable = ({
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="bg-gray-100 dark:bg-gray-800">
           <TableHead>Name</TableHead>       
           <TableHead>Compartment</TableHead>
           <TableHead>CAS number</TableHead>

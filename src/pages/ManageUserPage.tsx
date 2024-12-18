@@ -39,10 +39,6 @@ const ManageUserPage = () => {
     setPage(1); 
   };
 
-  const handleEdit = (id: string) => {
-   
-    console.log(`Edit user with id: ${id}`);
-  };
 
   const handleToggleStatus = async (id: string, newStatus: boolean) => {
     try {
@@ -77,7 +73,7 @@ const ManageUserPage = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">User Management</h1>
       </div>
-      <div className="relative max-w-sm">
+      <div className="relative max-w-sm mb-4">
       <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
       <Input
         type="text"
@@ -99,7 +95,6 @@ const ManageUserPage = () => {
         <ScrollArea className="h-[calc(100vh-250px)]">
           <UserTable
             users={userResponse?.users}
-            onEdit={handleEdit}
             onToggleStatus={handleToggleStatus}
             isLoading={isLoading}
           />

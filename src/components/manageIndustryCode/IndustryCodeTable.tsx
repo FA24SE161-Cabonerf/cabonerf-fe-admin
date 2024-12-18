@@ -27,7 +27,7 @@ const IndustryCodeTable = ({
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="bg-gray-100 dark:bg-gray-800">
           <TableHead>Code</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Actions</TableHead>
