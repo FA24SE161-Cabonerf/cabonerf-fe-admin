@@ -205,9 +205,9 @@ const importMidpointFactors = async (methodName: string, file: File): Promise<Im
   try {
     const formData = new FormData();
     formData.append('file', file);
-
+    formData.append('methodName', methodName);
     const response = await fetch(
-      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/import?methodName=${encodeURIComponent(methodName)}`,
+      `${VITE_BASE_URL}/impacts/admin/midpoint-factors/import`,
       {
         method: 'POST',
         headers: {
