@@ -44,9 +44,12 @@ const Pagination = (
     setInputPage(page.toString());
   }, [page]);
 
-  const handleFirstPage = () => onPageChange(1);
-
-  const handlePreviousPage = () => {
+  const handleFirstPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onPageChange(1);
+  };
+  const handlePreviousPage = (e: React.MouseEvent) => {
+    e.preventDefault();
     const currentInputPage = parseInt(inputPage);
     if (
       !isNaN(currentInputPage) &&
@@ -59,7 +62,8 @@ const Pagination = (
     }
   };
 
-  const handleNextPage = () => {
+  const handleNextPage = (e: React.MouseEvent) => {
+    e.preventDefault();
     const currentInputPage = parseInt(inputPage);
     if (
       !isNaN(currentInputPage) &&
@@ -72,8 +76,10 @@ const Pagination = (
     }
   };
 
-  const handleLastPage = () => onPageChange(totalPages);
-
+  const handleLastPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onPageChange(totalPages);
+  };
   const handleInputPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputPage(e.target.value);
   };
