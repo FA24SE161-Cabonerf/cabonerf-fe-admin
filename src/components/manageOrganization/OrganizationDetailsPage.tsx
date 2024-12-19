@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, ArrowLeft, FileText } from 'lucide-react';
+import { AlertCircle, ArrowLeft, FileText, Plus } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useOrganization } from '@/api/manageOrganization';
+import { useOrganization, useOrganizationMembers, useRemoveMemberFromOrganization } from '@/api/manageOrganization';
 import {
   Table,
   TableBody,
@@ -12,12 +12,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import InviteUsersModal from '@/forms/manage-Organization/InviteUsersModal';
+import { useState } from 'react';
+import { useAuth } from '@/contexts/auth/AuthContext';
+import { useCurrentUser } from '@/api/manageUserProfile';
+import { toast } from '@/hooks/use-toast';
 
 const OrganizationDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: organization, isLoading, error } = useOrganization(id || '');
-
+  const { data: members, refetch: refetchMembers } = useOrganizationMembers(id || '');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const { currentUser } = useAuth();
+  const { data: userData } = useCurrentUser(currentUser?.id);
+  const removeMemberMutation = useRemoveMemberFromOrganization();
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -41,6 +51,38 @@ const OrganizationDetailsPage = () => {
   if (!organization) {
     return <div>Organization not found</div>;
   }
+  const handleInviteModalClose = () => {
+    setIsInviteModalOpen(false);
+    refetchMembers();
+  };
+
+  const handleRemoveMember = async (userOrganizationId: string) => {
+    if (!userData?.id) {
+      toast({
+        title: "Error",
+        description: "Unable to remove member. User ID not found.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await removeMemberMutation.mutateAsync({ userOrganizationId, currentUserId: userData.id });
+      toast({
+        title: "Success",
+        description: "Member removed successfully.",
+      });
+      refetchMembers();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `${error}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -123,8 +165,69 @@ const OrganizationDetailsPage = () => {
               <p className="mt-2">{organization.taxCode}</p>
             </div>
           )}
+           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">Organization member</h2>
+                <p className="text-sm text-muted-foreground">
+                  Members inside this organization
+                </p>
+              </div>
+              <Button className="bg-green-500 hover:bg-green-600" onClick={() => setIsInviteModalOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Invite
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              {members?.map((member) => (
+                <div
+                  key={member.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <div className="flex items-center gap-4">
+                    <Avatar>
+                      <AvatarImage src={member.user.profilePictureUrl} />
+                      <AvatarFallback>
+                        {member.user.fullName.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{member.user.fullName}</span>                    
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {member.user.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                  <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                      {member.role.name}
+                    </span>
+                    <Button 
+                      variant="ghost" 
+                      className="text-gray-500 hover:text-gray-700"
+                      onClick={() => handleRemoveMember(member.id)}
+                      disabled={removeMemberMutation.isPending}
+                    >
+                      {removeMemberMutation.isPending ? 'Removing...' : 'Remove'}
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </CardContent>
       </Card>
+      {isInviteModalOpen && (
+        <InviteUsersModal
+          isOpen={isInviteModalOpen}
+          onClose={handleInviteModalClose}
+          organizationId={id || ''}
+          currentUserId={userData?.id || ''}
+        />
+      )}
     </div>
   );
 };
