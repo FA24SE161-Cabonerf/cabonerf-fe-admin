@@ -225,7 +225,7 @@ const OrganizationDetailsPage = () => {
                     {member.role.name !== "Organization Manager" && (
                       <Button
                         variant="ghost"
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 hidden"
                         onClick={() => handleRemoveMember(member.id)}
                         disabled={removeMemberMutation.isPending}
                       >
