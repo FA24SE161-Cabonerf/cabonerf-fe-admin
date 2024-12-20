@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import {
   Perspective,
   PerspectiveListResponse,
@@ -18,7 +18,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 const fetchPerspectives = async (): Promise<Perspective[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/perspectives/`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: PerspectiveListResponse = await response.json();
@@ -42,7 +42,7 @@ const createPerspective = async (newPerspective: {
     const response = await fetch(`${VITE_BASE_URL}/perspectives`, {
       method: "POST",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newPerspective),
@@ -72,7 +72,7 @@ const updatePerspective = async (
     const response = await fetch(`${VITE_BASE_URL}/perspectives/${id}`, {
       method: "PUT",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedPerspective),
@@ -94,7 +94,7 @@ const deletePerspective = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/perspectives/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

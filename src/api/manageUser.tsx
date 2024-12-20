@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
 import { User, UserListResponse, UserPaginatedResponse, UserResponse } from "@/types/userListType";
@@ -19,7 +19,7 @@ const fetchUsers = async (
 
     const response = await fetch(
       `${VITE_BASE_URL}/users/admin?${params.toString()}`,
-      { headers }
+      {  headers: getHeaders(), }
     );
 
     const data: UserListResponse = await response.json();
@@ -40,7 +40,7 @@ const banUnbanUser = async (userId: string): Promise<User> => {
       `${VITE_BASE_URL}/users/admin/ban-unban-user/${userId}`,
       {
         method: 'POST',
-        headers,
+        headers: getHeaders(),
       }
     );
 

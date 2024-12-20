@@ -1,4 +1,4 @@
-import { headers } from '@/constants/headers'
+import { getHeaders } from '@/constants/headers'
 import { LifeCycleStage, LifeCycleStageListResponse, LifeCycleStageResponse } from '@/types/lifeCycleStage'
 import { useQuery, UseQueryResult, useMutation, UseMutationResult } from '@tanstack/react-query'
 import { handleApiResponse } from './apiUtility'
@@ -9,7 +9,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
 const fetchLifeCycleStages = async (): Promise<LifeCycleStage[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages`, {
-      headers
+      headers: getHeaders(),
     })
     
     const data: LifeCycleStageListResponse = await response.json()
@@ -33,10 +33,7 @@ const createLifeCycleStage = async (newLifeCycleStage: {
     const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages`, 
     {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newLifeCycleStage),
     })
 
@@ -60,10 +57,7 @@ const updateLifeCycleStage = async (
   try {
     const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages/${id}`, {
       method: "PUT",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(updatedLifeCycleStage),
     })
 
@@ -83,7 +77,7 @@ const deleteLifeCycleStage = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/life-cycle-stages/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     })
 
     const data: ApiResponse<void> = await response.json()

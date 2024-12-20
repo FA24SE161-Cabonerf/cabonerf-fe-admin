@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { CreateImpactCategoryRequest, ImpactCategory, ImpactCategoryListResponse, ImpactCategoryResponse } from "@/types/impactCategory";
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
@@ -12,7 +12,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactCategoryListResponse = await response.json();
@@ -30,7 +30,7 @@ const fetchImpactCategories = async (): Promise<ImpactCategory[]> => {
 const fetchImpactCategoriesByMethod = async (methodId: string): Promise<ImpactCategory[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/impact-categories`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactCategoryListResponse = await response.json();
@@ -48,7 +48,7 @@ const fetchImpactCategoriesByMethod = async (methodId: string): Promise<ImpactCa
 const fetchImpactCategory = async (id: string): Promise<ImpactCategory> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories/${id}`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactCategoryResponse = await response.json();
@@ -67,10 +67,7 @@ const createImpactCategory = async (newImpactCategory: CreateImpactCategoryReque
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories`, {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newImpactCategory),
     });
 
@@ -93,10 +90,7 @@ const updateImpactCategory = async (
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories/${id}`, {
       method: "PUT",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(updatedImpactCategory),
     });
 
@@ -116,7 +110,7 @@ const deleteImpactCategory = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();
@@ -134,7 +128,7 @@ const deleteImpactCategory = async (id: string): Promise<void> => {
 const fetchImpactMethodsByCategory = async (categoryId: string): Promise<ImpactMethod[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories/${categoryId}/impact-methods`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactMethodListResponse = await response.json();
@@ -153,7 +147,7 @@ const addImpactCategoryToMethod = async (methodId: string, categoryId: string): 
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${methodId}/impact-categories/${categoryId}`, {
       method: "POST",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();
@@ -172,7 +166,7 @@ const removeImpactCategoryFromMethod = async (categoryId: string, methodId: stri
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-categories/${categoryId}/impact-methods/${methodId}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

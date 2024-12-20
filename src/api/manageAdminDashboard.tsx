@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
 import { ApiResponse } from "@/types/apiResponse";
@@ -9,7 +9,7 @@ const fetchUserCount = async (): Promise<number> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/users/admin/count-all-user`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: ApiResponse<number> = await response.json();
@@ -28,7 +28,7 @@ const fetchProjectCount = async (): Promise<number> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/projects/admin/count-project`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: ApiResponse<number> = await response.json();
@@ -52,7 +52,7 @@ const fetchMonthlyNewUsers = async (): Promise<MonthlyUserCount[]> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/users/admin/count-user-new`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: ApiResponse<MonthlyUserCount[]> = await response.json();
@@ -76,7 +76,7 @@ const fetchSumImpact = async (): Promise<ImpactData[]> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/projects/admin/sum-impact`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: ApiResponse<ImpactData[]> = await response.json();
@@ -100,7 +100,7 @@ const fetchEmissionSubstanceCount = async (): Promise<EmissionSubstanceCount[]> 
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/impacts/admin/count-emission-substance`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: ApiResponse<EmissionSubstanceCount[]> = await response.json();

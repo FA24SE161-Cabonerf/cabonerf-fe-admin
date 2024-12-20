@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import {
   EmissionCompartment,
   EmissionCompartmentListResponse,
@@ -14,9 +14,7 @@ const fetchEmissionCompartments = async (): Promise<EmissionCompartment[]> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/emissions/emission-compartments`,
-      {
-        headers,
-      }
+      { headers: getHeaders(), }
     );
 
     const data: EmissionCompartmentListResponse = await response.json();
@@ -41,10 +39,7 @@ const createEmissionCompartment = async (newEmissionCompartment: {
   try {
     const response = await fetch(`${VITE_BASE_URL}/emissions/emission-compartments`, {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newEmissionCompartment),
     });
 
@@ -70,10 +65,7 @@ const updateEmissionCompartment = async (
   try {
     const response = await fetch(`${VITE_BASE_URL}/emissions/emission-compartments/${id}`, {
       method: "PUT",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(updatedEmissionCompartment),
     });
 
@@ -93,7 +85,7 @@ const deleteEmissionCompartment = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/emissions/emission-compartments/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();
