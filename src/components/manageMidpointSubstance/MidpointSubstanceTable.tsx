@@ -63,7 +63,7 @@ const MidpointSubstancesTable = ({
         </TableRow>
       </TableHeader>
       {isLoading ? (
-        <SkeletonTable columns={8} rows={10} />
+        <SkeletonTable columns={10} rows={10} />
       ) : (
         <TableBody>
           {substances && substances.length > 0 ? (
