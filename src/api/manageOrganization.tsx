@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import {
   useMutation,
   UseMutationResult,
@@ -39,7 +39,7 @@ const fetchOrganization = async (id: string): Promise<Organization> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/organizations/${id}`,
-      { headers }
+      {   headers: getHeaders(), }
     );
 
     const data = await response.json();
@@ -70,7 +70,7 @@ const fetchOrganizations = async (
 
     const response = await fetch(
       `${VITE_BASE_URL}/manager/organizations?${params.toString()}`,
-      { headers }
+      {   headers: getHeaders(), }
     );
 
     const data: OrganizationListResponse = await response.json();
@@ -110,7 +110,7 @@ const createOrganization = async (newOrganization: {
       `${VITE_BASE_URL}/manager/organizations`,
       {
         method: "POST",
-        headers: { ...headers },
+        headers: getHeaders(),
         body: formData,
       }
     );
@@ -139,7 +139,7 @@ const updateOrganization = async (
       `${VITE_BASE_URL}/manager/organizations/${organizationId}`,
       {
         method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" },
+        headers: { ...getHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
       }
     );
@@ -157,7 +157,7 @@ const deleteOrganization = async (organizationId: string): Promise<void> => {
       `${VITE_BASE_URL}/manager/organizations/${organizationId}`,
       {
         method: "DELETE",
-        headers,
+        headers: getHeaders(),
       }
     );
 
@@ -174,7 +174,7 @@ const fetchOrganizationMembers = async (organizationId: string): Promise<Member[
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/organizations/${organizationId}/members`,
-      { headers }
+      {   headers: getHeaders(), }
     );
 
     const data: MemberListResponse = await response.json();
@@ -198,7 +198,7 @@ const inviteUsersToOrganization = async (request: InviteUsersRequest, userId: st
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...getHeaders(),
           'Content-Type': 'application/json',
           'x-user-id': userId,
         },
@@ -234,7 +234,7 @@ const fetchUsersToInvite = async (
 
     const response = await fetch(
       `${VITE_BASE_URL}/users/invite?${params.toString()}`,
-      { headers }
+      {  headers: getHeaders(), }
     );
 
     const data: ApiResponse<UserInviteResponse> = await response.json();
@@ -257,7 +257,7 @@ const removeMemberFromOrganization = async (userOrganizationId: string, currentU
       {
         method: 'DELETE',
         headers: {
-          ...headers,
+          ...getHeaders(),
           'x-user-id': currentUserId,
         },
       }

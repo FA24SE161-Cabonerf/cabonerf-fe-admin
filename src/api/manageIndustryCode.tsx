@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { IndustryCode, IndustryCodeListResponse, IndustryCodePaginatedResponse, IndustryCodeResponse } from "@/types/industryCode";
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { handleApiResponse } from "./apiUtility";
 import { ApiResponse } from "@/types/apiResponse";
 
@@ -20,7 +20,7 @@ const fetchIndustryCodes = async (
 
     const response = await fetch(
       `${VITE_BASE_URL}/manager/industry-code?${params.toString()}`,
-      { headers }
+      {  headers: getHeaders(), }
     );
 
     const data: IndustryCodeListResponse = await response.json();
@@ -47,7 +47,7 @@ const searchIndustryCode = async (keyword: string): Promise<IndustryCode[]> => {
 
     const response = await fetch(
     `${VITE_BASE_URL}/manager/industry-code/get-create${params.toString() ? `?${params.toString()}` : ''}`,
-      { headers }
+      {  headers: getHeaders(), }
     );
 
     const data: ApiResponse<IndustryCode[]> = await response.json();
@@ -69,7 +69,7 @@ const createIndustryCode = async (data: { code: string; name: string }): Promise
   try {
     const response = await fetch(`${VITE_BASE_URL}/manager/industry-code`, {
       method: 'POST',
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
@@ -88,7 +88,7 @@ const updateIndustryCode = async (id: string, data: { code: string; name: string
   try {
     const response = await fetch(`${VITE_BASE_URL}/manager/industry-code/${id}`, {
       method: 'PUT',
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
@@ -108,7 +108,7 @@ const deleteIndustryCode = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/manager/industry-code/${id}`, {
       method: 'DELETE',
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

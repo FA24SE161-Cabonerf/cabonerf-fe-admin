@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import {
   MidpointImpactCategory,
   MidpointImpactCategoryListResponse,
@@ -18,7 +18,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 const fetchMidpointImpactCategories = async (): Promise<MidpointImpactCategory[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/midpoint-categories`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: MidpointImpactCategoryListResponse = await response.json();
@@ -36,7 +36,7 @@ const fetchMidpointImpactCategories = async (): Promise<MidpointImpactCategory[]
 const fetchMidpointImpactCategory = async (id: string): Promise<MidpointImpactCategory> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/midpoint-categories/${id}`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: MidpointImpactCategoryResponse = await response.json();
@@ -60,10 +60,7 @@ const createMidpointImpactCategory = async (newCategory: {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/midpoint-categories`, {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newCategory),
     });
 
@@ -91,10 +88,7 @@ const updateMidpointImpactCategory = async (
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/midpoint-categories/${id}`, {
       method: "PUT",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(updatedCategory),
     });
 
@@ -114,7 +108,7 @@ const deleteMidpointImpactCategory = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/midpoint-categories/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

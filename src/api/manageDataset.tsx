@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
 import { DatasetListResponse, DatasetPaginatedResponse } from "@/types/dataset";
@@ -18,7 +18,7 @@ const fetchDatasets = async (
 
     const response = await fetch(
       `${VITE_BASE_URL}/datasets/admin?${params.toString()}`,
-      { headers }
+      { headers: getHeaders(), }
     );
 
     const data: DatasetListResponse = await response.json();

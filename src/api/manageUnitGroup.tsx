@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import {
   UnitGroup,
   UnitGroupListResponse,
@@ -18,7 +18,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 const fetchUnitGroups = async (): Promise<UnitGroup[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: UnitGroupListResponse = await response.json();
@@ -36,7 +36,7 @@ const fetchUnitGroups = async (): Promise<UnitGroup[]> => {
 const fetchUnitGroup = async (id: string): Promise<UnitGroup> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: UnitGroupResponse = await response.json();
@@ -59,7 +59,7 @@ const createUnitGroup = async (newUnitGroup: {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/`, {
       method: "POST",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newUnitGroup),
@@ -85,7 +85,7 @@ const updateUnitGroup = async (
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
       method: "PUT",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedUnitGroup),
@@ -107,7 +107,7 @@ const deleteUnitGroup = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { UnitListResponse, UnitResponse, Unit } from "@/types/unit";
 import {
   useMutation,
@@ -13,7 +13,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const fetchUnits = async (): Promise<Unit[]> => {
   try {
-    const response = await fetch(`${VITE_BASE_URL}/units`, { headers });
+    const response = await fetch(`${VITE_BASE_URL}/units`, {  headers: getHeaders(), });
 
     const data: UnitListResponse = await response.json();
     return handleApiResponse(response, data);
@@ -31,7 +31,7 @@ const fetchUnitsByUnitGroup = async (unitGroupId: string): Promise<Unit[]> => {
   try {
     const response = await fetch(
       `${VITE_BASE_URL}/unit-groups/${unitGroupId}/units`,
-      { headers }
+      {  headers: getHeaders(), }
     );
 
     const data: UnitListResponse = await response.json();
@@ -51,7 +51,7 @@ const fetchUnitsByUnitGroup = async (unitGroupId: string): Promise<Unit[]> => {
 const fetchUnit = async (id: string): Promise<Unit> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/units/${id}`, {
-      headers,
+      headers: getHeaders(),
     });
 
     const data: UnitResponse = await response.json();
@@ -75,7 +75,7 @@ const createUnit = async (unitGroupId: string, unitData: {
     const response = await fetch(`${VITE_BASE_URL}/unit-groups/${unitGroupId}/units`, {
       method: "POST",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(unitData),
@@ -123,7 +123,7 @@ const updateUnit = async (
     const response = await fetch(`${VITE_BASE_URL}/units/${id}`, {
       method: "PUT",
       headers: {
-        ...headers,
+        ...getHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedUnit),
@@ -145,7 +145,7 @@ const deleteUnit = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/units/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();

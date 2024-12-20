@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "@tanstack/react-query";
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { handleApiResponse } from "./apiUtility";
 import { ApiResponse } from "@/types/apiResponse";
 import { User } from "@/types/user";
@@ -10,7 +10,7 @@ const fetchCurrentUser = async (userId: string): Promise<User> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/users/me`, {
       headers: {
-        ...headers,
+        ...getHeaders(),
         'x-user-id': userId,
       },
     });
@@ -40,7 +40,7 @@ const updateProfile = async (data: UpdateProfileData, userId: string): Promise<v
     const response = await fetch(`${VITE_BASE_URL}/users/profile`, {
       method: 'PUT',
       headers: {
-        ...headers,
+        ...getHeaders(),
         'Content-Type': 'application/json',
         'x-user-id': userId,
       },
@@ -67,7 +67,7 @@ const updateUserAvatar = async (image: File, userId: string): Promise<void> => {
     const response = await fetch(`${VITE_BASE_URL}/users/avatar`, {
       method: 'PUT',
       headers: {
-        ...headers,
+        ...getHeaders(),
         'x-user-id': userId,
       },
       body: formData,

@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { ImpactMethod, ImpactMethodListResponse, ImpactMethodName, ImpactMethodNameListResponse, ImpactMethodResponse } from "@/types/impactMethod";
 import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
 import { handleApiResponse } from "./apiUtility";
@@ -9,7 +9,7 @@ const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactMethodListResponse = await response.json();
@@ -27,7 +27,7 @@ const fetchImpactMethods = async (): Promise<ImpactMethod[]> => {
 const fetchImpactMethod = async (id: string): Promise<ImpactMethod> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactMethodResponse = await response.json();
@@ -52,10 +52,7 @@ const createImpactMethod = async (newMethod: {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods`, {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newMethod),
     });
 
@@ -84,10 +81,7 @@ const updateImpactMethod = async (
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
       method: "PUT",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(updatedMethod),
     });
 
@@ -107,7 +101,7 @@ const deleteImpactMethod = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: ApiResponse<void> = await response.json();
@@ -125,7 +119,7 @@ const deleteImpactMethod = async (id: string): Promise<void> => {
 const fetchImpactMethodNames = async (): Promise<ImpactMethodName[]> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/impact-methods/name`, {
-      headers
+      headers: getHeaders(),
     });
 
     const data: ImpactMethodNameListResponse = await response.json();

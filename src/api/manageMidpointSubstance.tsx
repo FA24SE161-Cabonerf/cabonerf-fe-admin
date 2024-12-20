@@ -1,4 +1,4 @@
-import { headers } from "@/constants/headers";
+import { getHeaders } from "@/constants/headers";
 import { ApiResponse, PaginatedResponse } from "@/types/apiResponse";
 import {
   MidpointSubstance,
@@ -30,7 +30,7 @@ const fetchMidpointSubstances = async (
     const response = await fetch(
       `${VITE_BASE_URL}/impacts/admin/midpoint-factors?${params.toString()}`,
       {
-        headers,
+        headers: getHeaders(),
       }
     );
 
@@ -55,7 +55,7 @@ const fetchEmissionSubstances = async (keyword: string): Promise<EmissionSubstan
     const response = await fetch(
       `${VITE_BASE_URL}/emission-substance/admin?${params.toString()}`,
       {
-        headers,
+        headers: getHeaders(),
       }
     );
 
@@ -96,10 +96,7 @@ const createMidpointSubstance = async (newMidpointSubstance: CreateMidpointSubst
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/admin`, {
       method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(newMidpointSubstance),
     });
 
@@ -119,7 +116,7 @@ const deleteMidpointSubstance = async (id: string): Promise<void> => {
   try {
     const response = await fetch(`${VITE_BASE_URL}/impacts/admin/midpoint-factors/${id}`, {
       method: "DELETE",
-      headers,
+      headers: getHeaders(),
     });
 
     const data: MidpointSubstanceResponse = await response.json();
@@ -139,7 +136,7 @@ const downloadMidpointFactorTemplate = async (): Promise<Blob> => {
     const response = await fetch(
       `${VITE_BASE_URL}/impacts/admin/midpoint-factors/factor-template`,
       {
-        headers,
+        headers: getHeaders(),
         method: 'GET',
       }
     );
@@ -174,7 +171,7 @@ const exportMidpointFactors = async (params: ExportMidpointFactorsParams): Promi
     const response = await fetch(
       `${VITE_BASE_URL}/impacts/admin/midpoint-factors/export?${queryParams.toString()}`,
       {
-        headers,
+        headers: getHeaders(),
         method: 'GET',
       }
     );
@@ -210,9 +207,7 @@ const importMidpointFactors = async (methodName: string, file: File): Promise<Im
       `${VITE_BASE_URL}/impacts/admin/midpoint-factors/import`,
       {
         method: 'POST',
-        headers: {
-          ...headers,
-        },
+        headers: getHeaders(),
         body: formData,
       }
     );
@@ -235,7 +230,7 @@ const downloadErrorLog = async (fileName: string): Promise<Blob> => {
     const response = await fetch(
       `${VITE_BASE_URL}/impacts/admin/midpoint-factors/download?fileName=${encodeURIComponent(fileName)}`,
       {
-        headers,
+        headers: getHeaders(),
         method: 'GET',
       }
     );
