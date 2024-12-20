@@ -32,7 +32,9 @@ const MidpointSubstancesTable = ({
           <TableHead>Name</TableHead>       
           <TableHead>Compartment</TableHead>
           <TableHead>CAS number</TableHead>
-          <TableHead>Molecular formula</TableHead>    
+          <TableHead>Molecular formula</TableHead>  
+          <TableHead>Alternative formula</TableHead>      
+          <TableHead>Chemical name</TableHead>    
           <TableHead>Individualist</TableHead>
           <TableHead>Hierarchist</TableHead>
           <TableHead>Egalitarian</TableHead>
@@ -70,7 +72,9 @@ const MidpointSubstancesTable = ({
                 <TableCell className="font-medium">{substance.name || "-"}</TableCell>                  
                 <TableCell>{substance.compartmentName || "-"}</TableCell>
                 <TableCell>{substance.casNumber || "-"}</TableCell>
-                <TableCell>{substance.molecularFormula || "-"}</TableCell>             
+                <TableCell>{substance.molecularFormula || "-"}</TableCell>   
+                <TableCell>{substance.alternativeFormula || "-"}</TableCell>    
+                <TableCell>{substance.chemicalName || "-"}</TableCell>                            
                 <TableCell>{substance.individualist || "-"}</TableCell>
                 <TableCell>{substance.hierarchist || "-"}</TableCell>
                 <TableCell>{substance.egalitarian || "-"}</TableCell>
